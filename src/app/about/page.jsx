@@ -10,9 +10,9 @@ const AboutPage = () => {
             <div className="h-[100px] flex items-center text-center justify-center border-b-2 border-gray-200">
                 <h3 className="font-bold text-[32px]">Tentang M-Learning</h3>
             </div>
-            <div className="relative">
+            <div className="relative min-h-screen">
                 <Background />
-                <div className="absolute top-0 w-full z-10">
+                <div className="w-full z-10">
                     <div className="container mx-auto py-10">
                         <p>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint deserunt, nostrum ea a eaque, animi suscipit dolorem enim, quasi molestias tempore. Sequi inventore enim voluptatum velit id optio! Libero, autem.
