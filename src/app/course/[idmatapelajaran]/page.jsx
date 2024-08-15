@@ -8,8 +8,10 @@ const CourseHomePage = () => {
     return (
         <>
             <Navbar />
-            <div className="w-full min-h-screen flex fllex-row">
-                <AsideCourse/>
+            <div className="w-full min-h-screen flex flex-row">
+                <aside className="hidden lg:block w-full lg:w-[15%]">
+                    <AsideCourse />
+                </aside>
                 <div className="lg:w-[85%] w-full">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
@@ -40,9 +42,9 @@ const CourseHomePage = () => {
                         <div className="hidden lg:block absolute bottom-0 right-0 h-[200px] w-[250px] bg-[url('/assets/image/openedbook.png')] bg-no-repeat bg-cover bg-center">
                         </div>
                     </div>
-                    <div className="relative w-full min-h-screen">
+                    <div className="relative w-full hidden lg:block min-h-screen">
                         <Background />
-                        <div className="relative top-0 w-[90%] flex flex-col gap-5 mx-auto py-10 z-10">
+                        <div className="relative top-0 w-[90%] hidden lg:flex flex-col gap-5 mx-auto py-10 z-10">
                             <p>
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas saepe facilis ea ipsam quae unde, magni similique quaerat non. Fugiat distinctio obcaecati minima aliquam eius suscipit pariatur, neque fugit error!
                                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio cumque molestias eos ut, commodi officia veritatis et maxime repellat similique, aliquid laborum a officiis culpa quos dolorem voluptate natus nihil?
@@ -58,6 +60,9 @@ const CourseHomePage = () => {
                                 </Button>
                             </div>
                         </div>
+                    </div>
+                    <div className="w-full min-h-screen block lg:hidden">
+                        <AsideCourse />
                     </div>
                     <Footer />
                 </div>

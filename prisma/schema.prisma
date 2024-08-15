@@ -9,84 +9,97 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Siswa {
-  id Int @id @default(autoincrement())
-  email String @db.VarChar(120)
-  password String @db.VarChar(120)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-}
-model Guru{
-  id Int @id @default(autoincrement())
-  email String @db.VarChar(120)
-  password String @db.VarChar(120)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())  
+  id           Int            @id @default(autoincrement())
+  email        String         @unique @db.VarChar(120)
+  password     String         @db.VarChar(120)
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @default(now())
+  ProfileSiswa ProfileSiswa[]
+  ProfileWali  ProfileWali[]
 }
 
-model ProfileSiswa{
-  id Int @id @default(autoincrement())
-  idsiswa Int
-  nisn String? @db.VarChar(30)
-  name String @db.VarChar(120)
-  sekolah String? @db.VarChar(120)
-  kelas String? @db.VarChar(10)
-  tempatlahir String? @db.VarChar(120)
-  tanggallahir DateTime? 
-  gender Gender?
-  agama String? @db.VarChar(20)
-  phone String?
-  anakke Int?
-  alamat String? @db.Text
+model Guru {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique @db.VarChar(120)
+  password    String        @db.VarChar(120)
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  ProfileGuru ProfileGuru[]
+}
+
+model ProfileSiswa {
+  id           Int       @id @default(autoincrement())
+  idsiswa      Int
+  nisn         String?   @db.VarChar(30)
+  name         String    @db.VarChar(120)
+  sekolah      String?   @db.VarChar(120)
+  kelas        String?   @db.VarChar(10)
+  tempatlahir  String?   @db.VarChar(120)
+  tanggallahir DateTime?
+  gender       Gender?
+  agama        String?   @db.VarChar(20)
+  phone        String?
+  anakke       Int?
+  alamat       String?   @db.Text
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @default(now())
+  Siswa        Siswa     @relation(fields: [idsiswa], references: [id])
+}
+
+model ProfileWali {
+  id         Int      @id @default(autoincrement())
+  idsiswa    Int
+  name       String   @db.VarChar(150)
+  pekerjaan  String?  @db.VarChar(120)
+  phone      String?
+  alamat     String?  @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  Siswa      Siswa    @relation(fields: [idsiswa], references: [id])
+}
+
+model ProfileGuru {
+  id         Int       @id @default(autoincrement())
+  idguru     Int
+  nuptk      String?
+  start      DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  Guru       Guru      @relation(fields: [idguru], references: [id])
+}
+
+model MataPelajaran {
+  id         Int      @id @default(autoincrement())
+  idguru     String?
+  name       String?  @db.VarChar(120)
+  kelas      String?  @db.VarChar(10)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
-model ProfileWali{
-  id Int @id @default(autoincrement())
-  idsiswa String?
-  name String @db.VarChar(150)
-  pekerjaan String? @db.VarChar(120)
-  phone String?
-  alamat String? @db.Text
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-}
-model Profileguru{
-  id Int @id @default(autoincrement())
-  idguru String?
-  nuptk String?
-  start DateTime?
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-}
-model MataPelajaran{
-  id Int @id @default(autoincrement())
-  idguru String?
-  name String? @db.VarChar(120)
-  kelas String? @db.VarChar(10)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-}
-model Absensi{
-  id Int @id @default(autoincrement())
+
+model Absensi {
+  id              Int         @id @default(autoincrement())
   idmatapelajaran Int?
-  idmateri Int?
-  idsiswa Int?
-  name String? @db.VarChar(150)
-  nisn String? @db.VarChar(30)
-  kelas String? @db.VarChar(10)
-  matapelajaran String? @db.VarChar(120)
-  status StatusAbsen @default(BELUM)
-  date DateTime?
+  idmateri        Int?
+  idsiswa         Int?
+  name            String?     @db.VarChar(150)
+  nisn            String?     @db.VarChar(30)
+  kelas           String?     @db.VarChar(10)
+  matapelajaran   String?     @db.VarChar(120)
+  status          StatusAbsen @default(BELUM)
+  date            DateTime?
 }
+
 enum Gender {
   Pria
   Perempuan
 }
+
 enum StatusAbsen {
   BELUM
   SUDAH
