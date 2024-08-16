@@ -5,9 +5,11 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import Background from "@/components/Background"
 import Aside from "@/components/Aside"
-import { useState } from "react"
-
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 const Dashboard = () => {
+    const router = useRouter()
+    const [access, setAccess] = useState(null)
     const [classButton, setClassButton] = useState({
         "kelas 10": true,
         "kelas 11": false,
@@ -25,7 +27,18 @@ const Dashboard = () => {
         "Fisika", "Kimia", "Sejarah", "Seni & Prakarya",
         "Kewarganegaraan", "Pendidikan Jasmani", "Agama & Budi Pekerti", "Pendidikan Kewirausahaan "
     ];
-
+    useEffect(()=>{
+        const validateAccess = ()=>{
+            const getToken=sessionStorage.getItem('tokensiswa')
+            if(getToken){
+                setAccess(true)
+            }else{
+                setAccess(false)
+                router.push('login/')
+            }
+        }
+        validateAccess()
+    },[router])
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />

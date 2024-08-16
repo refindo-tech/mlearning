@@ -65,6 +65,7 @@ model ProfileWali {
 
 model ProfileGuru {
   id         Int       @id @default(autoincrement())
+  name         String    @db.VarChar(120)
   idguru     Int
   nuptk      String?
   start      DateTime?
@@ -75,7 +76,6 @@ model ProfileGuru {
 
 model MataPelajaran {
   id         Int      @id @default(autoincrement())
-  idguru     String?
   name       String?  @db.VarChar(120)
   kelas      String?  @db.VarChar(10)
   created_at DateTime @default(now())

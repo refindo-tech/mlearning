@@ -1,18 +1,42 @@
 'use client'
+import { useRouter } from "next/navigation"
 import { Input, Image, Button, Link } from "@nextui-org/react"
 import { useState } from "react"
 import Icons from "@/components/Icons"
+import {loginGuru} from '@/backend/fetchAPI.js'
 const LoginPage = () => {
+    const router = useRouter()
     const [isVisible, setIsVisible] = useState(false);
     const { EyeFilledIcon, EyeSlashFilledIcon } = Icons
     const toggleVisibility = () => setIsVisible(!isVisible);
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
+    const handleEmailValue = (value)=>{
+        setEmail(value)
+    }
+    const handlePasswordValue = (value)=>{
+        setPassword(value)
+    }
+    const handleLogin = ()=>{
+        const payload = {
+            email:email,
+            password:password
+        }
+        const fetchAPI = async()=>{
+            const response = await loginGuru(payload)
+            if(response){
+                console.log(response)
+                sessionStorage.setItem('token',response.token)
+                router.push('dashboard/')
+            }
+        }
+        fetchAPI()
+    }
     return (
         <div className="h-screen w-full flex items-center justify-center bg-gradient-to-b from-primer-400 to-primer-500">
             <div className="w-[90%] lg:w-[30%] bg-white rounded-lg py-[30px] flex flex-col items-center z-20">
                 <Image
                     alt="logo"
-                    // height={80}
-                    // width={198}
                     src={'/assets/image/logologinpage.png'}
                     className="block h-[70] w-[100]  lg:h-[80] lg:w-[198]"
                 />
@@ -24,6 +48,7 @@ const LoginPage = () => {
                         size='sm'
                         variant="light"
                         label="Email"
+                        onChange={(e)=> handleEmailValue(e.target.value)}
                         placeholder="Enter your email"
                     />
                     <Input
@@ -31,6 +56,7 @@ const LoginPage = () => {
                         color="default"
                         size='sm'
                         variant="light"
+                        onChange={(e)=> handlePasswordValue(e.target.value)}
                         placeholder="Enter your password"
                         endContent={
                             <button className="focus:outline-none" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
@@ -44,6 +70,7 @@ const LoginPage = () => {
                         type={isVisible ? "text" : "password"}
                     />
                     <Button
+                        onPress={handleLogin}
                         className="h-[60px] bg-primer-500 text-white text-xl font-semibold"
                     >
                         Masuk

@@ -26,6 +26,7 @@ const LoginPage = () => {
             const response = await loginSiswa(payload)
             if(response){
                 console.log(response)
+                sessionStorage.setItem('tokensiswa',response.token)
                 router.push('dashboard/')
             }
         }
