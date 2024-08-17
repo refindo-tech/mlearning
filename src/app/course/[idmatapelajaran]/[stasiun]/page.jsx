@@ -1,10 +1,37 @@
+'use client'
+import { useRouter } from "next/navigation"
 import Background from "@/components/Background"
 import AsideCourse from '@/components/AsideCourse'
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { Button, Image } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
+import { useState, useEffect } from "react"
+import { detailMateri } from "@/backend/fetchAPI"
+import { usePathname } from "next/navigation"
 const Stasiun = () => {
+    const router = useRouter()
+    const path = usePathname()
+    const [dataMateri, setDataMateri] = useState(null)
+    useEffect(() => {
+        const idmapel = path.split('/')[2]
+        const stasiun = path.split('/').pop()
+        const payload = {
+            idmapel: idmapel,
+            stasiun: stasiun
+        }
+        const fetchAPI = async () => {
+            const response = await detailMateri(payload)
+            if (response) {
+                console.log(response)
+                setDataMateri(response.data)
+            }
+        }
+        fetchAPI()
+    }, [path])
+    const handleBack = ()=>{
+        router.back()
+    }
     return (
         <>
             <Navbar />
@@ -17,6 +44,7 @@ const Stasiun = () => {
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
                                 <button
+                                    onClick={handleBack}
                                     className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
                                 >
                                     <ChevronLeft size={32} />
@@ -47,12 +75,17 @@ const Stasiun = () => {
                         <div className="relative top-0 w-[90%] flex flex-col gap-5 mx-auto py-10 z-10">
                             <h3 className="font-semibold text-xl">Simak materi berikut ini!</h3>
                             <div className="flex flex-col gap-5">
-                                <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg">
+                                {/* <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg">
                                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas saepe facilis ea ipsam quae unde, magni similique quaerat non. Fugiat distinctio obcaecati minima aliquam eius suscipit pariatur, neque fugit error!
                                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio cumque molestias eos ut, commodi officia veritatis et maxime repellat similique, aliquid laborum a officiis culpa quos dolorem voluptate natus nihil?
                                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates hic aliquam, in sit omnis obcaecati expedita veritatis ipsam laboriosam aut recusandae iure rem delectus mollitia nostrum quos, ratione quam reiciendis.
                                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, architecto. Aut illo tempora labore obcaecati dolores consectetur, blanditiis iusto odit qui quam quas! Laudantium impedit magni rerum id atque! Necessitatibus?
-                                </div>
+                                </div> */}
+                                {dataMateri &&
+                                    <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg">
+                                        {dataMateri.detailmateri}
+                                    </div>
+                                }
                                 <div className="flex flex-col gap-5 items-end">
                                     <h5 className="font-semibold">Unduh Materi</h5>
                                     <Button

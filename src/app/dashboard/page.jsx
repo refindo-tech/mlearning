@@ -1,15 +1,18 @@
 'use client'
 import { Button, Image } from "@nextui-org/react"
+import Loading from "../loading"
 import Link from "next/link"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import Background from "@/components/Background"
 import Aside from "@/components/Aside"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import {listClass} from "@/backend/fetchAPI.js"
 const Dashboard = () => {
     const router = useRouter()
     const [access, setAccess] = useState(null)
+    const [dataListClass, setDataListClass] = useState([])
     const [classButton, setClassButton] = useState({
         "kelas 10": true,
         "kelas 11": false,
@@ -39,6 +42,23 @@ const Dashboard = () => {
         }
         validateAccess()
     },[router])
+    useEffect(()=>{
+        const selectedClass = Object.keys(classButton).find(kelas => classButton[kelas]===true)
+        if(selectedClass){
+            const payload = {kelas:String(selectedClass)}
+            const fetchData = async()=>{
+                const response = await listClass(payload)
+                if(response){
+                    console.log(response)
+                    setDataListClass(response.data)
+                }
+            }
+            fetchData()
+        }
+    },[classButton])
+    if(access === null){
+        return (<Loading/>)
+    }
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
@@ -76,8 +96,8 @@ const Dashboard = () => {
                             </Button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {subjects.map((subject, index) => (
-                                <SubjectCard key={index} subject={subject} />
+                            {dataListClass.map((item, index) => (
+                                <SubjectCard key={index} subject={item} />
                             ))}
                         </div>
                     </div>
@@ -90,7 +110,7 @@ const Dashboard = () => {
 }
 
 const SubjectCard = ({ subject }) => (
-    <Link href="/" className="flex flex-col p-2 gap-3 rounded-xl border-2 border-gray-200 bg-white h-[200px]">
+    <Link href={`course/${subject.id}`} className="flex flex-col p-2 gap-3 rounded-xl border-2 border-gray-200 bg-white h-[200px]">
         <div className="w-full h-[90px] flex items-center justify-end bg-primer-300 rounded">
             <Image
                 alt="icon-card"
@@ -99,8 +119,8 @@ const SubjectCard = ({ subject }) => (
             />
         </div>
         <div className="flex flex-col justify-between flex-grow">
-            <h1 className="text-lg font-semibold line-clamp-2">{subject}</h1>
-            <h3 className="text-sm">Kelas 10</h3>
+            <h1 className="text-lg font-semibold line-clamp-2">{subject.name}</h1>
+            <h3 className="text-sm">{subject.kelas}</h3>
         </div>
     </Link>
 )

@@ -1,10 +1,16 @@
+'use client'
 import Background from "@/components/Background"
 import AsideCourse from '@/components/AsideCourse'
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { Button, Image } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
+import { useState } from "react"
 const CourseHomePage = () => {
+    const [selectedStasiun, setSelectedStasiun] = useState(null)
+    const handleNextLearn = ()=>{
+        setSelectedStasiun()
+    }
     return (
         <>
             <Navbar />
