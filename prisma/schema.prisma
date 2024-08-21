@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Siswa {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique @db.VarChar(120)
+  password     String         @db.VarChar(120)
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @default(now())
+  ProfileSiswa ProfileSiswa[]
+  ProfileWali  ProfileWali[]
+  Absensi      Absensi[]
+}
+
+model Guru {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique @db.VarChar(120)
+  password    String        @db.VarChar(120)
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  ProfileGuru ProfileGuru[]
+}
+
+model ProfileSiswa {
+  id           Int       @id @default(autoincrement())
+  idsiswa      Int
+  nisn         String?   @db.VarChar(30)
+  name         String    @db.VarChar(120)
+  sekolah      String?   @db.VarChar(120)
+  kelas        String?   @db.VarChar(10)
+  tempatlahir  String?   @db.VarChar(120)
+  tanggallahir DateTime?
+  gender       Gender?
+  agama        String?   @db.VarChar(20)
+  phone        String?
+  anakke       Int?
+  alamat       String?   @db.Text
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @default(now())
+  Siswa        Siswa     @relation(fields: [idsiswa], references: [id])
+}
+
+model ProfileWali {
+  id         Int      @id @default(autoincrement())
+  idsiswa    Int
+  name       String   @db.VarChar(150)
+  pekerjaan  String?  @db.VarChar(120)
+  phone      String?
+  alamat     String?  @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  Siswa      Siswa    @relation(fields: [idsiswa], references: [id])
+}
+
+model ProfileGuru {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(120)
+  idguru     Int
+  nuptk      String?
+  start      DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  Guru       Guru      @relation(fields: [idguru], references: [id])
+}
+
+model MataPelajaran {
+  id         Int       @id @default(autoincrement())
+  name       String?   @db.VarChar(120)
+  kelas      String?   @db.VarChar(10)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  Materi     Materi[]
+  Absensi    Absensi[]
+}
+
+model Absensi {
+  id              Int           @id @default(autoincrement())
+  idmatapelajaran Int
+  idmateri        Int
+  idsiswa         Int
+  name            String?       @db.VarChar(150)
+  nisn            String?       @db.VarChar(30)
+  kelas           String?       @db.VarChar(10)
+  matapelajaran   String?       @db.VarChar(120)
+  status          StatusAbsen   @default(BELUM)
+  date            DateTime?
+  MataPelajaran   MataPelajaran @relation(fields: [idmatapelajaran], references: [id])
+  Materi          Materi        @relation(fields: [idmateri], references: [id])
+  Siswa           Siswa         @relation(fields: [idsiswa], references: [id])
+}
+
+model Materi {
+  id              Int           @id @default(autoincrement())
+  idmatapelajaran Int
+  stasiun         String        @db.VarChar(10)
+  detailmateri    String        @db.Text
+  urlvideo        String?       @db.Text
+  urlaudio        String?       @db.Text
+  urlimage        String?       @db.Text
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @default(now())
+  MataPelajaran   MataPelajaran @relation(fields: [idmatapelajaran], references: [id])
+  Absensi         Absensi[]
+}
+
+enum Gender {
+  Pria
+  Perempuan
+}
+
+enum StatusAbsen {
+  BELUM
+  SUDAH
+}
