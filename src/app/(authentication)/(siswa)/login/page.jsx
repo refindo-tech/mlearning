@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useRouter } from "next/navigation"
 import { Input, Image, Button, Link } from "@nextui-org/react"
 import { useState } from "react"
@@ -48,6 +48,7 @@ const LoginPage = () => {
                         size='sm'
                         variant="light"
                         label="Email"
+                        value={email}
                         onChange={(e)=> handleEmailValue(e.target.value)}
                         placeholder="Enter your email"
                     />
@@ -56,6 +57,7 @@ const LoginPage = () => {
                         color="default"
                         size='sm'
                         variant="light"
+                        value={password}
                         onChange={(e)=> handlePasswordValue(e.target.value)}
                         placeholder="Enter your password"
                         endContent={

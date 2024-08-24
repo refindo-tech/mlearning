@@ -1,16 +1,51 @@
+'use client'
 import Background from "@/components/Background"
+import Loading from "@/app/loading.jsx"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import { usePathname, useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
 import AsideCourse from "@/components/AsideCourse"
-import { Button, Image } from "@nextui-org/react"
+import { Button, Image, Link } from "@nextui-org/react"
+import {listStasiun, getAbsensiByIdSiswa} from '@/backend/fetchAPI.js'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 const ResultCoursePage = () => {
+    const path = usePathname()
+    const router = useRouter()
+    const [isLoaded, setIsLoad] = useState(true)
+    const [dataListStasiun, setDataListStasiun] = useState([])
+    const [dataAbsensi, setDataAbsensi] = useState([])
+    useEffect(() => {
+        const idmapel = path.split('/')[2]
+        const fetchAPI = async () => {
+            const req = { idmatapelajaran: idmapel }
+            const response = await listStasiun(req)
+            if (response) {
+                setDataListStasiun(response.data)
+            }
+            const payload = {
+                idmapel: idmapel
+            }
+            const responseAbsensi = await getAbsensiByIdSiswa(payload)
+            if (responseAbsensi) {
+                setDataAbsensi(responseAbsensi.data)
+                setIsLoad(false)
+            }
+        }
+        fetchAPI()
+    }, [path, router])
+    if(isLoaded){
+        return (<Loading/>)
+    }
     return (
         <>
             <Navbar />
             <div className="w-full min-h-screen flex fllex-row">
                 <aside className="hidden lg:block w-full lg:w-[15%]">
-                    <AsideCourse />
+                    <AsideCourse 
+                        listStasiun = {dataListStasiun}
+                        absen = {dataAbsensi}
+                    />
                 </aside>
                 <div className="lg:w-[85%] w-full">
                     <div className="h-fit static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
@@ -120,10 +155,12 @@ const ResultCoursePage = () => {
                                     </div>
                                 </div>
                                 <Button
+                                    as={Link}
+                                    href="/dashboard"
                                     size="sm"
-                                    className="bg-primer-500 text-white h-10 w-[200px] flex text-md items-center text-center rounded"
+                                    className="bg-primer-500 text-white h-10 w-fit flex text-md items-center text-center rounded"
                                 >
-                                    Kumpulkan
+                                    Kembali ke Halaman Utama
                                 </Button>
                             </div>
                         </div>

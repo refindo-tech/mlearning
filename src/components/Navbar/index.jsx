@@ -1,14 +1,21 @@
 'use client'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Image, Button, Link } from "@nextui-org/react"
-import { X, Search } from "lucide-react"
+import { X } from "lucide-react"
+import SearchComponent from '@/components/SearchComponent'
+import PopoverUser from '@/components/PopoverUser'
 import Icons from "@/components/Icons"
 const Navbar = () => {
+    const [token, setToken] = useState(null)
     const [isModal, setIsModal] = useState(false)
     const handleModal = () => {
         setIsModal(!isModal)
     }
     const { CircleElipsis } = Icons
+    useEffect(() => {
+        const verify = sessionStorage.getItem('tokensiswa') || sessionStorage.getItem('tokenguru')
+        setToken(verify)
+    }, [])
     return (
         <nav className="sticky top-0 w-full h-[80px] bg-white flex items-center shadow-xl z-20">
             <div className="w-[90%] lg:container mx-auto flex justify-between">
@@ -19,7 +26,7 @@ const Navbar = () => {
                     <CircleElipsis size={24} />
                 </button>
                 {isModal &&
-                    <div className="absolute top-0 flex flex-col justify-between pt-[80px] left-0 w-[50vw] h-screen z-0 bg-white">
+                    <div className="absolute lg:hidden top-0 flex flex-col justify-between pt-[80px] left-0 w-[50vw] h-screen z-0 bg-white">
                         <div className="w-[90%] mx-auto">
                             <button
                                 onClick={handleModal}
@@ -86,27 +93,34 @@ const Navbar = () => {
                         <a href="/">Portal Guru</a>
                     </li>
                 </ul>
-                <div className="hidden lg:flex flex-row items-center gap-2">
-                    <Button
-                        as={Link}
-                        href="/login"
-                        className="bg-primer-500 rounded w-32 text-white font-semibold text-sm"
+                {token ? (
+                    <div
+                        className="hidden lg:flex flex-row items-center gap-2"
                     >
-                        Masuk
-                    </Button>
-                    <Button
-                        as={Link}
-                        href="/register"
-                        className="bg-white rounded w-32 text-accent-orange border-2 border-gray-200 font-semibold text-sm"
-                    >
-                        Daftar
-                    </Button>
+                        <SearchComponent/>
+                        <PopoverUser/>
+                    </div>
+                ) : (
+                    <div className="hidden lg:flex flex-row items-center gap-2">
+                        <Button
+                            as={Link}
+                            href="/login"
+                            className="bg-primer-500 rounded w-32 text-white font-semibold text-sm"
+                        >
+                            Masuk
+                        </Button>
+                        <Button
+                            as={Link}
+                            href="/register"
+                            className="bg-white rounded w-32 text-accent-orange border-2 border-gray-200 font-semibold text-sm"
+                        >
+                            Daftar
+                        </Button>
+                    </div>
+                )}
+                <div className="flex items-center lg:hidden">
+                <SearchComponent/>
                 </div>
-                <button
-                    className="flex items-center lg:hidden"
-                >
-                    <Search size={20} />
-                </button>
             </div>
         </nav>
     )

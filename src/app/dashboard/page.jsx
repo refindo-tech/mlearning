@@ -33,10 +33,7 @@ const Dashboard = () => {
     useEffect(()=>{
         const validateAccess = ()=>{
             const getToken=sessionStorage.getItem('tokensiswa')
-            if(getToken){
-                setAccess(true)
-            }else{
-                setAccess(false)
+            if(!getToken){
                 router.push('login/')
             }
         }
@@ -51,6 +48,7 @@ const Dashboard = () => {
                 if(response){
                     console.log(response)
                     setDataListClass(response.data)
+                    setAccess(true)
                 }
             }
             fetchData()
