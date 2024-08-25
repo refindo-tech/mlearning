@@ -12,7 +12,7 @@ import PGAnswer from '@/components/PGAnswer'
 import EssayAnswer from '@/components/EssayAnswer'
 import { Button, Image, Checkbox } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
-import { listQuestion, listExamAnswer, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
+import { listQuestion, listExamAnswer, listStasiun, getAbsensiByIdSiswa, postAnswerQuestion } from "@/backend/fetchAPI.js"
 import { useRouter } from "next/navigation"
 const Exam = () => {
     const router = useRouter()
@@ -127,19 +127,19 @@ const Exam = () => {
                         absen={dataAbsensi}
                     />
                 </aside>
-                <div className="lg:w-[85%] w-full">
+                <div className="lg:w-[85%] w-full border-l-2 border-gray-200">
                     <div className="h-fit static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
                                 <button
                                     onClick={backStep}
-                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
+                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white cursor-pointer"
                                 >
                                     <ChevronLeft size={32} />
                                 </button>
                                 <button
                                     onClick={nextStep}
-                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
+                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white hover:cursor-pointer"
                                 >
                                     <ChevronRight size={32} />
                                 </button>

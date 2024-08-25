@@ -71,7 +71,7 @@ class _authentication {
                 email:siswa.email,
                 name:siswa.ProfileSiswa[0]?.name,
                 kelas: siswa.ProfileSiswa[0]?.kelas
-            },process.env.SECRET_KEY,{expiresIn:'1h'})
+            },process.env.SECRET_KEY,{expiresIn:'24h'})
             return {
                 message: 'login success',
                 token:token,

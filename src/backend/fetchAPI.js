@@ -300,3 +300,23 @@ export const getAbsensiByIdSiswa = async (req) => {
         return error
     }
 }
+export const addAbsen = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokensiswa')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/absensi/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(req)
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}

@@ -35,7 +35,7 @@ const AsideCourse = ({listStasiun, absen}) => {
         } 
     }, [listStasiun, absen])
     return (
-        <aside className="w-full py-10 flex flex-col items-center border-r-2 border-gray-200 gap-7">
+        <aside className="w-full py-10 flex flex-col items-center gap-7">
             <h3 className="font-semibold text-xl text-center">Materi Belajar</h3>
             <div className="w-[90%] flex flex-col gap-3">
                 {dataListStasiun && dataListStasiun.map((item, index) => (
@@ -43,7 +43,7 @@ const AsideCourse = ({listStasiun, absen}) => {
                         as={Link}
                         href={handleUrl(item.stasiun)}
                         variant="bordered"
-                        className={`rounded-lg h-12 font-semibold ${isStasiunCompleted(item.stasiun) ? 'bg-primer-500 text-yellow-500' : ''}`}
+                        className={`rounded-lg h-12 font-semibold shadow-lg border-0 hover:cursor-pointer ${isStasiunCompleted(item.stasiun) ? 'bg-primer-500 text-yellow-500' : 'bg-gray-100'}`}
                         key={index}
                     >
                         {item.stasiun.toUpperCase()}
@@ -64,7 +64,7 @@ const AsideCourse = ({listStasiun, absen}) => {
                 <Button
                     onPress={handleResult}
                     variant="bordered"
-                    className="rounded-lg h-12 font-semibold"
+                    className="rounded-lg h-12 font-semibold shadow-lg border-0 bg-gray-100 hover:cursor-pointer"
                 >
                     Hasil Akhir
                 </Button>

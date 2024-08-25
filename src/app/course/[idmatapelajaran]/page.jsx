@@ -26,7 +26,7 @@ const CourseHomePage = () => {
         )
     }
     const selectedStasiun = findFirstIncompleteStasiun()
-    const handleUrl = (stasiun)=>{
+    const handleUrl = (stasiun) => {
         return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${stasiun}`
     }
     useEffect(() => {
@@ -69,7 +69,7 @@ const CourseHomePage = () => {
                         absen={dataAbsensi}
                     />
                 </aside>
-                <div className="lg:w-[85%] w-full">
+                <div className="lg:w-[85%] w-full border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
@@ -78,11 +78,12 @@ const CourseHomePage = () => {
                                 >
                                     <ChevronLeft size={32} />
                                 </button>
-                                <button
-                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
+                                <Link
+                                    href={handleUrl(selectedStasiun.stasiun)}
+                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white text-black"
                                 >
                                     <ChevronRight size={32} />
-                                </button>
+                                </Link>
                             </div>
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">

@@ -5,7 +5,6 @@ export async function GET(req){
         const authorization = req.headers.get('authorization');
         // Parsing URL untuk mendapatkan query parameters
         const url = new URL(req.url);
-        console.log(url)
         const params = url.searchParams;
         const idmapel = params.get('idmapel');
         const stasiun = params.get('stasiun');
