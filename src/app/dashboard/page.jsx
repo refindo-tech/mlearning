@@ -116,7 +116,7 @@ const SubjectCard = ({ subject }) => (
                 className="block h-[60px] w-[100px]"
             />
         </div>
-        <div className="flex flex-col justify-between flex-grow">
+        <div className="flex flex-col gap-2">
             <h1 className="text-lg font-semibold line-clamp-2">{subject.name}</h1>
             <h3 className="text-sm">{subject.kelas}</h3>
         </div>
