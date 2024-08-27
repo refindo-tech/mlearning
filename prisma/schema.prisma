@@ -19,6 +19,8 @@ model Siswa {
   password      String          @db.VarChar(120)
   created_at    DateTime        @default(now())
   updated_at    DateTime        @default(now())
+  resetToken    String?         @db.Text
+  expiredResetToken DateTime?   
   ProfileSiswa  ProfileSiswa[]
   ProfileWali   ProfileWali[]
   Absensi       Absensi[]

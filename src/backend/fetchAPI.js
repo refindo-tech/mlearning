@@ -320,3 +320,75 @@ export const addAbsen = async (req) => {
         return error
     }
 }
+export const getDetailProfile = async () => {
+    try {
+        const token = sessionStorage.getItem('tokensiswa')
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/profile/siswa`
+        const response = await fetch(url,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const forgotPassword = async (req) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/forgotpassword`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(req)
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const verifyTokenReset = async (req) => {
+    try {
+        // const { idexam, idmapel, stasiun } = req
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/reset?${queryString}`
+        const response = await fetch(url,{method: 'GET'})
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const resetPassword = async (req) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/reset/update`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(req)
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}

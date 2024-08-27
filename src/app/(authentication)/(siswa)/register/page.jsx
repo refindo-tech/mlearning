@@ -6,6 +6,7 @@ import Icons from "@/components/Icons"
 import {registerSiswa} from '@/backend/fetchAPI.js'
 const RegisterPage = () => {
     const router = useRouter()
+    const [isLoad, setIsLoad] = useState(false);    
     const [isVisible, setIsVisible] = useState(false);
     const { EyeFilledIcon, EyeSlashFilledIcon } = Icons
     const toggleVisibility = () => setIsVisible(!isVisible);
@@ -31,6 +32,7 @@ const RegisterPage = () => {
             password:password,
             name:name
         }
+        setIsLoad(true)
         const fetchAPI = async ()=>{
             const response = await registerSiswa(payload)
             if(response.message === 'success'){
@@ -91,9 +93,14 @@ const RegisterPage = () => {
                     />
                     <Button
                         onPress={handleSubmit}
+                        isDisabled={isLoad?true:false}
                         className="h-[60px] bg-primer-500 text-white text-xl font-semibold"
                     >
-                        Daftar
+                        {isLoad ? (
+                            <div className="loader"></div>
+                        ) : (
+                            <p>Daftar</p>
+                        )}
                     </Button>
                     <p href="/" className="text-center">Sudah punya akun? <a href="/login">masuk</a></p>
                     <a href="/" className="text-center text-accent-orange underline">Masuk untuk guru</a>
