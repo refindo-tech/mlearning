@@ -29,13 +29,38 @@ class _materi {
     detailMateri = async(req)=>{
         try {
             const {headers ,idmapel, stasiun} = req
-            const detail = await db.materi.findFirst({
-                where:{
-                    idmatapelajaran: parseInt(idmapel),
-                    stasiun:stasiun
+            let detail
+            if(idmapel){
+                if(stasiun){
+                    console.log(stasiun)
+                    detail = await db.materi.findFirst({
+                        where:{
+                            idmatapelajaran: parseInt(idmapel),
+                            stasiun:stasiun
+                        }
+                    })
+                }else{
+                    detail = await db.materi.findFirst({
+                        where:{
+                            idmatapelajaran: parseInt(idmapel),
+                        },
+                        include:{
+                            MataPelajaran:{
+                                select:{
+                                    name:true,
+                                    kelas:true
+                                }
+                            }
+                        }
+                    })
                 }
-            })
-            console.log(detail)
+            }
+            if(!detail){
+                return{
+                    message:'Not any material relevant',
+                    code:404
+                }
+            }
             return {
                 message:'success',
                 data:detail,

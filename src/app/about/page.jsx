@@ -5,7 +5,7 @@ const AboutPage = () => {
     return (
         <>
             <Navbar />
-            <div className="h-screen w-full flex items-center bg-[url('/assets/image/heroonboarding.png')] bg-cover bg-no-repeat bg-center">
+            <div className="h-[50vh] w-full flex items-center bg-[url('/assets/image/heroonboarding.png')] bg-cover bg-no-repeat bg-center">
             </div>
             <div className="h-[100px] flex items-center text-center justify-center border-b-2 border-gray-200">
                 <h3 className="font-bold text-[32px]">Tentang M-Learning</h3>

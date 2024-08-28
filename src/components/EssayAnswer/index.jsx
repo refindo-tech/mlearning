@@ -1,5 +1,5 @@
 import { Textarea } from "@nextui-org/react"
-const EssayAnswer = () => {
+const EssayAnswer = ({handleAnswerQuestion}) => {
     return (
         <Textarea
             variant="bordered"
@@ -8,6 +8,9 @@ const EssayAnswer = () => {
             maxRows={30}
             placeholder="Tulis jawabanmu disini"
             className="rounded-lg focus:outline-none border-primer-300 border-1 text-accent-orange"
+            onValueChange={(value)=>{
+                handleAnswerQuestion(value)
+            }}
         />
     )
 }

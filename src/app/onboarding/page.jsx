@@ -6,9 +6,9 @@ const Homepage = ()=>{
         <>
             <Navbar/>
             <div className="h-screen w-full flex items-center bg-[url('/assets/image/heroonboarding.png')] bg-cover bg-no-repeat bg-center">
-                <div className="mx-auto flex flex-col p-[30px] text-center bg-white gap-5 text-indigo-900">
-                    <h1 className="text-[50px] font-sans font-semibold">Selamat Datang di M-Learning</h1>
-                    <h3 className='text-2xl'>Portal belajar online interaktif siswa</h3>
+                <div className="mx-auto flex flex-col p-[30px] text-center bg-white gap-5 lg:gap-10 text-indigo-900">
+                    <h1 className="text-base lg:text-[50px] font-sans font-bold lg:font-semibold">Selamat Datang di M-Learning</h1>
+                    <h3 className='text-xs lg:text-2xl'>Portal belajar online interaktif siswa</h3>
                 </div>
             </div>
             <Footer/>
