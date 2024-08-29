@@ -6,9 +6,6 @@ export async function GET(req){
         // Parsing URL untuk mendapatkan query parameters
         const url = new URL(req.url);
         const params = url.searchParams;
-        console.log(authorization)
-        console.log(params)
-
         const idmapel = params.get('idmapel');
         const stasiun = params.get('stasiun');
         const payload = {

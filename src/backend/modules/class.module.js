@@ -5,6 +5,7 @@ class _kelas {
             const queryParams = new URLSearchParams(req);
             const kelas = queryParams.get('kelas')
             const name = queryParams.get('name')
+            const limit = queryParams.get('limit')
             let getClass
             if(kelas){
                 getClass = await db.mataPelajaran.findMany({
@@ -16,8 +17,15 @@ class _kelas {
             if(name){
                 getClass = await db.mataPelajaran.findMany({
                     where:{
-                        name:name
+                        name:{
+                            contains:name
+                        }
                     }
+                })
+            }
+            if(limit){
+                getClass = await db.mataPelajaran.findMany({
+                    take:parseInt(limit)
                 })
             }
             return {
@@ -37,6 +45,22 @@ class _kelas {
             }
         }
     }
+    // searchClass = async (req)=>{
+    //     try {
+    //         const {mapel}=req
+    //         const data = await db.mataPelajaran
+    //     } catch (error) {
+    //         console.log(error)
+    //         console.log({
+    //             message:'Class Module List Class Error',
+    //             error:error.message
+    //         })
+    //         return {
+    //             message: 'Internal Server Error',
+    //             code: 500
+    //         }
+    //     }
+    // }
 }
 const m$kelas = new _kelas()
 export default m$kelas

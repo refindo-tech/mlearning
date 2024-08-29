@@ -25,18 +25,10 @@ const Dashboard = () => {
             "kelas 12": kelas === "kelas 12",
         });
     }
-    const subjects = [
-        "Bahasa Indonesia", "Bahasa Inggris", "Matematika", "Biologi",
-        "Fisika", "Kimia", "Sejarah", "Seni & Prakarya",
-        "Kewarganegaraan", "Pendidikan Jasmani", "Agama & Budi Pekerti", "Pendidikan Kewirausahaan "
-    ];
     useEffect(()=>{
         const validateAccess = ()=>{
             const getToken=sessionStorage.getItem('tokensiswa')
-            if(getToken){
-                setAccess(true)
-            }else{
-                setAccess(false)
+            if(!getToken){
                 router.push('login/')
             }
         }
@@ -49,8 +41,8 @@ const Dashboard = () => {
             const fetchData = async()=>{
                 const response = await listClass(payload)
                 if(response){
-                    console.log(response)
                     setDataListClass(response.data)
+                    setAccess(true)
                 }
             }
             fetchData()
@@ -118,7 +110,7 @@ const SubjectCard = ({ subject }) => (
                 className="block h-[60px] w-[100px]"
             />
         </div>
-        <div className="flex flex-col justify-between flex-grow">
+        <div className="flex flex-col gap-2">
             <h1 className="text-lg font-semibold line-clamp-2">{subject.name}</h1>
             <h3 className="text-sm">{subject.kelas}</h3>
         </div>

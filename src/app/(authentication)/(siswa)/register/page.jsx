@@ -6,12 +6,13 @@ import Icons from "@/components/Icons"
 import {registerSiswa} from '@/backend/fetchAPI.js'
 const RegisterPage = () => {
     const router = useRouter()
+    const [isLoad, setIsLoad] = useState(false);    
     const [isVisible, setIsVisible] = useState(false);
     const { EyeFilledIcon, EyeSlashFilledIcon } = Icons
     const toggleVisibility = () => setIsVisible(!isVisible);
-    const [name,setName] = useState(null)
-    const [email,setEmail] = useState(null)
-    const [password,setPassword] = useState(null)
+    const [name,setName] = useState('')
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
     const [error, setError] = useState(null)
     const handleEmailValue = (value)=>{
         setEmail(value)
@@ -31,6 +32,7 @@ const RegisterPage = () => {
             password:password,
             name:name
         }
+        setIsLoad(true)
         const fetchAPI = async ()=>{
             const response = await registerSiswa(payload)
             if(response.message === 'success'){
@@ -62,6 +64,7 @@ const RegisterPage = () => {
                         color="default"
                         variant="light"
                         label="Name"
+                        value={name}
                         onChange={(e)=>handleNameValue(e.target.value)}
                         placeholder="Masukkan nama anda"
                         />
@@ -70,12 +73,14 @@ const RegisterPage = () => {
                         color="default"
                         variant="light"
                         label="Email"
+                        value={email}
                         onChange={(e)=>handleEmailValue(e.target.value)}
                         placeholder="Enter your email" />
                     <Input
                         label="Password"
                         color="default"
                         variant="light"
+                        password={password}
                         onChange={(e)=>handlePasswordValue(e.target.value)}
                         placeholder="Enter your password"
                         endContent={
@@ -91,9 +96,14 @@ const RegisterPage = () => {
                     />
                     <Button
                         onPress={handleSubmit}
+                        isDisabled={isLoad?true:false}
                         className="h-[60px] bg-primer-500 text-white text-xl font-semibold"
                     >
-                        Daftar
+                        {isLoad ? (
+                            <div className="loader"></div>
+                        ) : (
+                            <p>Daftar</p>
+                        )}
                     </Button>
                     <p href="/" className="text-center">Sudah punya akun? <a href="/login">masuk</a></p>
                     <a href="/" className="text-center text-accent-orange underline">Masuk untuk guru</a>
