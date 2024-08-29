@@ -5,6 +5,9 @@ import Background from "@/components/Background"
 import AsideCourse from '@/components/AsideCourse'
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import AudioPlayer from "@/components/AudioPlayer"
+import YoutubeVideo from "@/components/YoutubeVideo"
+import DisplayImageComponent from "@/components/DisplayImageComponent"
 import { Button, Image, RadioGroup, Radio } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
@@ -37,7 +40,6 @@ const Stasiun = () => {
             idmapel: idmapel,
             stasiun: stasiun
         }
-        console.log(stasiun)
         const fetchAPI = async () => {
             const req = { idmatapelajaran: idmapel }
             const response = await listStasiun(req)
@@ -48,12 +50,13 @@ const Stasiun = () => {
                 idmapel: idmapel
             }
             const responseAbsensi = await getAbsensiByIdSiswa(payload)
-            if (responseAbsensi) {
+            if (responseAbsensi.status) {
                 setDataAbsensi(responseAbsensi.data)
+            } else {
+                router.push('/onboarding')
             }
             const responseDetailMateri = await detailMateri(payloadDetailMateri)
             if (responseDetailMateri) {
-                console.log(responseDetailMateri)
                 if (!responseDetailMateri.data) {
                     const newPath = path.replace(`${stasiun}`, '')
                     router.push(`${newPath}`)
@@ -70,20 +73,15 @@ const Stasiun = () => {
         router.back()
     }
     const submitAbsen = async () => {
-        try {
-            const idmapel = path.split('/')[2]
-            const stasiun = path.split('/')[3]
-            const payload = {
-                idmapel,
-                stasiun
-            }
-            const response = await addAbsen(payload)
-            if (response) {
-                console.log(response)
-                setHasAbsen(true)
-            }
-        } catch (error) {
-            console.log(error)
+        const idmapel = path.split('/')[2]
+        const stasiun = path.split('/')[3]
+        const payload = {
+            idmapel,
+            stasiun
+        }
+        const response = await addAbsen(payload)
+        if (response) {
+            setHasAbsen(true)
         }
     }
     if (!dataMateri) {
@@ -99,7 +97,7 @@ const Stasiun = () => {
                         absen={dataAbsensi}
                     />
                 </aside>
-                <div className="lg:w-[85%] w-full border-l-2 border-gray-200">
+                <div className="lg:w-[85%] w-full lg:border-l-2 lg:border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
@@ -121,7 +119,9 @@ const Stasiun = () => {
                                     {dataMateri &&
                                         <h1 className="font-bold text-xl lg:text-3xl">{dataMateri.topic}</h1>
                                     }
-                                    <h3 className="font-normal text-xs lg:text-lg">Materi Minggu 1</h3>
+                                    {dataMateri &&
+                                        <h3 className="font-normal text-xs lg:text-lg">{`Materi ${dataMateri.stasiun}`}</h3>
+                                    }
                                 </div>
                                 <Image
                                     alt="icon-card"
@@ -138,19 +138,18 @@ const Stasiun = () => {
                         <div className="relative top-0 w-[90%] flex flex-col gap-5 mx-auto py-10 z-10">
                             <h3 className="font-semibold text-xl">Simak materi berikut ini!</h3>
                             <div className="flex flex-col gap-5">
-                                {/* <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas saepe facilis ea ipsam quae unde, magni similique quaerat non. Fugiat distinctio obcaecati minima aliquam eius suscipit pariatur, neque fugit error!
-                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio cumque molestias eos ut, commodi officia veritatis et maxime repellat similique, aliquid laborum a officiis culpa quos dolorem voluptate natus nihil?
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates hic aliquam, in sit omnis obcaecati expedita veritatis ipsam laboriosam aut recusandae iure rem delectus mollitia nostrum quos, ratione quam reiciendis.
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, architecto. Aut illo tempora labore obcaecati dolores consectetur, blanditiis iusto odit qui quam quas! Laudantium impedit magni rerum id atque! Necessitatibus?
-                                </div> */}
                                 {dataMateri &&
                                     <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg">
                                         {dataMateri.detailmateri}
+                                        <div className="flex flex-col justify-center items-center">
+                                            {dataMateri.urlaudio && <AudioPlayer url={`${dataMateri.urlaudio}`} />}
+                                            {dataMateri.urlimage && <DisplayImageComponent url={`${dataMateri.urlimage}`} />}
+                                            {dataMateri.urlvideo && <YoutubeVideo idvideo={dataMateri.urlvideo} />}
+                                        </div>
                                     </div>
                                 }
                                 <div className="flex flex-col gap-5 items-end">
-                                    <h5 className="font-semibold">Unduh Materi</h5>
+                                    {/* <h5 className="font-semibold">Unduh Materi</h5> */}
                                     <Button
                                         onPress={() => {
                                             if (hasAbsen) {

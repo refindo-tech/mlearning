@@ -27,8 +27,7 @@ const Footer = () => {
                     className="block h-[24px] w-[58px] lg:h-[60px] lg:w-[233px]"
                 />
                 <p className="text-black/50 text-center">
-                    @2024 M Learning Website M Versi 1.0 <br />
-                    Designed by team. Icons by Icons8
+                    @2024 M-Learning v.1.0
                 </p>
             </div>
         </footer>

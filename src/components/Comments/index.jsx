@@ -7,11 +7,11 @@ const Comments = () => {
                 {`
                     var disqus_config = function () {
                     this.page.url = document.location.href;  // Replace PAGE_URL with your page's canonical URL variable
-                this.page.identifier = adsfadsfasdfcvgehfbastgw; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                this.page.identifier = document.location.href.split('course/')[1]; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
                     };
                 (function() { // DON'T EDIT BELOW THIS LINE
                         var d = document, s = d.createElement('script');
-                s.src = 'https://m-learning-1.disqus.com/embed.js';
+                s.src = 'https://mlearning-1.disqus.com/embed.js';
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
                 })();`

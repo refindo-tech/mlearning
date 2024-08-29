@@ -25,11 +25,6 @@ const Dashboard = () => {
             "kelas 12": kelas === "kelas 12",
         });
     }
-    const subjects = [
-        "Bahasa Indonesia", "Bahasa Inggris", "Matematika", "Biologi",
-        "Fisika", "Kimia", "Sejarah", "Seni & Prakarya",
-        "Kewarganegaraan", "Pendidikan Jasmani", "Agama & Budi Pekerti", "Pendidikan Kewirausahaan "
-    ];
     useEffect(()=>{
         const validateAccess = ()=>{
             const getToken=sessionStorage.getItem('tokensiswa')
@@ -46,7 +41,6 @@ const Dashboard = () => {
             const fetchData = async()=>{
                 const response = await listClass(payload)
                 if(response){
-                    console.log(response)
                     setDataListClass(response.data)
                     setAccess(true)
                 }

@@ -60,34 +60,34 @@ const Navbar = () => {
                             </ul>
                         </div>
                         {token ? (
-                            <div className="flex flex-col justify-center mx-auto pb-4 gap-2">
+                            <div className="w-full flex flex-col p-4 gap-2">
                                 <Button
                                     as={Link}
                                     href="/login"
-                                    className="bg-white rounded w-32 border-2 border-gray-200 font-semibold text-sm"
+                                    className="bg-white rounded border-2 border-gray-200 font-semibold text-sm"
                                 >
                                     Tentang Akun
                                 </Button>
                                 <Button
                                     onPress={handleLogout}
-                                    className="bg-white rounded w-32 text-accent-orange border-2 border-gray-200 font-semibold text-sm"
+                                    className="bg-white rounded text-accent-orange border-2 border-gray-200 font-semibold text-sm"
                                 >
                                     Keluar
                                 </Button>
                             </div>
                         ) : (
-                            <div className="flex flex-col justify-center mx-auto pb-4 gap-2">
+                            <div className="w-full flex flex-col p-4 gap-2">
                                 <Button
                                     as={Link}
                                     href="/login"
-                                    className="bg-primer-500 rounded w-32 text-white font-semibold text-sm"
+                                    className="bg-primer-500 rounded text-white font-semibold text-sm"
                                 >
                                     Masuk
                                 </Button>
                                 <Button
                                     as={Link}
                                     href="/register"
-                                    className="bg-white rounded w-32 text-accent-orange border-2 border-gray-200 font-semibold text-sm"
+                                    className="bg-white rounded text-accent-orange border-2 border-gray-200 font-semibold text-sm"
                                 >
                                     Daftar
                                 </Button>

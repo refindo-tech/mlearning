@@ -14,17 +14,18 @@ datasource db {
 }
 
 model Siswa {
-  id            Int             @id @default(autoincrement())
-  email         String          @unique @db.VarChar(120)
-  password      String          @db.VarChar(120)
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @default(now())
-  resetToken    String?         @db.Text
-  expiredResetToken DateTime?   
-  ProfileSiswa  ProfileSiswa[]
-  ProfileWali   ProfileWali[]
-  Absensi       Absensi[]
-  AuthExamSiswa AuthExamSiswa[]
+  id                Int               @id @default(autoincrement())
+  email             String            @unique @db.VarChar(120)
+  password          String            @db.VarChar(120)
+  created_at        DateTime          @default(now())
+  updated_at        DateTime          @default(now())
+  resetToken        String?           @db.Text
+  expiredResetToken DateTime?
+  ProfileSiswa      ProfileSiswa[]
+  ProfileWali       ProfileWali[]
+  Absensi           Absensi[]
+  AuthExamSiswa     AuthExamSiswa[]
+  ResultExamSiswa   ResultExamSiswa[]
 }
 
 model Guru {
@@ -81,17 +82,18 @@ model ProfileGuru {
 }
 
 model MataPelajaran {
-  id            Int             @id @default(autoincrement())
-  name          String?         @db.VarChar(120)
-  kelas         String?         @db.VarChar(10)
-  description   String?         @db.Text
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @default(now())
-  Materi        Materi[]
-  Absensi       Absensi[]
-  Diskusi       Diskusi[]
-  Exam          Exam[]
-  AuthExamSiswa AuthExamSiswa[]
+  id              Int               @id @default(autoincrement())
+  name            String?           @db.VarChar(120)
+  kelas           String?           @db.VarChar(10)
+  description     String?           @db.Text
+  created_at      DateTime          @default(now())
+  updated_at      DateTime          @default(now())
+  Materi          Materi[]
+  Absensi         Absensi[]
+  Diskusi         Diskusi[]
+  Exam            Exam[]
+  AuthExamSiswa   AuthExamSiswa[]
+  ResultExamSiswa ResultExamSiswa[]
 }
 
 model Absensi {
@@ -130,6 +132,9 @@ model Diskusi {
   idmateri      Int
   idguru        Int
   question      String        @db.Text
+  urlvideo      String?       @db.Text
+  urlaudio      String?       @db.Text
+  urlimage      String?       @db.Text
   stasiun       String        @db.VarChar(10)
   created_at    DateTime      @default(now())
   updated_at    DateTime      @default(now())
@@ -176,6 +181,18 @@ model AuthExamSiswa {
   Siswa         Siswa         @relation(fields: [idsiswa], references: [id])
   MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id])
   Exam          Exam          @relation(fields: [idexam], references: [id])
+}
+
+model ResultExamSiswa {
+  id            Int           @id @default(autoincrement())
+  idmapel       Int
+  idsiswa       Int
+  stasiun       String        @db.VarChar(10)
+  nilai         Int
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @default(now())
+  MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id])
+  Siswa         Siswa         @relation(fields: [idsiswa], references: [id])
 }
 
 enum Gender {

@@ -80,7 +80,7 @@ export const loginGuru = async (req) => {
 }
 export const listClass = async (req) => {
     try {
-        const { kelas, name } = req
+        const { kelas, name, limit } = req
         const token = sessionStorage.getItem('tokensiswa')
         let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/listclass`
         const createUrl = () => {
@@ -89,6 +89,9 @@ export const listClass = async (req) => {
             }
             else if (name) {
                 return url + `?name=${encodeURIComponent(name)}`
+            }
+            else if(limit){
+                return url + `?limit=${limit}`
             }
             else if (name && kelas) {
                 return url + `?kelas=${encodeURIComponent(kelas)}&name=${encodeURIComponent(name)}`
@@ -384,6 +387,28 @@ export const resetPassword = async (req) => {
             body: JSON.stringify(req)
         })
         if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const getResultSiswa = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokensiswa')
+        const queryString = new URLSearchParams(req).toString();
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/result?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
             const data = await response.json()
             return data
         }
