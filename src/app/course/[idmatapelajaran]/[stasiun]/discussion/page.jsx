@@ -5,6 +5,9 @@ import Navbar from "@/components/Navbar"
 import AsideCourse from "@/components/AsideCourse"
 import Footer from "@/components/Footer"
 import Comments from '@/components/Comments'
+import AudioPlayer from "@/components/AudioPlayer"
+import YoutubeVideo from "@/components/YoutubeVideo"
+import DisplayImageComponent from '@/components/DisplayImageComponent'
 import { Button, Image } from "@nextui-org/react"
 import { detailDiskusi, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
@@ -30,17 +33,18 @@ const Discussion = () => {
             if (response) {
                 setDataListStasiun(response.data)
             }
-            const payload = {idmapel: idmapel}
+            const payload = { idmapel: idmapel }
             const responseAbsensi = await getAbsensiByIdSiswa(payload)
-            if (responseAbsensi) {
+            if (responseAbsensi.status) {
                 setDataAbsensi(responseAbsensi.data)
+            } else {
+                router.push('/onboarding')
             }
             const responseDetailDiskusi = await detailDiskusi(payloadDetailDiskusi)
             if (!responseDetailDiskusi.data) {
                 router.push('exam')
             }
             setDataDiskusi(responseDetailDiskusi.data)
-            console.log(responseDetailDiskusi)
         }
         fetchAPI()
     }, [path, router])
@@ -60,7 +64,7 @@ const Discussion = () => {
                 <Navbar />
                 <div className="w-full min-h-screen flex fllex-row">
                     <aside className="hidden lg:block w-full lg:w-[15%]">
-                        <AsideCourse 
+                        <AsideCourse
                             listStasiun={dataListStasiun}
                             absen={dataAbsensi}
                         />
@@ -104,6 +108,11 @@ const Discussion = () => {
                                     {dataDiskusi &&
                                         <div className="bg-sekunder-300 text-justify p-3 rounded-lg">
                                             {dataDiskusi.question}
+                                            <div className="flex flex-col justify-center items-center">
+                                                {dataDiskusi.urlaudio && <AudioPlayer url={`${dataDiskusi.urlaudio}`} />}
+                                                {dataDiskusi.urlimage && <DisplayImageComponent url={`${dataDiskusi.urlimage}`} />}
+                                                {dataDiskusi.urlvideo && <YoutubeVideo idvideo={dataDiskusi.urlvideo} />}
+                                            </div>
                                         </div>
                                     }
                                     <div className="flex justify-end">

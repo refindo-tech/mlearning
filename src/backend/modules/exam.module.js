@@ -98,7 +98,7 @@ class _exam{
             const verify = await db.authExamSiswa.findMany({
                 where:{idexam:parseInt(idexam),idmapel:parseInt(idmapel),idsiswa:parseInt(idsiswa),stasiun}
             })
-            if(verify.length !== 0){
+            if(verify){
                 return{
                     status:true,
                     message:'success',

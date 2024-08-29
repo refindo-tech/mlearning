@@ -3,15 +3,17 @@ import { Image } from '@nextui-org/react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Background from '@/components/Background'
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { getDetailProfile } from '@/backend/fetchAPI.js'
 const Profile = () => {
+    const router = useRouter()
     const [detailSiswa, setDetailSiswa] = useState(null)
     const [detailWali, setDetailWali] = useState(null)
     useEffect(() => {
         const fetchAPI = async () => {
             const response = await getDetailProfile()
-            if (response) {
+            if (response.status) {
                 console.log(response)
                 if (response.data.siswa) {
                     setDetailSiswa(response.data.siswa)
@@ -19,10 +21,12 @@ const Profile = () => {
                 if (response.data.wali) {
                     setDetailWali(response.data.wali)
                 }
+            }else{
+                router.push('/onboarding')
             }
         }
         fetchAPI()
-    }, [])
+    }, [router])
     return (
         <div className='flex flex-col min-h-screen'>
             <Navbar />
@@ -63,10 +67,6 @@ const Profile = () => {
                                         <p className='text-lg font-bold text-accent-orange'>-</p>
                                     )}
                                 </div>
-                                {/* <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                    <h3 className='text-lg font-bold'>Nama</h3>
-                                    <p className='text-lg font-bold text-accent-orange'>Zaky Maulana Al Bajili</p>
-                                </div> */}
                             </div>
                         </div>}
                 </div>

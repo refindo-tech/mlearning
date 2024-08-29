@@ -7,7 +7,7 @@ import { requestAsyncStorage } from 'next/dist/client/components/request-async-s
 class _fpassword {
     sendEmail = async (req) => {
         try {
-            const { email } = requestAsyncStorage
+            const { email } = req
             const resetToken = crypto.randomBytes(32).toString('hex');
             const hashedToken = await bcrypt.hash(resetToken, 10);
             const findSiswa = await db.siswa.findUnique({

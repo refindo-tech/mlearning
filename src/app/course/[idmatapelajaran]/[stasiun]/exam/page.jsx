@@ -10,6 +10,7 @@ import YoutubeVideo from '@/components/YoutubeVideo'
 import AudioPlayer from '@/components/AudioPlayer'
 import PGAnswer from '@/components/PGAnswer'
 import EssayAnswer from '@/components/EssayAnswer'
+import DisplayImageComponent from "@/components/DisplayImageComponent"
 import { Button, Image, Checkbox } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { listQuestion, listExamAnswer, listStasiun, getAbsensiByIdSiswa, postAnswerQuestion } from "@/backend/fetchAPI.js"
@@ -39,12 +40,13 @@ const Exam = () => {
             }
             const payload = {idmapel: idmapel}
             const responseAbsensi = await getAbsensiByIdSiswa(payload)
-            if (responseAbsensi) {
+            if (responseAbsensi.status) {
                 setDataAbsensi(responseAbsensi.data)
+            }else{
+                router.push('/onboarding')
             }
             const responseListQuestion = await listQuestion(payloadListQuestion)
             if (responseListQuestion) {
-                console.log(responseListQuestion)
                 if (responseListQuestion.message === 'Not Any Exam Relevant') {
                     const newPath = path.replace('/exam', '')
                     router.push(newPath)
@@ -63,11 +65,6 @@ const Exam = () => {
         }
         fetchAPI()
     }, [path, router])
-    // useEffect(()=>{
-    //     if(otherData){
-    //         const fetchData()
-    //     }
-    // })
     const nextStep = ()=>{
         const newPath = path.replace('/exam', '')
         router.push(newPath)
@@ -84,9 +81,10 @@ const Exam = () => {
                 stasiun: otherData.stasiun
             }
             const response = await listExamAnswer(payload)
-            if (response.status) {
-                console.log(response)
-                setIsHasAnswer(true)
+            if (response) {
+                if(response.data.length !== 0){
+                    setIsHasAnswer(true)
+                }
             }
         }
         if (otherData) {
@@ -109,7 +107,6 @@ const Exam = () => {
         }
         const postData = await postAnswerQuestion(payload)
         if (postData) {
-            console.log(postData)
             const newPath = path.replace('/exam', '')
             router.push(newPath)
         }
@@ -127,7 +124,7 @@ const Exam = () => {
                         absen={dataAbsensi}
                     />
                 </aside>
-                <div className="lg:w-[85%] w-full border-l-2 border-gray-200">
+                <div className="lg:w-[85%] w-full lg:border-l-2 lg:border-gray-200">
                     <div className="h-fit static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
@@ -170,8 +167,11 @@ const Exam = () => {
                                     <div className="flex flex-col gap-5">
                                         <div className="bg-sekunder-300 text-justify p-3 rounded-lg">
                                             {item.text}
-                                            {item.urlaudio && <AudioPlayer url={`${item.urlaudio}`} />}
-                                            {item.urlvideo && <YoutubeVideo idvideo={'tgbNymZ7vqY'} />}
+                                            <div className="flex flex-col justify-center items-center">
+                                                {item.urlaudio && <AudioPlayer url={`${item.urlaudio}`} />}
+                                                {item.urlimage && <DisplayImageComponent url={`${item.urlimage}`} />}
+                                                {item.urlvideo && <YoutubeVideo idvideo={item.urlvideo} />}
+                                            </div>
                                         </div>
                                     </div>
                                     {item.optionanswer ?

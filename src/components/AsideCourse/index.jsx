@@ -12,10 +12,6 @@ const AsideCourse = ({listStasiun, absen}) => {
     const [isLoaded, setIsLoaded] = useState(false)
     const path = usePathname()
     const idmapel = path.split('/')[2]
-    // setIdMapel(path.split('/')[2])
-    // useEffect(()=>{
-    //     setIsLoaded(true)
-    // },[])
     const handleUrl = (stasiun)=>{
         const url = `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}`
         return url+`/${stasiun}`
@@ -37,7 +33,7 @@ const AsideCourse = ({listStasiun, absen}) => {
     return (
         <aside className="w-full py-10 flex flex-col items-center gap-7">
             <h3 className="font-semibold text-xl text-center">Materi Belajar</h3>
-            <div className="w-[90%] flex flex-col gap-3">
+            <div className="w-[90%] flex flex-col gap-4">
                 {dataListStasiun && dataListStasiun.map((item, index) => (
                     <Button
                         as={Link}
@@ -49,18 +45,6 @@ const AsideCourse = ({listStasiun, absen}) => {
                         {item.stasiun.toUpperCase()}
                     </Button>
                 ))}
-                {/* <Button
-                    variant="bordered"
-                    className="rounded-lg h-12"
-                >
-                    Stasiun 1
-                </Button>
-                <Button
-                    variant="bordered"
-                    className="rounded-lg h-12"
-                >
-                    Stasiun 1
-                </Button> */}
                 <Button
                     onPress={handleResult}
                     variant="bordered"

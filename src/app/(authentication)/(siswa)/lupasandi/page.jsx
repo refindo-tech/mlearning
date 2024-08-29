@@ -4,7 +4,10 @@ import { Input, Image, Button, Link } from "@nextui-org/react"
 import { forgotPassword } from '@/backend/fetchAPI.js'
 const ForgotPasswordPage = () => {
     const [isLoad, setIsLoad] = useState(false)
-    const [email, setEmail] = useState(null)
+    const [email, setEmail] = useState('')
+    const handleEmailValue=(value)=>{
+        setEmail(value)
+    }
     const handleForgotPassword = async () => {
         setIsLoad(true)
         const payload = { email }
@@ -30,8 +33,9 @@ const ForgotPasswordPage = () => {
                         color="default"
                         variant="light"
                         label="Email"
+                        value={email}
                         placeholder="Enter your email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => handleEmailValue(e.target.value)}
                     />
                     <Button
                         onPress={handleForgotPassword}

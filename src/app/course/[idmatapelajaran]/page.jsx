@@ -35,19 +35,18 @@ const CourseHomePage = () => {
             const response = await listStasiun(req)
             if (response) {
                 setDataListStasiun(response.data)
-                console.log(response)
             }
             const payload = {
                 idmapel: idmapel
             }
             const responseAbsensi = await getAbsensiByIdSiswa(payload)
-            if (responseAbsensi) {
+            if (responseAbsensi.status) {
                 setDataAbsensi(responseAbsensi.data)
-                console.log(responseAbsensi)
+            }else{
+                router.push('/onboarding')
             }
             const responseDetailMateri = await detailMateri(payload)
             if (responseDetailMateri) {
-                console.log(responseDetailMateri)
                 if (!responseDetailMateri.data) {
                     router.push('/dashboard')
                 }

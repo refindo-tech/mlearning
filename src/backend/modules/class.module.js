@@ -5,6 +5,7 @@ class _kelas {
             const queryParams = new URLSearchParams(req);
             const kelas = queryParams.get('kelas')
             const name = queryParams.get('name')
+            const limit = queryParams.get('limit')
             let getClass
             if(kelas){
                 getClass = await db.mataPelajaran.findMany({
@@ -20,6 +21,11 @@ class _kelas {
                             contains:name
                         }
                     }
+                })
+            }
+            if(limit){
+                getClass = await db.mataPelajaran.findMany({
+                    take:parseInt(limit)
                 })
             }
             return {

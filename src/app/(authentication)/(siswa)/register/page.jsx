@@ -10,9 +10,9 @@ const RegisterPage = () => {
     const [isVisible, setIsVisible] = useState(false);
     const { EyeFilledIcon, EyeSlashFilledIcon } = Icons
     const toggleVisibility = () => setIsVisible(!isVisible);
-    const [name,setName] = useState(null)
-    const [email,setEmail] = useState(null)
-    const [password,setPassword] = useState(null)
+    const [name,setName] = useState('')
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
     const [error, setError] = useState(null)
     const handleEmailValue = (value)=>{
         setEmail(value)
@@ -64,6 +64,7 @@ const RegisterPage = () => {
                         color="default"
                         variant="light"
                         label="Name"
+                        value={name}
                         onChange={(e)=>handleNameValue(e.target.value)}
                         placeholder="Masukkan nama anda"
                         />
@@ -72,12 +73,14 @@ const RegisterPage = () => {
                         color="default"
                         variant="light"
                         label="Email"
+                        value={email}
                         onChange={(e)=>handleEmailValue(e.target.value)}
                         placeholder="Enter your email" />
                     <Input
                         label="Password"
                         color="default"
                         variant="light"
+                        password={password}
                         onChange={(e)=>handlePasswordValue(e.target.value)}
                         placeholder="Enter your password"
                         endContent={

@@ -10,12 +10,15 @@ const LoginPage = () => {
     const [isVisible, setIsVisible] = useState(false);
     const { EyeFilledIcon, EyeSlashFilledIcon } = Icons
     const toggleVisibility = () => setIsVisible(!isVisible);
+    const [error, setError] = useState(null)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const handleEmailValue = (value) => {
+        setError(null)
         setEmail(value)
     }
     const handlePasswordValue = (value) => {
+        setError(null)
         setPassword(value)
     }
     const handleLogin = () => {
@@ -29,6 +32,9 @@ const LoginPage = () => {
             if (response) {
                 sessionStorage.setItem('tokensiswa', response.token)
                 router.push('dashboard/')
+            }else{
+                setIsLoad(false)
+                setError('Not any data that match')
             }
         }
         fetchAPI()
@@ -42,6 +48,9 @@ const LoginPage = () => {
                     className="block h-[70] w-[100]  lg:h-[80] lg:w-[198]"
                 />
                 <h3 className="my-5 font-bold text-xl text-center">Masuk</h3>
+                {error&&
+                    <p className="text-xs text-danger-500 font-semibold text-center mb-2">{error}</p>
+                }
                 <div className="w-[90%] flex flex-col gap-5">
                     <Input
                         type="email"

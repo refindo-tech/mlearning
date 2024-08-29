@@ -10,6 +10,9 @@ class _discussion{
                 },
                 select:{
                     question:true,
+                    urlaudio:true,
+                    urlimage:true,
+                    urlvideo:true,
                     Materi:true
                 }
             })
