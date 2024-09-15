@@ -3,31 +3,34 @@ import { useRouter } from "next/navigation"
 import { Input, Image, Button, Link } from "@nextui-org/react"
 import { useState } from "react"
 import Icons from "@/components/Icons"
-import {loginGuru} from '@/backend/fetchAPI.js'
+import { loginGuru } from '@/backend/fetchAPI.js'
 const LoginPage = () => {
     const router = useRouter()
     const [isVisible, setIsVisible] = useState(false);
+    const [isLoad, setIsLoad] = useState(false);
     const { EyeFilledIcon, EyeSlashFilledIcon } = Icons
     const toggleVisibility = () => setIsVisible(!isVisible);
-    const [email,setEmail] = useState('')
-    const [password,setPassword] = useState('')
-    const handleEmailValue = (value)=>{
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const handleEmailValue = (value) => {
         setEmail(value)
     }
-    const handlePasswordValue = (value)=>{
+    const handlePasswordValue = (value) => {
         setPassword(value)
     }
-    const handleLogin = ()=>{
+    const handleLogin = () => {
+        setIsLoad(true)
         const payload = {
-            email:email,
-            password:password
+            email: email,
+            password: password
         }
-        const fetchAPI = async()=>{
+        const fetchAPI = async () => {
             const response = await loginGuru(payload)
-            if(response){
+            if (response) {
+                setIsLoad(false)
                 console.log(response)
-                sessionStorage.setItem('token',response.token)
-                router.push('dashboard/')
+                sessionStorage.setItem('tokenguru', response.token)
+                router.push('dashboardguru/')
             }
         }
         fetchAPI()
@@ -48,7 +51,7 @@ const LoginPage = () => {
                         size='sm'
                         variant="light"
                         label="Email"
-                        onChange={(e)=> handleEmailValue(e.target.value)}
+                        onChange={(e) => handleEmailValue(e.target.value)}
                         placeholder="Enter your email"
                     />
                     <Input
@@ -56,7 +59,7 @@ const LoginPage = () => {
                         color="default"
                         size='sm'
                         variant="light"
-                        onChange={(e)=> handlePasswordValue(e.target.value)}
+                        onChange={(e) => handlePasswordValue(e.target.value)}
                         placeholder="Enter your password"
                         endContent={
                             <button className="focus:outline-none" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
@@ -73,7 +76,11 @@ const LoginPage = () => {
                         onPress={handleLogin}
                         className="h-[60px] bg-primer-500 text-white text-xl font-semibold"
                     >
-                        Masuk
+                        {isLoad ? (
+                            <div className="loader"></div>
+                        ) : (
+                            <p>Masuk</p>
+                        )}
                     </Button>
                     <a href="/lupasandi" className="text-center">Lupa kata sandi?</a>
                     <Button
@@ -83,7 +90,7 @@ const LoginPage = () => {
                     >
                         Daftar
                     </Button>
-                    <a href="/" className="text-center text-accent-orange underline">Masuk untuk guru</a>
+                    <a href="/login" className="text-center text-accent-orange underline">Masuk untuk guru</a>
                 </div>
             </div>
             <div className="absolute top-0 right-0">

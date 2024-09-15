@@ -95,8 +95,8 @@ const RegisterPage = () => {
                     >
                         Daftar
                     </Button>
-                    <p href="/" className="text-center">Sudah punya akun? <a href="/login">masuk</a></p>
-                    <a href="/" className="text-center text-accent-orange underline">Masuk untuk guru</a>
+                    <p className="text-center">Sudah punya akun? <a href="/loginguru">masuk</a></p>
+                    <a href="/login" className="text-center text-accent-orange underline">Masuk untuk guru</a>
                 </div>
             </div>
             <div className="absolute top-0 right-0">

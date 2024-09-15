@@ -1,9 +1,15 @@
 import { EyeFilledIcon } from "./EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./EyeSlashFilledIcon";
 import CircleElipsis from "./CircleElipsis";
+import EditIcon from './EditIcon'
+import AddIcon from './AddIcon'
+import TrashIcon from './TrashIcon'
 const Icons ={
     "EyeFilledIcon":EyeFilledIcon,
     "EyeSlashFilledIcon":EyeSlashFilledIcon,
-    "CircleElipsis":CircleElipsis
+    "CircleElipsis":CircleElipsis,
+    "EditIcon":EditIcon,
+    "AddIcon":AddIcon,
+    "TrashIcon":TrashIcon
 }
 export default Icons

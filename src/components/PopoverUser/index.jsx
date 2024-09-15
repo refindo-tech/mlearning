@@ -2,12 +2,7 @@
 import { Popover, PopoverTrigger, PopoverContent, Button, Link, User, Card, CardBody, CardHeader, CardFooter } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 // import { UserTwitterCard } from "./UserTwitterCard";
-const PopoverUser = () => {
-    const router = useRouter()
-    const handleLogout = () =>{
-        sessionStorage.removeItem('tokensiswa')
-        router.push('/onboarding')
-    }
+const PopoverUser = ({handleLogout}) => {
     return (
         <Popover showArrow placement="bottom">
             <PopoverTrigger>

@@ -10,7 +10,7 @@ export async function GET(req){
         const idMataPelajaran = params.get('idmapel');
         const idexam = params.get('idexam');
         const stasiun = params.get('stasiun');
-        const verify = await middleware(authorization) 
+        const verify = await middleware.authUser(authorization)
         let response
         if(!verify.access){
             response = verify

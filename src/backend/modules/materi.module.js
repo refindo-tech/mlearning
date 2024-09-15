@@ -32,11 +32,19 @@ class _materi {
             let detail
             if(idmapel){
                 if(stasiun){
-                    console.log(stasiun)
                     detail = await db.materi.findFirst({
                         where:{
                             idmatapelajaran: parseInt(idmapel),
                             stasiun:stasiun
+                        },
+                        include:{
+                            MataPelajaran:{
+                                select:{
+                                    name:true,
+                                    kelas:true,
+                                    description:true
+                                }
+                            }
                         }
                     })
                 }else{
@@ -48,7 +56,8 @@ class _materi {
                             MataPelajaran:{
                                 select:{
                                     name:true,
-                                    kelas:true
+                                    kelas:true,
+                                    description:true
                                 }
                             }
                         }

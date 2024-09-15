@@ -13,6 +13,7 @@ const CourseHomePage = () => {
     const path = usePathname()
     const router = useRouter()
     const idmapel = path.split('/')[2]
+    const [isLoad, setIsLoad] = useState(true)
     const [dataListStasiun, setDataListStasiun] = useState([])
     const [dataAbsensi, setDataAbsensi] = useState([])
     // const [selectedStasiun, setSelectedStasiun] = useState(null)
@@ -26,8 +27,12 @@ const CourseHomePage = () => {
         )
     }
     const selectedStasiun = findFirstIncompleteStasiun()
-    const handleUrl = (stasiun) => {
-        return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${stasiun}`
+    const handleUrl = (value) => {
+        if (value) {
+            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${value.stasiun}`
+        } else {
+            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/result`
+        }
     }
     useEffect(() => {
         const fetchAPI = async () => {
@@ -42,7 +47,7 @@ const CourseHomePage = () => {
             const responseAbsensi = await getAbsensiByIdSiswa(payload)
             if (responseAbsensi.status) {
                 setDataAbsensi(responseAbsensi.data)
-            }else{
+            } else {
                 router.push('/onboarding')
             }
             const responseDetailMateri = await detailMateri(payload)
@@ -50,12 +55,14 @@ const CourseHomePage = () => {
                 if (!responseDetailMateri.data) {
                     router.push('/dashboard')
                 }
+                console.log(responseDetailMateri.data)
+                setIsLoad(false)
                 setDetailMapel(responseDetailMateri.data)
             }
         }
         fetchAPI()
     }, [idmapel, router])
-    if (!detailMapel) {
+    if (isLoad) {
         return (<Loading />)
     }
     return (
@@ -78,7 +85,7 @@ const CourseHomePage = () => {
                                     <ChevronLeft size={32} />
                                 </button>
                                 <Link
-                                    href={handleUrl(selectedStasiun.stasiun)}
+                                    href={handleUrl(selectedStasiun)}
                                     className="h-10 w-10 flex  items-center justify-center rounded-full bg-white text-black"
                                 >
                                     <ChevronRight size={32} />
@@ -102,16 +109,13 @@ const CourseHomePage = () => {
                     <div className="relative w-full hidden lg:block min-h-screen">
                         <Background />
                         <div className="relative top-0 w-[90%] hidden lg:flex flex-col gap-5 mx-auto py-10 z-10">
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas saepe facilis ea ipsam quae unde, magni similique quaerat non. Fugiat distinctio obcaecati minima aliquam eius suscipit pariatur, neque fugit error!
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio cumque molestias eos ut, commodi officia veritatis et maxime repellat similique, aliquid laborum a officiis culpa quos dolorem voluptate natus nihil?
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates hic aliquam, in sit omnis obcaecati expedita veritatis ipsam laboriosam aut recusandae iure rem delectus mollitia nostrum quos, ratione quam reiciendis.
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, architecto. Aut illo tempora labore obcaecati dolores consectetur, blanditiis iusto odit qui quam quas! Laudantium impedit magni rerum id atque! Necessitatibus?
-                            </p>
+                            {detailMapel && detailMapel.MataPelajaran.description &&
+                                (<div className="indent-8 text-justify" dangerouslySetInnerHTML={{__html:detailMapel.MataPelajaran.description}}/>)}
                             <div className="flex justify-end">
                                 <Button
                                     as={Link}
-                                    href={handleUrl(selectedStasiun.stasiun)}
+                                    href={handleUrl(selectedStasiun)}
+                                    // onPress={handleUrl(selectedStasiun)}
                                     size="sm"
                                     className="bg-primer-500 text-white h-10 w-[200px] text-center rounded"
                                 >

@@ -6,7 +6,7 @@ export async function POST(req){
         const authorization = req.headers.get('authorization');
         const data = await req.json()
         const {idmapel, stasiun} = data
-        const verify = await middleware(authorization) 
+        const verify = await middleware.authUser(authorization) 
         let response
         if(!verify.access){
             response = verify

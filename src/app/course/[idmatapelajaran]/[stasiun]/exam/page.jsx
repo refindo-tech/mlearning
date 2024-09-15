@@ -23,6 +23,7 @@ const Exam = () => {
     const [listQuestionExam, setListQuestionExam] = useState(null)
     const [isHasAnswer, setIsHasAnswer] = useState(null)
     const [answerQuestion, setAnswerQuestion] = useState([])
+    const [answeredQuestion, setAnsweredQuestion] = useState([])
     const [dataAbsensi, setDataAbsensi] = useState(null)
     const [dataListStasiun, setDataListStasiun] = useState([])
     useEffect(() => {
@@ -38,11 +39,11 @@ const Exam = () => {
             if (response) {
                 setDataListStasiun(response.data)
             }
-            const payload = {idmapel: idmapel}
+            const payload = { idmapel: idmapel }
             const responseAbsensi = await getAbsensiByIdSiswa(payload)
             if (responseAbsensi.status) {
                 setDataAbsensi(responseAbsensi.data)
-            }else{
+            } else {
                 router.push('/onboarding')
             }
             const responseListQuestion = await listQuestion(payloadListQuestion)
@@ -65,11 +66,11 @@ const Exam = () => {
         }
         fetchAPI()
     }, [path, router])
-    const nextStep = ()=>{
+    const nextStep = () => {
         const newPath = path.replace('/exam', '')
         router.push(newPath)
     }
-    const backStep = ()=>{
+    const backStep = () => {
         const newPath = path.replace('/exam', '/discussion')
         router.push(newPath)
     }
@@ -82,7 +83,9 @@ const Exam = () => {
             }
             const response = await listExamAnswer(payload)
             if (response) {
-                if(response.data.length !== 0){
+                if (response.data.length !== 0) {
+                    console.log(response)
+                    setAnsweredQuestion(response.data)
                     setIsHasAnswer(true)
                 }
             }
@@ -119,7 +122,7 @@ const Exam = () => {
             <Navbar />
             <div className="w-full min-h-screen flex fllex-row">
                 <aside className="hidden lg:block w-full lg:w-[15%]">
-                    <AsideCourse 
+                    <AsideCourse
                         listStasiun={dataListStasiun}
                         absen={dataAbsensi}
                     />
@@ -166,20 +169,42 @@ const Exam = () => {
                                     </div>
                                     <div className="flex flex-col gap-5">
                                         <div className="bg-sekunder-300 text-justify p-3 rounded-lg">
-                                            {item.text}
+                                            {/* {item.text} */}
+                                            <div className="indent-8" dangerouslySetInnerHTML={{ __html: item.text }} />
                                             <div className="flex flex-col justify-center items-center">
                                                 {item.urlaudio && <AudioPlayer url={`${item.urlaudio}`} />}
                                                 {item.urlimage && <DisplayImageComponent url={`${item.urlimage}`} />}
-                                                {item.urlvideo && <YoutubeVideo idvideo={item.urlvideo} />}
+                                                {item.urlvideo && <YoutubeVideo urlvideo={item.urlvideo} />}
                                             </div>
                                         </div>
                                     </div>
                                     {item.optionanswer ?
-                                        (<PGAnswer
-                                            optionanswer={item.optionanswer}
-                                            handleAnswerQuestion={(value) => handleSetAnswerQuestion(index, value)} />) :
-                                        (<EssayAnswer
-                                            handleAnswerQuestion={(value) => handleSetAnswerQuestion(index, value)} />)
+                                        (
+                                            <>{answeredQuestion.length !== 0 ? (
+                                                <PGAnswer
+                                                    answeredQuestion={answeredQuestion[index]}
+                                                    optionanswer={item.optionanswer}
+                                                    handleAnswerQuestion={(value) => handleSetAnswerQuestion(index, value)}
+                                                />
+                                            ) : (
+                                                <PGAnswer
+                                                    optionanswer={item.optionanswer}
+                                                    handleAnswerQuestion={(value) => handleSetAnswerQuestion(index, value)}
+                                                />
+                                            )}
+                                            </>
+                                        ) : (
+                                            <>{answeredQuestion.length !== 0 ? (
+                                                <EssayAnswer
+                                                    answeredQuestion={answeredQuestion[index]}
+                                                    handleAnswerQuestion={(value) => handleSetAnswerQuestion(index, value)}
+                                                />
+                                            ) : (
+                                                <EssayAnswer
+                                                    handleAnswerQuestion={(value) => handleSetAnswerQuestion(index, value)} />
+                                            )}
+                                            </>
+                                        )
                                     }
                                 </div>
                             ))}

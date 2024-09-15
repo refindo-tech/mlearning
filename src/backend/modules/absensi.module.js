@@ -68,6 +68,34 @@ class _absensi {
             }
         }
     }
+    getAbsensiForTeacher = async(req)=>{
+        try {
+            const {idmapel, stasiun} = req
+            const list = await db.absensi.findMany({
+                where:{
+                    idmatapelajaran:parseInt(idmapel),
+                    stasiun
+                }
+            })
+            return{
+                status:true,
+                message:'success',
+                data:list,
+                code:200
+            }
+        } catch (error) {
+            console.log({
+                status:false,
+                message:'Absensi Modul Get Absensi By Stasiun Error',
+                error:error
+            })
+            return{
+                status:false,
+                message:'Internal Server Error',
+                code:500
+            }
+        }
+    }
 }
 const m$absensi = new _absensi()
 export default m$absensi

@@ -2,7 +2,7 @@
 import { usePathname, useRouter } from "next/navigation"
 import Loading from '@/app/loading.jsx'
 import { useState, useEffect } from "react"
-import { listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
+// import { listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
 import { Button, Link } from "@nextui-org/react"
 const AsideCourse = ({listStasiun, absen}) => {
     const router = useRouter()
