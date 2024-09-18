@@ -46,8 +46,7 @@ model ProfileSiswa {
   name         String    @db.VarChar(120)
   sekolah      String?   @db.VarChar(120)
   kelas        String?   @db.VarChar(10)
-  tempatlahir  String?   @db.VarChar(120)
-  tanggallahir DateTime?
+  ttl          String?   @db.VarChar(200)
   gender       Gender?
   agama        String?   @db.VarChar(20)
   phone        String?
@@ -55,7 +54,7 @@ model ProfileSiswa {
   alamat       String?   @db.Text
   created_at   DateTime  @default(now())
   updated_at   DateTime  @default(now())
-  Siswa        Siswa     @relation(fields: [idsiswa], references: [id])
+  Siswa        Siswa     @relation(fields: [idsiswa], references: [id],onDelete: Cascade)
 }
 
 model ProfileWali {
@@ -67,7 +66,7 @@ model ProfileWali {
   alamat     String?  @db.Text
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  Siswa      Siswa    @relation(fields: [idsiswa], references: [id])
+  Siswa      Siswa    @relation(fields: [idsiswa], references: [id],onDelete: Cascade)
 }
 
 model ProfileGuru {
@@ -108,7 +107,7 @@ model Absensi {
   status          StatusAbsen   @default(BELUM)
   date            DateTime?
   MataPelajaran   MataPelajaran @relation(fields: [idmatapelajaran], references: [id])
-  Siswa           Siswa         @relation(fields: [idsiswa], references: [id])
+  Siswa           Siswa         @relation(fields: [idsiswa], references: [id],onDelete: Cascade)
 }
 
 model Materi {
@@ -178,7 +177,7 @@ model AuthExamSiswa {
   answer        String        @db.Text
   created_at    DateTime      @default(now())
   updated_at    DateTime      @default(now())
-  Siswa         Siswa         @relation(fields: [idsiswa], references: [id])
+  Siswa         Siswa         @relation(fields: [idsiswa], references: [id], onDelete: Cascade)
   MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id])
   Exam          Exam          @relation(fields: [idexam], references: [id])
 }
@@ -192,7 +191,7 @@ model ResultExamSiswa {
   created_at    DateTime      @default(now())
   updated_at    DateTime      @default(now())
   MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id])
-  Siswa         Siswa         @relation(fields: [idsiswa], references: [id])
+  Siswa         Siswa         @relation(fields: [idsiswa], references: [id],onDelete: Cascade)
 }
 
 enum Gender {

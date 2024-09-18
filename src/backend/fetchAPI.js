@@ -533,3 +533,110 @@ export const getAbsensiForTeacher = async (req) => {
         return error
     }
 }
+export const listExam = async (req) => {
+    try {
+        // const {idmapel, stasiun } = req
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString();
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/exam/teacher/list?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const listProfile = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/profile/siswa/authTeacher/list?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const editProfile = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/profile/siswa/update`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(req)
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const editProfileWali = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/profile/wali/update`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(req)
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const deleteProfileSiswa = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/profile/siswa/delete/?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}

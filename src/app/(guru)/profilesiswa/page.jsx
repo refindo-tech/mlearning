@@ -1,23 +1,41 @@
 'use client'
 import Background from "@/components/Background"
 import Loading from "@/app/loading.jsx"
-import AsideCourse from '@/components/AsideCourse'
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import Icons from "@/components/Icons"
-import { Button, Image, Link } from "@nextui-org/react"
-import { ChevronRight, ChevronLeft } from 'lucide-react'
+import { Button } from "@nextui-org/react"
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { detailMateri, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
+import { listProfile, deleteProfileSiswa } from "@/backend/fetchAPI.js"
 import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
 const ProfilSiswa = () => {
-    const path = usePathname()
-    const router = useRouter()
-    const idmapel = path.split('/')[2]
     const [isLoad, setIsLoad] = useState(true)
-    const { EditIcon, AddIcon, TrashIcon } = Icons
+    const [limitData, setLimitData] = useState(5)
+    const [dataListProfile, setDataListProfile] = useState(null)
+    const { AddIcon } = Icons
+    useEffect(() => {
+        const fetchAPI = async () => {
+            const payload={
+                limit:limitData
+            }
+            const response = await listProfile(payload)
+            if (response) {
+                setIsLoad(false)
+                setDataListProfile(response.data)
+            }
+        }
+        fetchAPI()
+    }, [limitData])
+    const handleLimit = (value)=>{
+        setLimitData(value)
+    }
+    if(isLoad){
+        return(
+            <Loading/>
+        )
+    }
     return (
         <>
             <Navbar />
@@ -36,7 +54,8 @@ const ProfilSiswa = () => {
                                                 variant="faded"
                                                 type="number"
                                                 min={1}
-                                                defaultValue={10}
+                                                onValueChange={(value)=>handleLimit(parseInt(value))}
+                                                defaultValue={limitData}
                                                 className="w-[60px] h-10 rounded"
                                             />
                                             <p>baris</p>
@@ -66,33 +85,23 @@ const ProfilSiswa = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="text-base">
-                                        <tr className="h-[60px] align-center">
-                                            <td className="text-center w-[50px]">1</td>
-                                            <td>Zaky Maulana</td>
-                                            <td>000000</td>
-                                            <td>10</td>
-                                            <td className="text-center">
-                                                <ActionGroup/>
-                                            </td>
-                                        </tr>
-                                        <tr className="h-[60px] align-center">
-                                            <td className="text-center w-[50px]">1</td>
-                                            <td>Zaky Maulana</td>
-                                            <td>000000</td>
-                                            <td>10</td>
-                                            <td className="text-center">
-                                                <ActionGroup/>
-                                            </td>
-                                        </tr>
-                                        <tr className="h-[60px] align-center">
-                                            <td className="text-center w-[50px]">1</td>
-                                            <td>Zaky Maulana</td>
-                                            <td>000000</td>
-                                            <td>10</td>
-                                            <td className="text-center">
-                                                <ActionGroup/>
-                                            </td>
-                                        </tr>
+                                        {dataListProfile?.map((item, index) => (
+                                            <tr className="h-[60px] align-center" key={index}>
+                                                <td className="text-center w-[50px]">{index + 1}</td>
+                                                <td>{item.name}</td>
+                                                {item.nisn ?
+                                                    (<td>{item.nisn}</td>) :
+                                                    (<td>-</td>)
+                                                }
+                                                {item.kelas ?
+                                                    (<td>{item.kelas}</td>) :
+                                                    (<td>-</td>)
+                                                }
+                                                <td className="text-center">
+                                                    <ActionGroup idsiswa={item.idsiswa}/>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -105,12 +114,26 @@ const ProfilSiswa = () => {
     )
 }
 export default ProfilSiswa
-const ActionGroup = () => {
-    const router =  useRouter()
+const ActionGroup = ({idsiswa}) => {
+    const router = useRouter()
     const url = usePathname()
-    const { EditIcon,TrashIcon } = Icons
-    const handleDetailProfile = ()=>{
-        router.push(`${url}/15`)
+    const { EditIcon, TrashIcon } = Icons
+    const [isLoad,setIsLoad] = useState(false)
+    const handleDetailProfile = () => {
+        router.push(`${url}/${parseInt(idsiswa)}`)
+    }
+    const handleDeleteProfile = ()=>{
+        const payload={
+            idsiswa:parseInt(idsiswa)
+        }
+        const fetchAPI = async()=>{
+            const response = await deleteProfileSiswa(payload)
+            if(response){
+                setIsLoad(false)
+                router.refresh()
+            }
+        }
+        fetchAPI()
     }
     return (
         <div className="flex gap-3">
@@ -125,13 +148,23 @@ const ActionGroup = () => {
                 </div>
             </Button>
             <Button
+                isDisabled={isLoad?true:false}
                 radius="sm"
                 className="bg-accent-red"
+                onPress={()=>{
+                    setIsLoad(true)
+                    handleDeleteProfile()
+                }}
             >
+                <>{isLoad?(
+                    <div className="loader"></div>
+                ):(
                 <div className="flex justify-center gap-3 text-white text-base">
                     <TrashIcon />
                     <p>Hapus</p>
                 </div>
+                )}
+                </>
             </Button>
         </div>
     )

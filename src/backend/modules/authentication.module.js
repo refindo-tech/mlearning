@@ -155,7 +155,7 @@ class _authentication {
                 id:guru.id,
                 email:guru.email,
                 nuptk:guru.ProfileGuru[0]?.nuptk,
-            },process.env.SECRET_KEY,{expiresIn:'1h'})
+            },process.env.SECRET_KEY,{expiresIn:'24h'})
             return {
                 message: 'login success',
                 token:token,

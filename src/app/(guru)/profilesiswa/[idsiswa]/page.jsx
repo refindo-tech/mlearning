@@ -1,5 +1,6 @@
 'use client'
 import { Button, Image } from '@nextui-org/react'
+import Loading from '@/app/loading'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Background from '@/components/Background'
@@ -7,17 +8,20 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { getDetailProfileByTeacher } from '@/backend/fetchAPI.js'
 const ProfileSiswa = () => {
+    const path = usePathname()
+    const idsiswa = path.split('/')[2]
     const router = useRouter()
+    const [isLoad, setIsLoad] = useState(true)
     const [detailSiswa, setDetailSiswa] = useState(null)
     const [detailWali, setDetailWali] = useState(null)
     useEffect(() => {
         const payload = {
-            idsiswa: 15
+            idsiswa: parseInt(idsiswa)
         }
         const fetchAPI = async () => {
             const response = await getDetailProfileByTeacher(payload)
             if (response.status) {
-                console.log(response)
+                setIsLoad(false)
                 if (response.data.siswa) {
                     setDetailSiswa(response.data.siswa)
                 }
@@ -29,7 +33,10 @@ const ProfileSiswa = () => {
             }
         }
         fetchAPI()
-    }, [router])
+    }, [router, idsiswa])
+    if(isLoad){
+        return(<Loading/>)
+    }
     return (
         <div className='flex flex-col min-h-screen'>
             <Navbar />
@@ -80,8 +87,8 @@ const ProfileSiswa = () => {
                             <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Tempat, Tanggal Lahir</h3>
-                                    {detailSiswa.tempatlahir && detailSiswa.tanggallahir ? (
-                                        <p className='text-lg font-bold text-accent-orange'>{`${detailSiswa.tempatlahir}, ${detailSiswa.tanggallahir}`}</p>
+                                    {detailSiswa.ttl ? (
+                                        <p className='text-lg font-bold text-accent-orange'>{detailSiswa.ttl}</p>
                                     ) : (
                                         <p className='text-lg font-bold text-accent-orange'>-</p>
                                     )}
@@ -207,8 +214,9 @@ export default ProfileSiswa
 const ActionGroup = () => {
     const router = useRouter()
     const url = usePathname()
+    const idsiswa = url.split('/')[2]
     const handleBack = () => {
-        const newUrl = url.replace('/15', '')
+        const newUrl = url.replace(`${idsiswa}`, '')
         router.push(newUrl)
     }
     const handleEdit = () => {

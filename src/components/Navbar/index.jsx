@@ -62,7 +62,7 @@ const Navbar = () => {
                                 {role === 'guru' ? (
                                     <>
                                         <li className="px-4 py-2">
-                                            <a href="/profilesiswa">Kelola Kelas</a>
+                                            <a href="/dashboardguru">Kelola Kelas</a>
                                         </li>
                                         <li className="px-4 py-2">
                                             <a href="/profilesiswa">Kelola Siswa</a>
@@ -160,7 +160,7 @@ const Navbar = () => {
                     {role === 'guru' ? (
                         <>
                             <li className="px-4 py-2">
-                                <a href="/profilesiswa">Kelola Kelas</a>
+                                <a href="/dashboardguru">Kelola Kelas</a>
                             </li>
                             <li className="px-4 py-2">
                                 <a href="/profilesiswa">Kelola Siswa</a>

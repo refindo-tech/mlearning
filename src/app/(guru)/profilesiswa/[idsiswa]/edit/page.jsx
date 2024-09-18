@@ -5,19 +5,26 @@ import Footer from '@/components/Footer'
 import Background from '@/components/Background'
 import { useRouter, usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { getDetailProfileByTeacher } from '@/backend/fetchAPI.js'
+import { getDetailProfileByTeacher, editProfile, editProfileWali } from '@/backend/fetchAPI.js'
+import Loading from '@/app/loading'
 const ProfileSiswaEdit = () => {
+    const path = usePathname()
     const router = useRouter()
+    const idsiswa = path.split('/')[2]
+    const [isLoad, setIsLoad] = useState(true)
+    const [submitLoad, setSubmitLoad] = useState(false)
+    const [dataEdit, setDataEdit] = useState(null)
+    const [dataEditWali, setDataEditWali] = useState(null)
     const [detailSiswa, setDetailSiswa] = useState(null)
     const [detailWali, setDetailWali] = useState(null)
     useEffect(() => {
         const payload = {
-            idsiswa: 15
+            idsiswa: parseInt(idsiswa)
         }
         const fetchAPI = async () => {
             const response = await getDetailProfileByTeacher(payload)
             if (response.status) {
-                console.log(response)
+                setIsLoad(false)
                 if (response.data.siswa) {
                     setDetailSiswa(response.data.siswa)
                 }
@@ -29,7 +36,60 @@ const ProfileSiswaEdit = () => {
             }
         }
         fetchAPI()
-    }, [router])
+    }, [router, idsiswa])
+    const handleEditData = (name, value) => {
+        setDataEdit((previousData) => ({
+            ...previousData,
+            [name]: value
+        }))
+    }
+    const handleEditDataWali = (name, value) => {
+        setDataEditWali((previousData) => ({
+            ...previousData,
+            [name]: value
+        }))
+    }
+    const handleSubmitEdit = () => {
+        const fetchAPI = async () => {
+            if(dataEdit && dataEditWali){
+                const payloadEditProfile = {
+                    idsiswa: parseInt(idsiswa),
+                    payload: dataEdit
+                }
+                const payloadEditProfileWali = {
+                    idsiswa: parseInt(idsiswa),
+                    payload: dataEditWali
+                }
+                const response = await editProfile(payloadEditProfile)
+                const responseWali = await editProfileWali(payloadEditProfileWali)
+                if (response && responseWali) {
+                    router.refresh()
+                }
+            }else if(dataEdit){
+                const payloadEditProfile = {
+                    idsiswa: parseInt(idsiswa),
+                    payload: dataEdit
+                }
+                const response = await editProfile(payloadEditProfile)
+                if (response) {
+                    router.refresh()
+                }
+            }else if (dataEditWali) {
+                const payloadEditProfile = {
+                    idsiswa: parseInt(idsiswa),
+                    payload: dataEditWali
+                }
+                const response = await editProfileWali(payloadEditProfile)
+                if (response) {
+                    router.refresh()
+                }
+            }
+        }
+        fetchAPI()
+    }
+    if (isLoad) {
+        return (<Loading />)
+    }
     return (
         <div className='flex flex-col min-h-screen'>
             <Navbar />
@@ -48,64 +108,44 @@ const ProfileSiswaEdit = () => {
                                             className="block h-[88px] w-[88px]"
                                         />
                                     </div>
-                                    {detailSiswa.name ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.name}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Ubah nama siswa'
-                                            className='max-w-xs'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Ubah nama siswa'
-                                            className='max-w-xs'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='name'
+                                        defaultValue={detailSiswa.name ? `${detailSiswa.name}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Ubah nama siswa'
+                                        className='max-w-xs'
+                                        type='text'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                             </div>
                             <div className='h-[300px] flex flex-col justify-center gap-4 rounded-lg border-2 border-gray-200'>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>NISN</h3>
-                                    {detailSiswa.nisn ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.nisn}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan NISN siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan NISN siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='nisn'
+                                        defaultValue={detailSiswa.nisn ? `${detailSiswa.nisn}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan NISN siswa'
+                                        className=''
+                                        type='number'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Kelas</h3>
-                                    {detailSiswa.kelas ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.kelas}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan kelas siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan kelas siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='kelas'
+                                        defaultValue={detailSiswa.kelas ? `${detailSiswa.kelas}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan kelas siswa'
+                                        className=''
+                                        type='text'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                             </div>
                         </div>}
@@ -117,230 +157,210 @@ const ProfileSiswaEdit = () => {
                             <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Tempat, Tanggal Lahir</h3>
-                                    {/* {detailSiswa.tempatlahir && detailSiswa.tanggallahir ? (
-                                        <p className='text-lg font-bold text-accent-orange'>{`${detailSiswa.tempatlahir}, ${detailSiswa.tanggallahir}`}</p>
-                                    ) : (
-                                        <p className='text-lg font-bold text-accent-orange'>-</p>
-                                    )} */}
-                                    {detailSiswa.tempatlahir && detailSiswa.tanggallahir ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.tempatlahir},${detailSiswa.tanggallahir}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan tempat dan tanggal lahir siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan tempat dan tanggal lahir siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='ttl'
+                                        defaultValue={detailSiswa.ttl ? `${detailSiswa.ttl}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan tempat tanggal lahir siswa'
+                                        className=''
+                                        type='text'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Jenis Kelamin</h3>
-                                    {detailSiswa.gender ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.gender}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan jenis kelamin siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan jenis kelamin siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='gender'
+                                        defaultValue={detailSiswa.gender ? `${detailSiswa.gender}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan jenis kelamin siswa'
+                                        className=''
+                                        type='text'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Agama</h3>
-                                    {detailSiswa.agama ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.agama}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan agama siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan agama siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='agama'
+                                        defaultValue={detailSiswa.agama ? `${detailSiswa.agama}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan agama siswa'
+                                        className=''
+                                        type='text'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>No. Telepon</h3>
-                                    {detailSiswa.phone ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.phone}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan nomor telepon siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan nomor telepon siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='phone'
+                                        defaultValue={detailSiswa.phone ? `${detailSiswa.phone}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan nomor telepon siswa'
+                                        className=''
+                                        type='number'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Anak Ke-</h3>
-                                    {detailSiswa.anakke ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.anakke}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan status anak ke- siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan status anak ke- siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='anakke'
+                                        defaultValue={detailSiswa.anakke ? `${detailSiswa.anakke}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan status anak ke- siswa'
+                                        className=''
+                                        type='number'
+                                        onChange={(e) => handleEditData(e.target.name, parseInt(e.target.value))}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Alamat Peserta Didik</h3>
-                                    {detailSiswa.alamat ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.alamat}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan alamat siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan alamat siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='alamat'
+                                        defaultValue={detailSiswa.alamat ? `${detailSiswa.alamat}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan alamat siswa'
+                                        className=''
+                                        type='text'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Sekolah Asal</h3>
-                                    {detailSiswa.sekolah ? (
-                                        <Input
-                                            defaultValue={`${detailSiswa.sekolah}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan sekolah asal siswa'
-                                            type='text'
-                                        />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan sekolah asal siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    <Input
+                                        name='sekolah'
+                                        defaultValue={detailSiswa.sekolah ? `${detailSiswa.sekolah}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan sekolah asal siswa'
+                                        className=''
+                                        type='text'
+                                        onChange={(e) => handleEditData(e.target.name, e.target.value)}
+                                    />
                                 </div>
                             </div>
                         }
                     </div>
                     <div className='flex flex-col gap-4 pb-10'>
                         <h1 className='text-xl font-bold'>Informasi Lainnya</h1>
-                        {detailWali &&
-                            <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
+                        {detailWali ?
+                            (<div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
-                                    {detailWali.name ? (
+                                    {detailWali.name &&
                                         <Input
+                                            name='name'
                                             defaultValue={`${detailWali.name}`}
                                             variant='bordered'
                                             size='lg'
                                             placeholder='Masukkan nama Orang Tua/Wali siswa'
                                             type='text'
+                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
                                         />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan nama Orang Tua/Wali siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    }
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Pekerjaan Orang Tua/Wali</h3>
-                                    {detailWali.pekerjaan ? (
+                                    {detailWali.pekerjaan &&
                                         <Input
+                                            name='pekerjaan'
                                             defaultValue={`${detailWali.pekerjaan}`}
                                             variant='bordered'
                                             size='lg'
                                             placeholder='Masukkan pekerjaan Orang Tua/Wali siswa'
                                             type='text'
+                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
                                         />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan pekerjaan Orang Tua/Wali siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    }
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>No. Telepon Orang Tua/Wali</h3>
-                                    {detailWali.phone ? (
+                                    {detailWali.phone &&
                                         <Input
+                                            name='phone'
                                             defaultValue={`${detailWali.phone}`}
                                             variant='bordered'
                                             size='lg'
                                             placeholder='Masukkan no.telepon Orang Tua/Wali siswa'
-                                            type='text'
+                                            type='number'
+                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
                                         />
-                                    ) : (
-                                        <Input
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan no.telepon Orang Tua/Wali siswa'
-                                            type='text'
-                                        />
-                                    )}
+                                    }
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Alamat Orang Tua/Wali</h3>
-                                    {detailWali.alamat ? (
+                                    {detailWali.alamat &&
                                         <Input
+                                            name='alamat'
                                             defaultValue={`${detailWali.alamat}`}
                                             variant='bordered'
                                             size='lg'
                                             placeholder='Masukkan alamat Orang Tua/Wali siswa'
                                             type='text'
+                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
                                         />
-                                    ) : (
+                                    }
+                                </div>
+                            </div>) : (
+                                <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
+                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
+                                        <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
                                         <Input
+                                            name='name'
+                                            variant='bordered'
+                                            size='lg'
+                                            placeholder='Masukkan nama Orang Tua/Wali siswa'
+                                            type='text'
+                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
+                                        <h3 className='text-lg font-bold'>Pekerjaan Orang Tua/Wali</h3>
+                                        <Input
+                                            name='pekerjaan'
+                                            variant='bordered'
+                                            size='lg'
+                                            placeholder='Masukkan pekerjaan Orang Tua/Wali siswa'
+                                            type='text'
+                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
+                                        <h3 className='text-lg font-bold'>No. Telepon Orang Tua/Wali</h3>
+                                        <Input
+                                            name='phone'
+                                            variant='bordered'
+                                            size='lg'
+                                            placeholder='Masukkan no.telepon Orang Tua/Wali siswa'
+                                            type='number'
+                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
+                                        <h3 className='text-lg font-bold'>Alamat Orang Tua/Wali</h3>
+                                        <Input
+                                            name='alamat'
                                             variant='bordered'
                                             size='lg'
                                             placeholder='Masukkan alamat Orang Tua/Wali siswa'
                                             type='text'
+                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
                                         />
-                                    )}
+                                    </div>
                                 </div>
-                            </div>
+                            )
                         }
                     </div>
                 </div>
-                <ActionGroup/>
+                <ActionGroup handleSubmitEdit={handleSubmitEdit} />
             </div>
             <Footer />
         </div>
@@ -348,18 +368,15 @@ const ProfileSiswaEdit = () => {
 }
 export default ProfileSiswaEdit
 
-const ActionGroup = ()=>{
+const ActionGroup = ({ handleSubmitEdit }) => {
     const router = useRouter()
     const url = usePathname()
-    const handleBack = () =>{
-        const newUrl = url.replace('/edit','')
+    const [isLoad, setIsLoad] = useState(false)
+    const handleBack = () => {
+        const newUrl = url.replace('/edit', '')
         router.push(newUrl)
     }
-    const handleSave = () =>{
-        const newUrl = url.replace('/edit','')
-        router.push(newUrl)
-    }
-    return(
+    return (
         <div className='w-[90%] mx-auto flex justify-end z-10 mb-10'>
             <div className='flex gap-4'>
                 <Button
@@ -372,10 +389,17 @@ const ActionGroup = ()=>{
                 </Button>
                 <Button
                     radius='sm'
+                    isDisabled={isLoad ? true : false}
                     className='w-[260px] bg-primer-500 text-white'
-                    onPress={handleSave}
+                    onPress={() => {
+                        setIsLoad(true)
+                        handleSubmitEdit()
+                    }}
                 >
-                    <span>Simpan</span>
+                    {isLoad ?
+                        (<div className='loader'></div>) :
+                        (<span>Simpan</span>)
+                    }
                 </Button>
             </div>
         </div>

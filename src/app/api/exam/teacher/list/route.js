@@ -7,20 +7,18 @@ export async function GET(req){
         // Parsing URL untuk mendapatkan query parameters
         const url = new URL(req.url);
         const params = url.searchParams;
-        const idMataPelajaran = params.get('idmapel');
+        const idmapel = params.get('idmapel');
         const stasiun = params.get('stasiun');
         const verify = await middleware.authTeacher(authorization) 
         let response
         if(!verify.access){
             response = verify
-            return NextResponse.json(response, {status:response.code})
         }
         const payload = {
-            email: verify.email,
-            idmapel : idMataPelajaran,
+            idmapel : idmapel,
             stasiun:stasiun
         }
-        response = await m$exam.listQuestionExam(payload)
+        response = await m$exam.listExam(payload)
         return NextResponse.json(response, {status:response.code})
     } catch (error) {
         console.log(error)

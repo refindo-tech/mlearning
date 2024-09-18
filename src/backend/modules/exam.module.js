@@ -1,5 +1,6 @@
 import { error } from "console"
 import db from "../helpers/db"
+import { select } from "@nextui-org/react"
 class _exam {
     listQuestionExam = async (req) => {
         try {
@@ -95,8 +96,13 @@ class _exam {
     listExamAnswer = async (req) => {
         try {
             const { idexam, idmapel, idsiswa, stasiun } = req
+            const findExam = await db.exam.findFirst({
+                where:{idmapel:parseInt(idmapel), stasiun},
+                select:{id:true}
+            })
+            const idExam = findExam.id
             const verify = await db.authExamSiswa.findMany({
-                where: { idexam: parseInt(idexam), idmapel: parseInt(idmapel), idsiswa: parseInt(idsiswa), stasiun }
+                where: { idexam: parseInt(idExam), idmapel: parseInt(idmapel), idsiswa: parseInt(idsiswa), stasiun }
             })
             if (verify) {
                 return {
@@ -127,30 +133,121 @@ class _exam {
                 total = total + nilai[i]
             }
             const result = total / nilai.length
-            const addData = await db.resultExamSiswa.create({
-                data:{
-                    idmapel:parseInt(idmapel),
+            const isResult = await db.resultExamSiswa.findFirst({
+                where: {
                     idsiswa:parseInt(idsiswa),
-                    stasiun:stasiun,
-                    nilai:result
+                    idmapel: parseInt(idmapel),
+                    stasiun: stasiun,
                 }
             })
-            if(!addData){
-                return {
-                    status: false,
-                    message: 'Add data failed',
-                    code: 400
+            if(isResult){
+                const editNilai = await db.resultExamSiswa.update({
+                    where:{id:isResult.id},
+                    data: {
+                        idmapel: parseInt(idmapel),
+                        stasiun: stasiun,
+                        nilai: Math.round(result)
+                    }
+                })
+                if (!editNilai) {
+                    return {
+                        status: false,
+                        message: 'Edit nilai failed',
+                        code: 400
+                    }
                 }
-            }
-            return {
-                status: true,
-                message: 'success',
-                code: 200
+                return {
+                    status: true,
+                    message: 'success',
+                    code: 200
+                }
+            }else{
+                const addData = await db.resultExamSiswa.create({
+                    data: {
+                        idmapel: parseInt(idmapel),
+                        idsiswa: parseInt(idsiswa),
+                        stasiun: stasiun,
+                        nilai: Math.round(result)
+                    }
+                })
+                if (!addData) {
+                    return {
+                        status: false,
+                        message: 'Add data failed',
+                        code: 400
+                    }
+                }
+                return {
+                    status: true,
+                    message: 'success',
+                    code: 200
+                }
             }
         } catch (error) {
             console.log({
                 status: false,
                 message: 'Exam Modul Answer Exam Error',
+                error: error
+            })
+            return {
+                status: false,
+                message: 'Internal Server Error',
+                code: 500
+            }
+        }
+    }
+    listExam = async (req) => {
+        try {
+            const { idmapel, stasiun } = req
+            const findExam = await db.exam.findFirst({
+                where: {
+                    idmapel: parseInt(idmapel),
+                    stasiun: stasiun
+                },
+                select: {
+                    id: true
+                }
+            })
+            if(!findExam){
+                return {
+                    status: true,
+                    message: 'success',
+                    data: [],
+                    code: 200
+                }
+            }
+            const idExam = findExam.id
+            const listExamAuthSiswa = await db.authExamSiswa.findMany({
+                where: { idexam: parseInt(idExam) },
+                select: {
+                    idsiswa: true
+                },
+                take: 10
+            })
+            const listIdSiswa = listExamAuthSiswa.map((auth) => auth.idsiswa)
+            const detailSiswa = await db.profileSiswa.findMany({
+                where: {
+                    idsiswa: {
+                        in: listIdSiswa
+                    }
+                },
+                select: {
+                    idsiswa: true,
+                    name: true,
+                    nisn: true,
+                    kelas: true
+                }
+            })
+            return {
+                status: true,
+                message: 'success',
+                data: detailSiswa,
+                code: 200
+            }
+        } catch (error) {
+            console.log({
+                status: false,
+                message: 'Exam Modul List Exam Error',
                 error: error
             })
             return {
