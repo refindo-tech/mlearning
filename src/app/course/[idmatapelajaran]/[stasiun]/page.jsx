@@ -139,9 +139,6 @@ const Stasiun = () => {
                         <div className="relative top-0 w-[90%] flex flex-col gap-5 mx-auto py-10 z-10">
                             <h3 className="font-semibold text-xl">Simak materi berikut ini!</h3>
                             <div className="flex flex-col gap-5">
-                                {/* {dataMateri.detailmateri} */}
-{/* <h3><strong>What is Descriptive text ?</strong></h3><p>Descriptive text is a kind of text with a purpose to give information. The context of this kind of text is description of particular thing, animal, person or others</p><br /><h3><strong>The Generic Structure of Descriptive Text</strong></h3><h5>1. Identification</h5><p>Introducing where or who is the subject is being describe</p><br /><h5>2. Description</h5><p>Describes parts, qualities, and the characteristic of the person, place or thing to be describe</p> */}
-{/* <h3><strong>What is Descriptive text</strong></h3><p>Descriptive text is a kind of text with a purpose to give information. The context of this kind of text is description of particular thing, animal, person or others </p> */}
                                 {dataMateri &&
                                     <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg text-justify">
                                         <div className="indent-3" dangerouslySetInnerHTML={{__html:dataMateri.detailmateri}}/>

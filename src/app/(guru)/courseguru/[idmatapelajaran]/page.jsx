@@ -1,14 +1,14 @@
 'use client'
 import Background from "@/components/Background"
 import Loading from "@/app/loading.jsx"
-import AsideCourse from '@/components/AsideCourse'
+import AsideTeacher from '@/components/AsideTeacher'
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { Button, Image, Link } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { detailMateri, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
+import { detailMateri, listStasiun, getAbsensiForTeacher } from "@/backend/fetchAPI.js"
 const CourseHomePage = () => {
     const path = usePathname()
     const router = useRouter()
@@ -82,7 +82,7 @@ const CourseHomePage = () => {
                     <div className="relative w-full hidden lg:block min-h-screen">
                         <Background />
                         <div className="flex justify-center py-10 gap-10">
-                            <CardFeature path={'/assets/image/bagpack.png'} text={'Stasiun Belajar'} href={'/stasiun'}/>
+                            <CardFeature path={'/assets/image/bagpack.png'} text={'Stasiun Belajar'} href={'/manage'}/>
                             <CardFeature path={'/assets/image/red clock.png'} text={'Absensi Siswa'} href={'/absen'}/>
                             <CardFeature path={'/assets/image/bookfeatureteacher.png'} text={'Koreksi Tugas'} href={'/koreksi'}/>
                             <CardFeature path={'/assets/image/mikroskop.png'} text={'Hasil Akhir'} href={'/hasil'}/>
