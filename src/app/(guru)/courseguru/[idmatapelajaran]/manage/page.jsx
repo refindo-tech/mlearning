@@ -9,6 +9,7 @@ import YoutubeVideo from "@/components/YoutubeVideo"
 import Footer from "@/components/Footer"
 import { Button, Image, Input } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
+import ModalAddExam from "@/components/ModalAddExam"
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { detailMateri, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
@@ -41,32 +42,32 @@ const CourseHomePage = () => {
     const handleChevronRight = () => {
         setContext((prevData) => {
             if (prevData.materi) {
-                return{ ...prevData, materi: false, discussion: true, exam: false }
+                return { ...prevData, materi: false, discussion: true, exam: false }
             }
             if (prevData.discussion) {
-                return{ ...prevData, materi: false, discussion: false, exam: true }
+                return { ...prevData, materi: false, discussion: false, exam: true }
             }
             if (prevData.exam) {
-                return{ ...prevData, materi: true, discussion: false, exam: false }
+                return { ...prevData, materi: true, discussion: false, exam: false }
             }
         })
     }
     const handleChevronLeft = () => {
         setContext((prevData) => {
             if (prevData.materi) {
-                return{ ...prevData, materi: true, discussion: false, exam: false }
+                return { ...prevData, materi: true, discussion: false, exam: false }
             }
             if (prevData.discussion) {
-                return{ ...prevData, materi: true, discussion: false, exam: false }
+                return { ...prevData, materi: true, discussion: false, exam: false }
             }
             if (prevData.exam) {
-                return{ ...prevData, materi: false, discussion: true, exam: false }
+                return { ...prevData, materi: false, discussion: true, exam: false }
             }
         })
     }
-    useEffect(()=>{
+    useEffect(() => {
         console.log(context)
-    },[context])
+    }, [context])
     const handleStasiun = (value) => {
         setStasiun(value)
     }
@@ -103,11 +104,22 @@ const CourseHomePage = () => {
         }
         fetchAPI()
     }, [idmapel, stasiun])
+    // const [isActiveModal, setIsActiveModal] = useState(false)
+    // const activeModalAddExam = () => {
+    //     setIsActiveModal(true)
+    // }
+    // const handleInActiveModalAddExam = () => {
+    //     setIsActiveModal(false)
+    // }
     if (isLoad) {
         return (<Loading />)
     }
     return (
         <>
+            {/* <ModalAddExam
+                active={isActiveModal}
+                inActiveModalExam={handleInActiveModalAddExam}
+            /> */}
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
                 <aside className="w-[15%]">
@@ -145,6 +157,7 @@ const CourseHomePage = () => {
                         stasiun={stasiun}
                         handleChevronLeft={handleChevronLeft}
                         handleChevronRight={handleChevronRight}
+                        // activeModalAddExam={activeModalAddExam}
                     />
                 }
             </div>

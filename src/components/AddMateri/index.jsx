@@ -1,8 +1,8 @@
 'use client'
 import Background from "@/components/Background"
 import Loading from "@/app/loading.jsx"
-import AsideTeacher from '@/components/AsideTeacher'
-import Navbar from "@/components/Navbar"
+import { useState } from "react"
+import ModalAddMateri from '@/components/ModalAddMateri'
 import AudioPlayer from "@/components/AudioPlayer"
 import DisplayImageComponent from "@/components/DisplayImageComponent"
 import YoutubeVideo from "@/components/YoutubeVideo"
@@ -12,8 +12,13 @@ import { ChevronRight, ChevronLeft } from 'lucide-react'
 import Icons from '../Icons'
 const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun, handleChevronRight, handleChevronLeft }) => {
     const { AddIcon } = Icons
+    const [isActiveModal, setIsActiveModal] = useState(false)
+    const handleIsActiveModal = ()=>{
+        setIsActiveModal(!isActiveModal)
+    }
     return (
         <div className=" w-[85%] border-l-2 border-gray-200">
+            <ModalAddMateri active={isActiveModal} inActiveModalExam={handleIsActiveModal}/>
             <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                 <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                     <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
@@ -117,6 +122,7 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                                             <Button
                                                 variant="bordered"
                                                 className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
+                                                onPress={handleIsActiveModal}
                                             >
                                                 <h3>Tambah materi pengenalan mata pelajaran</h3>
                                                 <div className="h-5 w-5 flex items-center justify-center text-primer-500">
@@ -142,6 +148,7 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                             <Button
                                 variant="bordered"
                                 className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
+                                onPress={handleIsActiveModal}
                             >
                                 <h3>Tambah materi</h3>
                                 <div className="h-5 w-5 flex items-center justify-center text-primer-500">
