@@ -35,8 +35,8 @@ model Guru {
   created_at  DateTime      @default(now())
   updated_at  DateTime      @default(now())
   ProfileGuru ProfileGuru[]
-  Diskusi     Diskusi[]
-  Exam        Exam[]
+  // Diskusi     Diskusi[]
+  // Exam        Exam[]
 }
 
 model ProfileSiswa {
@@ -115,7 +115,7 @@ model Materi {
   idmatapelajaran Int
   stasiun         String        @db.VarChar(10)
   topic           String?       @db.VarChar(100)
-  detailmateri    String        @db.Text
+  detailmateri    String        @db.LongText
   urlvideo        String?       @db.Text
   urlaudio        String?       @db.Text
   urlimage        String?       @db.Text
@@ -129,7 +129,7 @@ model Diskusi {
   id            Int           @id @default(autoincrement())
   idmapel       Int
   idmateri      Int
-  idguru        Int
+  // idguru        Int
   question      String        @db.Text
   urlvideo      String?       @db.Text
   urlaudio      String?       @db.Text
@@ -139,19 +139,19 @@ model Diskusi {
   updated_at    DateTime      @default(now())
   MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id])
   Materi        Materi        @relation(fields: [idmateri], references: [id])
-  Guru          Guru          @relation(fields: [idguru], references: [id])
+  // Guru          Guru          @relation(fields: [idguru], references: [id])
 }
 
 model Exam {
   id            Int             @id @default(autoincrement())
-  idguru        Int
+  // idguru        Int
   idmapel       Int
   stasiun       String          @db.VarChar(10)
   created_at    DateTime        @default(now())
   updated_at    DateTime        @default(now())
   ExamQuestion  ExamQuestion[]
   AuthExamSiswa AuthExamSiswa[]
-  Guru          Guru            @relation(fields: [idguru], references: [id])
+  // Guru          Guru            @relation(fields: [idguru], references: [id])
   MataPelajaran MataPelajaran   @relation(fields: [idmapel], references: [id])
 }
 
@@ -163,6 +163,7 @@ model ExamQuestion {
   urlimage     String?  @db.Text
   urlaudio     String?  @db.Text
   optionanswer String?  @db.Text
+  correctAnswer String? @db.Text
   created_at   DateTime @default(now())
   updated_at   DateTime @default(now())
   Exam         Exam     @relation(fields: [idexam], references: [id])

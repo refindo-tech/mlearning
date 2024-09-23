@@ -180,7 +180,7 @@ const AddExam = (
                     <div className="w-full py-10 flex flex-col gap-10">
                         <Button
                             variant="bordered"
-                            className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
+                            className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold z-10"
                             onPress={handleAddListQuestion}
                         >
                             <h3>Tambah materi</h3>
@@ -191,7 +191,7 @@ const AddExam = (
                         <div className="flex justify-end">
                             <Button
                                 radius="sm"
-                                className="w-[260px] bg-primer-500 text-white font-semibold"
+                                className="w-[260px] bg-primer-500 text-white font-semibold z-10"
                             >
                                 <h3>Simpan</h3>
                             </Button>

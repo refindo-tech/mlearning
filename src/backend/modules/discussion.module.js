@@ -41,6 +41,37 @@ class _discussion{
             }
         }
     }
+    createDsicussion = async(req) =>{
+        try {
+            const {idmapel, stasiun, question, urlaudio} = req
+            if(idmapel, stasiun, question){
+                const create = await db.diskusi.create({
+                    data:{
+                        idmapel:parseInt(idmapel),
+                        stasiun:stasiun,
+                        question:question,
+                        urlaudio: urlaudio ? urlaudio:null
+                    }
+                })
+                if(create){
+                    return{
+                        code:201,
+                        message:"Success create discussion",
+                    }
+                }
+            }
+        } catch (error) {
+            console.log({
+                message: 'Materi Module Add Materi Error',
+                error: error.message,
+                code: 500
+            })
+            return {
+                message: 'Internal Server Error',
+                code: 500
+            }
+        }
+    }
 }
 const m$diskusi = new _discussion()
 export default m$diskusi

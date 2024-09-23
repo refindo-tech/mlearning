@@ -2,6 +2,48 @@ import { error } from "console"
 import db from "../helpers/db"
 import { select } from "@nextui-org/react"
 class _exam {
+    createExam = async(req) =>{
+        try {
+            const {idmapel, stasiun, data} = req
+            const create = await db.exam.create({
+                data:{
+                    idmapel:parseInt(idmapel),
+                    stasiun:stasiun,
+                },
+                select:{
+                    id:true
+                }
+            })
+            if(create){
+                for(const i =0; i<data.length; i++){
+                    await db.examQuestion.create({
+                        data:{
+                            idexam:create.id,
+                            text:data[i].text,
+                            urlaudio:data[i].urlaudio ? data[i].urlaudio : null,
+                            optionanswer:data[i].optionanswer ? data[i].optionanswer : null,
+                            correctAnswer:data[i].correctAnswer ? data[i].correctAnswer : null
+                        }
+                    })
+                }
+            }
+
+            // const createQuestion = await db.examQuestion.createMany({
+            //     data:[]
+            // })
+        } catch (error) {
+            console.log({
+                status: false,
+                message: 'Exam Model Create Exam Error',
+                error: error
+            })
+            return {
+                status: false,
+                message: 'Internal Server Error',
+                code: 500
+            }
+        }
+    }
     listQuestionExam = async (req) => {
         try {
             const { idmapel, stasiun } = req

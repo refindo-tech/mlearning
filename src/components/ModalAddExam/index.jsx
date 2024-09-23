@@ -40,7 +40,7 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
         <>
             {active &&
                 <div className="fixed top-0 left-0 right-0 bottom-0 w-full py-10 flex items-center h-[100vh] bg-gray-500/30 z-[999]">
-                    <div className="w-[90%] h-[90vh] mx-auto bg-white py-10 rounded-xl flex flex-col justify-between">
+                    <div className="w-[90%] h-[90vh] mx-auto bg-white py-10 rounded-xl flex flex-col gap-5">
                         <div className="w-[90%] mx-auto flex flex-row items-center justify-end gap-[40%] text-primer-300 font-semibold mb-5">
                             <h1>Buat Exam</h1>
                             <Button
@@ -55,12 +55,6 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
                         <div className="w-[90%] mx-auto flex flex-col gap-5 overflow-y-scroll overflow-x-hidden px-2">
                             <div className="flex flex-col gap-5">
                                 <h3>Pertanyaan dalam bentuk teks</h3>
-                                {/* <Textarea
-                                    variant="bordered"
-                                    radius="sm"
-                                    placeholder="Tambahkan text"
-                                    minRows={4}
-                                /> */}
                                 <TextEditor />
                                 <h3>Pertanyaan dalam bentuk gambar, audio, atau video</h3>
                                 <Button

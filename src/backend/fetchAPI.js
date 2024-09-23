@@ -640,3 +640,21 @@ export const deleteProfileSiswa = async (req) => {
         return error
     }
 }
+export const createMateri = async (req) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/materi/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(req)
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}

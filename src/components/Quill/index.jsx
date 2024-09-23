@@ -5,7 +5,7 @@ import ReactQuill from "react-quill"; // Imports ReactQuill, the Quill editor co
 import "react-quill/dist/quill.snow.css"; // Imports the Quill editor's default "snow" theme CSS
 
 // The main TextEditor component
-const TextEditor = () => {
+const TextEditor = ({value, handleValue}) => {
     // State for the content of the text editor
     const [body, setBody] = useState("");
     // State for the submitted content
@@ -34,8 +34,8 @@ const TextEditor = () => {
                     placeholder="Write something..." // Placeholder text for the editor
                     modules={TextEditor.modules} // Custom toolbar modules
                     formats={TextEditor.formats} // Custom formats
-                    onChange={handleBody} // Event handler for content changes
-                    value={body} // Current value of the editor content
+                    onChange={handleValue} // Event handler for content changes
+                    value={value} // Current value of the editor content
                 />
                 {/* <button onClick={handleSubmit}>Submit</button> Button to submit the content */}
             </div>

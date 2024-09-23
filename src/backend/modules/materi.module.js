@@ -48,21 +48,6 @@ class _materi {
                         }
                     })
                 } else {
-                    // detail = await db.materi.findFirst({
-                    //     where: {
-                    //         idmatapelajaran: parseInt(idmapel),
-                    //     },
-                    //     include: {
-                    //         MataPelajaran: {
-                    //             select: {
-                    //                 name: true,
-                    //                 kelas: true,
-                    //                 description: true
-                    //             }
-                    //         }
-                    //     }
-                    // })
-                    // if (detail) {
                         detail = await db.mataPelajaran.findFirst({
                             where: {
                                 id: parseInt(idmapel),
@@ -97,6 +82,36 @@ class _materi {
         } catch (error) {
             console.log({
                 message: 'Materi Module Detail Materi Error',
+                error: error.message,
+                code: 500
+            })
+            return {
+                message: 'Internal Server Error',
+                code: 500
+            }
+        }
+    }
+    createMateri = async(req) =>{
+        try {
+            const {idmapel, stasiun, detailMateri, topic, urlaudio} = req
+            const create = await db.materi.create({
+                data:{
+                    idmatapelajaran:parseInt(idmapel),
+                    stasiun:stasiun,
+                    detailmateri:detailMateri,
+                    topic:topic,
+                    urlaudio:urlaudio ? urlaudio : null
+                }
+            })
+            if(create){
+                return{
+                    code:201,
+                    message:"Success create materi",
+                }
+            }
+        } catch (error) {
+            console.log({
+                message: 'Materi Module Add Materi Error',
                 error: error.message,
                 code: 500
             })

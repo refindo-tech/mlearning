@@ -4,7 +4,7 @@ import { Button, Textarea, RadioGroup, Radio } from "@nextui-org/react"
 import dynamic from "next/dynamic"
 import TextEditor from "../Quill"
 import Icons from "../Icons"
-const ModalAddMateri = ({ active, inActiveModalExam }) => {
+const ModalAddMateri = ({ active, inActiveModalExam, saveMateri }) => {
     const { AddIcon } = Icons
     const [option, setOption] = useState(null)
     const [listOptionAnswer, setListOptionAnswer] = useState([])
@@ -30,6 +30,18 @@ const ModalAddMateri = ({ active, inActiveModalExam }) => {
     const handleCorrectAnswer = (value) => {
         setCorrectAnswer(value)
     }
+    const [valueMateri, setValueMateri] = useState("")
+    const [urlAudio, setUrlAudio] = useState(null)
+    const handleUrlAudio = (value) => {
+        setUrlAudio(value)
+    }
+    const handleValueMateri = (e) => {
+        setValueMateri(e)
+    }
+
+    // useEffect(() => {
+    //     console.log(valueMateri)
+    // }, [valueMateri])
     // const TextEditor = dynamic(
     //     () => import("@/components/Quill"), // Path to the TextEditor component file
     //     {
@@ -55,7 +67,7 @@ const ModalAddMateri = ({ active, inActiveModalExam }) => {
                         <div className="w-[90%] mx-auto flex flex-col gap-5 overflow-y-auto overflow-x-hidden px-2 justify-between">
                             <div className="flex flex-col gap-5">
                                 <h3>Materi dalam bentuk teks atau video</h3>
-                                <TextEditor />
+                                <TextEditor value={valueMateri} handleValue={handleValueMateri} />
                                 <h3>Tambah materi dalam bentuk gambar atau audio</h3>
                                 <Button
                                     variant="bordered"
@@ -70,7 +82,12 @@ const ModalAddMateri = ({ active, inActiveModalExam }) => {
                             <div className="flex justify-end">
                                 <Button
                                     radius="sm"
+                                    isDisabled={valueMateri === '' ? true : false}
                                     className="w-[260px] bg-primer-500 text-white"
+                                    onPress={() => {
+                                        saveMateri(valueMateri, urlAudio)
+                                        inActiveModalExam()
+                                    }}
                                 >
                                     Tambahkan
                                 </Button>
