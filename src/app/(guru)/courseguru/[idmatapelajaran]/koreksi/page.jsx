@@ -19,6 +19,10 @@ const KoreksiTugas = () => {
     const [isLoad, setIsLoad] = useState(true)
     const [dataListStasiun, setDataListStasiun] = useState([])
     const [dataListExam, setDataListExam] = useState([])
+    const [limit, setLimit] = useState(5)
+    const handleLimit = (value) => {
+        setLimit(value)
+    }
     const [detailMapel, setDetailMapel] = useState(null)
     const [stasiun, setStasiun] = useState(null)
     const { EditIcon } = Icons
@@ -57,8 +61,10 @@ const KoreksiTugas = () => {
         const fetchAPI = async () => {
             const payloadListExam = {
                 idmapel: idmapel,
-                stasiun: stasiun
+                stasiun: stasiun,
+                limit: parseInt(limit)
             }
+            console.log(payloadListExam)
             if (stasiun) {
                 const response = await listExam(payloadListExam)
                 if (response) {
@@ -67,7 +73,7 @@ const KoreksiTugas = () => {
             }
         }
         fetchAPI()
-    }, [stasiun, idmapel])
+    }, [stasiun, idmapel, limit])
     if (isLoad) {
         return (<Loading />)
     }
@@ -105,57 +111,57 @@ const KoreksiTugas = () => {
                         {stasiun &&
                             <div className="py-10 flex flex-col gap-[30px] w-[80%] mx-auto">
                                 <h3 className="font-semibold text-lg">{`Koreksi exam siswa ${stasiun}`}</h3>
-                                {dataListExam.length !== 0 &&
-                                    <div className="border-2 border-gray-300 rounded-xl">
-                                        <div className="w-full h-[87px] bg-gray-200 rounded-t-xl flex items-center justify-center">
-                                            <div className="w-[90%] flex justify-between items-center">
-                                                <div className="flex gap-3 items-center text-sm">
-                                                    <p>Tampilkan</p>
-                                                    <Input
-                                                        variant="faded"
-                                                        type="number"
-                                                        min={1}
-                                                        defaultValue={10}
-                                                        className="w-[60px] h-10 rounded"
-                                                    />
-                                                    <p>baris</p>
-                                                </div>
-                                                <SearchTable />
+                                <div className="border-2 border-gray-300 rounded-xl">
+                                    <div className="w-full h-[87px] bg-gray-200 rounded-t-xl flex items-center justify-center">
+                                        <div className="w-[90%] flex justify-between items-center">
+                                            <div className="flex gap-3 items-center text-sm">
+                                                <p>Tampilkan</p>
+                                                <Input
+                                                    variant="faded"
+                                                    type="number"
+                                                    min={1}
+                                                    defaultValue={limit}
+                                                    onValueChange={(e) => handleLimit(parseInt(e))}
+                                                    className="w-[60px] h-10 rounded"
+                                                />
+                                                <p>baris</p>
                                             </div>
+                                            <SearchTable />
                                         </div>
-                                        <table className="table-fixed w-full">
-                                            <thead>
-                                                <tr className="bg-gray-200 h-10 align-center text-left font-normal text-sm">
-                                                    <th className="w-[50px] text-center">No</th>
-                                                    <th>Nama</th>
-                                                    <th>NISN</th>
-                                                    <th>Kelas</th>
-                                                    <th className="text-center">Aksi</th>
+                                    </div>
+                                    <table className="table-fixed w-full">
+                                        <thead>
+                                            <tr className="bg-gray-200 h-10 align-center text-left font-normal text-sm">
+                                                <th className="w-[50px] text-center">No</th>
+                                                <th>Nama</th>
+                                                <th>NISN</th>
+                                                <th>Kelas</th>
+                                                <th className="text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="text-base">
+                                            {dataListExam?.map((item, index) => (
+                                                <tr className="h-[60px] align-center" key={index}>
+                                                    <td className="text-center w-[50px]">{index + 1}</td>
+                                                    <td>{item.name}</td>
+                                                    {item.nisn ? (
+                                                        <td>{item.nisn}</td>
+                                                    ) : (
+                                                        <td>-</td>
+                                                    )}
+                                                    {item.kelas ? (
+                                                        <td>{item.kelas}</td>
+                                                    ) : (
+                                                        <td>-</td>
+                                                    )}
+                                                    <td className="text-center">
+                                                        <Action idsiswa={item.idsiswa} stasiun={stasiun} />
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody className="text-base">
-                                                {dataListExam?.map((item, index) => (
-                                                    <tr className="h-[60px] align-center" key={index}>
-                                                        <td className="text-center w-[50px]">{index + 1}</td>
-                                                        <td>{item.name}</td>
-                                                        {item.nisn ? (
-                                                            <td>{item.nisn}</td>
-                                                        ) : (
-                                                            <td>-</td>
-                                                        )}
-                                                        {item.kelas ? (
-                                                            <td>{item.kelas}</td>
-                                                        ) : (
-                                                            <td>-</td>
-                                                        )}
-                                                        <td className="text-center">
-                                                            <Action idsiswa={item.idsiswa} stasiun={stasiun} />
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>}
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         }
                     </div>

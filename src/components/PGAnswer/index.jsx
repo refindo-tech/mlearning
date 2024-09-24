@@ -5,7 +5,9 @@ const PGAnswer = ({ optionanswer, handleAnswerQuestion, answeredQuestion }) => {
     const [options, setOptions] = useState(null)
     useEffect(() => {
         if (optionanswer) {
-            setOptions(optionanswer.split('/'))
+            let data = optionanswer.split('/')
+            data.pop()
+            setOptions(data)
         }
     }, [optionanswer])
     return (

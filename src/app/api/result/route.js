@@ -8,7 +8,7 @@ export async function GET(req){
         const url = new URL(req.url);
         const params = url.searchParams;
         const idmapel = params.get('idmapel');
-        const verify = await middleware(authorization) 
+        const verify = await middleware.authUser(authorization) 
         let response
         if(!verify.access){
             response = verify

@@ -15,7 +15,7 @@ class _exam {
                 }
             })
             if(create){
-                for(const i =0; i<data.length; i++){
+                for(let i =0; i<data.length; i++){
                     await db.examQuestion.create({
                         data:{
                             idexam:create.id,
@@ -27,7 +27,11 @@ class _exam {
                     })
                 }
             }
-
+            return {
+                status: true,
+                message: 'Create Exam Success',
+                code: 201
+            }
             // const createQuestion = await db.examQuestion.createMany({
             //     data:[]
             // })
@@ -240,7 +244,10 @@ class _exam {
     }
     listExam = async (req) => {
         try {
-            const { idmapel, stasiun } = req
+            const { idmapel, stasiun, limit } = req
+            if(limit){
+
+            }
             const findExam = await db.exam.findFirst({
                 where: {
                     idmapel: parseInt(idmapel),
@@ -278,7 +285,8 @@ class _exam {
                     name: true,
                     nisn: true,
                     kelas: true
-                }
+                },
+                take:parseInt(limit)
             })
             return {
                 status: true,

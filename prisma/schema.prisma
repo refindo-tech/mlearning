@@ -147,6 +147,7 @@ model Exam {
   // idguru        Int
   idmapel       Int
   stasiun       String          @db.VarChar(10)
+  topic         String?         @db.Text
   created_at    DateTime        @default(now())
   updated_at    DateTime        @default(now())
   ExamQuestion  ExamQuestion[]

@@ -70,12 +70,13 @@ class _absensi {
     }
     getAbsensiForTeacher = async(req)=>{
         try {
-            const {idmapel, stasiun} = req
+            const {idmapel, stasiun, limit} = req
             const list = await db.absensi.findMany({
                 where:{
                     idmatapelajaran:parseInt(idmapel),
                     stasiun
-                }
+                },
+                take:parseInt(limit)
             })
             return{
                 status:true,

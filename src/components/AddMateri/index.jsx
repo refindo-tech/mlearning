@@ -1,6 +1,7 @@
 'use client'
 import Background from "@/components/Background"
 import Loading from "@/app/loading.jsx"
+import { useRouter,usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import ModalAddMateri from '@/components/ModalAddMateri'
 import AudioPlayer from "@/components/AudioPlayer"
@@ -9,14 +10,21 @@ import YoutubeVideo from "@/components/YoutubeVideo"
 import Footer from "@/components/Footer"
 import { Button, Image, Input } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
-import "react-quill/dist/quill.snow.css"; // Imports the Quill editor's default "snow" theme CSS
+import { createMateri } from "@/backend/fetchAPI"
+import parse from 'html-react-parser'
+// import "react-quill/dist/quill.snow.css"; // Imports the Quill editor's default "snow" theme CSS
+import "quill/dist/quill.snow.css";
 import Icons from '../Icons'
 const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun, handleChevronRight, handleChevronLeft }) => {
     const { AddIcon } = Icons
+    const path = usePathname()
+    const router = useRouter()
+    const idmapel = path.split('/')[2]
     const [isActiveModal, setIsActiveModal] = useState(false)
     const [topic, setTopic] = useState(null)
     const [detailmateri, setDetailmateri] = useState(null)
     const [urlAudio, setUrlAudio] = useState(null)
+    const [isActiveSubmit, setIsActiveSubmit] = useState(false)
     const handleIsActiveModal = () => {
         setIsActiveModal(!isActiveModal)
     }
@@ -38,13 +46,37 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
             setDetailmateri(materi)
         }
     }
-    const resetDetailMateri = () =>{
+    const resetDetailMateri = () => {
         setDetailmateri(null)
     }
     useEffect(() => {
         console.log(detailmateri)
     }, [detailmateri])
     const submit = () => {
+        setIsActiveSubmit(true)
+        let payload = {
+            idmapel: parseInt(idmapel),
+            stasiun: stasiun,
+            detailMateri: detailmateri,
+            topic: topic
+        }
+        if (urlAudio) {
+            payload = {
+                idmapel: parseInt(idmapel),
+                stasiun: stasiun,
+                detailMateri: detailmateri,
+                topic: topic,
+                urlaudio: urlAudio
+            }
+        }
+        const fetchAPI = async () => {
+            const response = await createMateri(payload)
+            if (response) {
+                setIsActiveSubmit(false)
+                router.refresh()
+            }
+        }
+        fetchAPI()
     }
     return (
         <div className=" w-[85%] border-l-2 border-gray-200">
@@ -74,7 +106,7 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                                     (
                                         <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                             <h1 className="font-bold text-xl lg:text-3xl">{detailMapel.topic}</h1>
-                                            <h3 className="font-normal text-xs lg:text-lg">{detailMapel.stasiun}</h3>
+                                            <h3 className="font-normal text-xs lg:text-lg">{detailMapel.stasiun.toUpperCase()}</h3>
                                         </div>
                                     ) :
                                     (
@@ -132,7 +164,7 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                                     <div className="flex flex-col gap-5">
                                         {detailMapel &&
                                             <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg text-justify">
-                                                <div className="indent-3" dangerouslySetInnerHTML={{ __html: detailMapel.detailmateri }} />
+                                                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailMapel.detailmateri }} />
                                                 <div className="flex flex-col justify-center items-center">
                                                     {detailMapel.urlaudio && <AudioPlayer url={`${detailMapel.urlaudio}`} />}
                                                     {detailMapel.urlimage && <DisplayImageComponent url={`${detailMapel.urlimage}`} />}
@@ -179,7 +211,11 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                             {detailmateri ?
                                 (
                                     <div className="w-[90%] mx-auto py-10 flex flex-col gap-5 z-10">
-                                        <div className="p-5 rounded-lg bg-yellow-500" dangerouslySetInnerHTML={{ __html: detailmateri }} />
+                                        <div className=" w-full p-5 rounded-lg bg-yellow-500 text-wrap">
+                                            <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailmateri }} />
+                                            {/* {parse(detailmateri)} */}
+                                            {/* {detailmateri} */}
+                                        </div>
                                         <div className="flex justify-end gap-5">
                                             <Button
                                                 variant="bordered"
@@ -192,9 +228,13 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                                             <Button
                                                 radius="sm"
                                                 className="w-[260px] bg-primer-500 text-white font-semibold z-10"
-                                                isDisabled={detailmateri && topic ?false:true }
+                                                isDisabled={detailmateri && topic ? false : true}
+                                                onPress={submit}
                                             >
-                                                <h3>Simpan</h3>
+                                                {isActiveSubmit ?
+                                                    (<div className="loader"></div>) :
+                                                    (<h3>Simpan</h3>)
+                                                }
                                             </Button>
                                         </div>
                                     </div>
@@ -214,10 +254,13 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                                         <div className="flex justify-end z-10">
                                             <Button
                                                 radius="sm"
-                                                isDisabled={detailmateri ? false: true}
+                                                isDisabled={detailmateri ? false : true}
                                                 className="w-[260px] bg-primer-500 text-white font-semibold"
                                             >
-                                                <h3>Simpan</h3>
+                                                {isActiveSubmit ?
+                                                    (<div className="loader"></div>) :
+                                                    (<h3>Simpan</h3>)
+                                                }
                                             </Button>
                                         </div>
                                     </div>

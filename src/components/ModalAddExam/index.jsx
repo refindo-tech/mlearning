@@ -4,7 +4,12 @@ import { Button, Textarea, RadioGroup, Radio } from "@nextui-org/react"
 import dynamic from "next/dynamic"
 import TextEditor from "../Quill"
 import Icons from "../Icons"
-const ModalAddExam = ({ active, inActiveModalExam }) => {
+const ModalAddExam = ({
+    active,
+    inActiveModalExam ,
+    index,
+    handleAddListQuestion,
+    }) => {
     const { AddIcon } = Icons
     const [option, setOption] = useState(null)
     const [listOptionAnswer, setListOptionAnswer] = useState([])
@@ -27,8 +32,37 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
     const handleOption = (value) => {
         setOption(value)
     }
-    const handleCorrectAnswer = (value)=>{
+    const handleCorrectAnswer = (value) => {
         setCorrectAnswer(value)
+    }
+    // useEffect(()=>{
+    //     console.log(listOptionAnswer)
+    // },[listOptionAnswer])
+    
+    
+    // useEffect(()=>{
+    //     const arrayToString = ()=>{
+    //         let result = ""
+    //         for(let i=0; i<listOptionAnswer.length; i++){
+    //             result += `${listOptionAnswer[i]}/`
+    //         }
+    //         return result
+    //     }
+    //     console.log(arrayToString())
+    // },[listOptionAnswer])
+const arrayToString = ()=>{
+            let result = ""
+            for(let i=0; i<listOptionAnswer.length; i++){
+                result += `${listOptionAnswer[i]}/`
+            }
+            return result
+        }
+    const [inputQuestion, setInputQuestion] = useState(null)
+    const handleValueInputQuestion = (value) =>{
+        setInputQuestion(value)
+    }
+    const resetStateInput=()=>{
+        setInputQuestion(null)
     }
     // const TextEditor = dynamic(
     //     () => import("@/components/Quill"), // Path to the TextEditor component file
@@ -36,6 +70,20 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
     //         ssr: false, // Disables server-side rendering (SSR) for this component
     //     }
     // );
+    const handleSave = ()=>{
+        let payload = {
+            text:inputQuestion,
+            correctAnswer:correctAnswer
+        }
+        if(listOptionAnswer.length !== 0){
+            payload={
+            text:inputQuestion,
+            optionanswer: arrayToString(),
+            correctAnswer:correctAnswer
+            }
+        }
+        handleAddListQuestion(index, payload)
+    }
     return (
         <>
             {active &&
@@ -47,7 +95,10 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
                                 radius="sm"
                                 isIconOnly={true}
                                 className="bg-primer-500"
-                                onPress={inActiveModalExam}
+                                onPress={()=>{
+                                    inActiveModalExam()
+                                    resetStateInput()
+                                }}
                             >
                                 <div className="h-5 w-5 text-white font-semibold">x</div>
                             </Button>
@@ -55,7 +106,7 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
                         <div className="w-[90%] mx-auto flex flex-col gap-5 overflow-y-scroll overflow-x-hidden px-2">
                             <div className="flex flex-col gap-5">
                                 <h3>Pertanyaan dalam bentuk teks</h3>
-                                <TextEditor />
+                                <TextEditor value={inputQuestion} handleValue={handleValueInputQuestion}/>
                                 <h3>Pertanyaan dalam bentuk gambar, audio, atau video</h3>
                                 <Button
                                     variant="bordered"
@@ -79,12 +130,13 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
                             </div>
                             {option && option === 'essay' &&
                                 <div className="flex flex-col gap-5 mb-16">
-                                    <h3>Pertanyaan dalam bentuk teks</h3>
+                                    <h3>Jawaban benar</h3>
                                     <Textarea
                                         variant="bordered"
                                         radius="sm"
                                         placeholder="Tambahkan text"
                                         minRows={4}
+                                        onValueChange={(value)=>handleCorrectAnswer(value)}
                                     />
                                 </div>
                             }
@@ -94,7 +146,7 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
                                     {correctAnswer && <p>{correctAnswer}</p>}
                                     <RadioGroup
                                         color="success"
-                                        onValueChange={(value)=>handleCorrectAnswer(value)}
+                                        onValueChange={(value) => handleCorrectAnswer(value)}
                                         className="pl-2"
                                     >
                                         {listOptionAnswer && listOptionAnswer?.map((value, index) => (
@@ -113,7 +165,7 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
                                             </div>
                                         ))}
                                     </RadioGroup>
-                                    {listOptionAnswer.length < 4 &&<Button
+                                    {listOptionAnswer.length < 4 && <Button
                                         variant="bordered"
                                         disableAnimation={true}
                                         className="border-0 border-white text-gray-700/50"
@@ -134,6 +186,11 @@ const ModalAddExam = ({ active, inActiveModalExam }) => {
                                 <Button
                                     radius="sm"
                                     className="w-[260px] bg-primer-500 text-white"
+                                    onPress={()=>{
+                                        handleSave()
+                                        resetStateInput()
+                                        inActiveModalExam()
+                                    }}
                                 >
                                     Simpan
                                 </Button>

@@ -17,8 +17,6 @@ import AddMateri from '@/components/AddMateri'
 import AddDiskusi from '@/components/AddDiskusi'
 import AddExam from '@/components/AddExam'
 import Icons from "@/components/Icons"
-// import "react-quill/dist/quill.snow.css"; // Imports the Quill editor's default "snow" theme CSS
-import "quill/dist/quill.snow.css";
 const CourseHomePage = () => {
     const path = usePathname()
     const router = useRouter()
@@ -123,7 +121,7 @@ const CourseHomePage = () => {
                 inActiveModalExam={handleInActiveModalAddExam}
             /> */}
             <Navbar />
-            <div className="w-full min-h-screen flex flex-row overflow-x-hidden">
+            <div className="w-full min-h-screen flex flex-row">
                 <aside className="w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}

@@ -39,7 +39,7 @@ const AsideCourse = ({listStasiun, absen}) => {
                         as={Link}
                         href={handleUrl(item.stasiun)}
                         variant="bordered"
-                        className={`rounded-lg h-12 font-semibold shadow-lg border-0 hover:cursor-pointer ${isStasiunCompleted(item.stasiun) ? 'bg-primer-500 text-yellow-500' : 'bg-gray-100'}`}
+                        className={`rounded-lg h-20 font-semibold shadow-lg border-0 hover:cursor-pointer ${isStasiunCompleted(item.stasiun) ? 'bg-primer-500 text-yellow-500' : 'bg-gray-100'}`}
                         key={index}
                     >
                         {item.stasiun.toUpperCase()}
@@ -48,7 +48,7 @@ const AsideCourse = ({listStasiun, absen}) => {
                 <Button
                     onPress={handleResult}
                     variant="bordered"
-                    className="rounded-lg h-12 font-semibold shadow-lg border-0 bg-gray-100 hover:cursor-pointer"
+                    className="rounded-lg h-20 font-semibold shadow-lg border-0 bg-gray-100 hover:cursor-pointer"
                 >
                     Hasil Akhir
                 </Button>

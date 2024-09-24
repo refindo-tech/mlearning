@@ -642,10 +642,32 @@ export const deleteProfileSiswa = async (req) => {
 }
 export const createMateri = async (req) => {
     try {
+        const token = sessionStorage.getItem('tokenguru')
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/materi/create`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization':`Bearer ${token}`
+            },
+            body: JSON.stringify(req)
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const createExam = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/exam/teacher/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':`Bearer ${token}`
             },
             body: JSON.stringify(req)
         })

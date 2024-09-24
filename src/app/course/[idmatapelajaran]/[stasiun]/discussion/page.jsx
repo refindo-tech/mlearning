@@ -129,7 +129,7 @@ const Discussion = () => {
                                     <h3 className="font-semibold text-xl">Portal Diskusi</h3>
                                     {/* <div className="border-2 border-gray-200 rounded-lg flex-grow bg-white">
                                 </div> */}
-                                    <Comments />
+                                    <Comments idmapel={idmapel} stasiun={stasiun}/>
                                 </div>
                             </div>
                         </div>

@@ -1,8 +1,12 @@
 'use client'
 import Background from "@/components/Background"
+import { useEffect } from "react"
+import { usePathname, useRouter } from "next/navigation"
 import Loading from "@/app/loading.jsx"
 import AsideTeacher from '@/components/AsideTeacher'
 import Navbar from "@/components/Navbar"
+import PGAnswer from '@/components/PGAnswer'
+import EssayAnswer from '@/components/EssayAnswer'
 import AudioPlayer from "@/components/AudioPlayer"
 import DisplayImageComponent from "@/components/DisplayImageComponent"
 import YoutubeVideo from "@/components/YoutubeVideo"
@@ -12,31 +16,80 @@ import { Button, Image, Input } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState } from "react"
 import Icons from '../Icons'
+import { createExam } from "@/backend/fetchAPI"
 const AddExam = (
     {
         detailMapel,
-        handleActiveInputTopic,
-        isInputActive,
+        // handleActiveInputTopic,
+        // isInputActive,
         stasiun,
         handleChevronLeft,
         handleChevronRight
     }
 ) => {
+    const path = usePathname()
+    const router = useRouter()
+    const idmapel = path.split('/')[2]
     const { AddIcon } = Icons
-    const [listQuestion, setListQuestion] = useState([0])
+    const [listQuestion, setListQuestion] = useState([{}])
     const [isActiveModal, setIsActiveModal] = useState(false)
-    const activeModalAddExam = () => {
+    const [activeQuestionIndex, setActiveQuestionIndex] = useState(null);
+    const activeModalAddExam = (index) => {
+        setActiveQuestionIndex(index); // Set index yang aktif
         setIsActiveModal(true)
+    }
+    const handleDeleteListQuestion = (index) => {
+        setListQuestion((prev) => {
+            const data = [...prev]
+            data.splice(index, 1)
+            return data
+        })
     }
     const handleInActiveModalAddExam = () => {
         setIsActiveModal(false)
     }
-    const handleAddListQuestion = (index, value) => {
+    const handleEditListQuestion = (index, value) => {
         setListQuestion((prev) => {
             const data = [...prev]
-            data[data.length] = data.length
+            data[index] = value
             return data
         })
+    }
+    useEffect(() => {
+        console.log(listQuestion)
+    }, [listQuestion])
+    const handleAddQuestion = () => {
+        setListQuestion((prev) => {
+            let data = [...prev]
+            data[data.length] = {}
+            return data
+        })
+    }
+    const [topic, setTopic] = useState(null)
+    const [isInputActive, setIsInputActive] = useState(true)
+    const handletopic = (value) => {
+        setTopic(value)
+    }
+    const handleActiveInputTopic = () => {
+        setIsInputActive(!isInputActive)
+    }
+    const [submitActive, setSubmitActive] = useState(false)
+    const submit = () => {
+        setSubmitActive(true)
+        let payload = {
+            idmapel: parseInt(idmapel),
+            stasiun: stasiun,
+            topic: topic,
+            data: listQuestion
+        }
+        const fetchAPI = async () => {
+            const response = await createExam(payload)
+            if (response) {
+                setSubmitActive(false)
+                router.refresh()
+            }
+        }
+        fetchAPI()
     }
     return (
         <div className=" w-[85%] border-l-2 border-gray-200">
@@ -57,6 +110,28 @@ const AddExam = (
                         >
                             <ChevronRight size={32} />
                         </button>
+                    </div>
+                    <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
+                        <div
+                            className="flex items-center gap-1 h-10 w-fit border-3 border-dashed border-white rounded-lg px-2"
+                        >
+                            <input
+                                // variant="bordered"
+                                placeholder="Tambah judul"
+                                disabled={isInputActive ? true : false}
+                                className="w-[105px] text-white placeholder:text-white bg-transparent focus:outline-none"
+                                onChange={(e) => handletopic(e.target.value)}
+                            />
+                            <Button
+                                isIconOnly={true}
+                                variant="bordered"
+                                onPress={handleActiveInputTopic}
+                                className="h-5 w-5 border-0"
+                            >
+                                <AddIcon />
+                            </Button>
+                        </div>
+                        <h3 className="font-normal text-xs lg:text-lg">{stasiun.toUpperCase()}</h3>
                     </div>
                     {/* <div className="flex flex-row items-end justify-between">
                         {detailMapel ?
@@ -121,28 +196,63 @@ const AddExam = (
                                     <h3>{index + 1}</h3>
                                 </div>
                                 <div className="w-full border-t-3 border-dashed border-primer-500"></div>
-                                <Button
-                                    isIconOnly={true}
-                                    radius="sm"
-                                    className="bg-primer-500 w-[300px]"
-                                    onPress={activeModalAddExam}
-                                >
-                                    <div className="flex justify-center gap-2 text-white">
-                                        <h3>Tambah Pertanyaan</h3>
-                                        <AddIcon />
-                                    </div>
-                                </Button>
+                                {item.text ?
+                                    (
+                                        <Button
+                                            isIconOnly={true}
+                                            radius="sm"
+                                            className="bg-primer-500 w-[300px]"
+                                            onPress={() => handleDeleteListQuestion(index)}
+                                        >
+                                            <div className="flex justify-center gap-2 text-white">
+                                                <h3>Hapus Pertanyaan</h3>
+                                                <div className="h-5 w-5 rounded bg-white flex justify-center items-center text-primer-500 font-semibold">
+                                                    <p>-</p>
+                                                </div>
+                                            </div>
+                                        </Button>
+                                    ) :
+                                    (
+                                        <Button
+                                            isIconOnly={true}
+                                            radius="sm"
+                                            className="bg-primer-500 w-[300px]"
+                                            onPress={() => activeModalAddExam(index)}
+                                        >
+                                            <div className="flex justify-center gap-2 text-white">
+                                                <h3>Tambah Pertanyaan</h3>
+                                                <AddIcon />
+                                            </div>
+                                        </Button>
+                                    )
+                                }
                             </div>
-                            {/* <div className="flex flex-col gap-5">
-                                <div className="bg-sekunder-300 text-justify p-3 rounded-lg">
-                                    <div className="indent-8" dangerouslySetInnerHTML={{ __html: item.text }} />
-                                    <div className="flex flex-col justify-center items-center">
-                                        {item.urlaudio && <AudioPlayer url={`${item.urlaudio}`} />}
-                                        {item.urlimage && <DisplayImageComponent url={`${item.urlimage}`} />}
-                                        {item.urlvideo && <YoutubeVideo urlvideo={item.urlvideo} />}
+                            {item.text &&
+                                <div className="flex flex-col gap-5">
+                                    <div className="bg-sekunder-300 text-justify p-3 rounded-lg">
+                                        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: item.text }} />
+                                        <div className="flex flex-col justify-center items-center">
+                                            {item.urlaudio && <AudioPlayer url={`${item.urlaudio}`} />}
+                                            {item.urlimage && <DisplayImageComponent url={`${item.urlimage}`} />}
+                                            {item.urlvideo && <YoutubeVideo urlvideo={item.urlvideo} />}
+                                        </div>
                                     </div>
+                                    {item.optionanswer ?
+                                        (
+                                            <PGAnswer optionanswer={item.optionanswer} />
+                                        ) :
+                                        (
+                                            <EssayAnswer isDisabled={true} />
+                                        )
+                                    }
                                 </div>
-                            </div> */}
+                            }
+                            <ModalAddExam
+                                index={activeQuestionIndex} // Pass the active index here
+                                active={isActiveModal}
+                                inActiveModalExam={handleInActiveModalAddExam}
+                                handleAddListQuestion={handleEditListQuestion}
+                            />
                             {/* {item.optionanswer ?
                                 (
                                     <>{answeredQuestion.length !== 0 ? (
@@ -171,19 +281,15 @@ const AddExam = (
                                     </>
                                 )
                             } */}
-                            <ModalAddExam
-                                active={isActiveModal}
-                                inActiveModalExam={handleInActiveModalAddExam}
-                            />
                         </div>
                     ))}
                     <div className="w-full py-10 flex flex-col gap-10">
                         <Button
                             variant="bordered"
                             className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold z-10"
-                            onPress={handleAddListQuestion}
+                            onPress={handleAddQuestion}
                         >
-                            <h3>Tambah materi</h3>
+                            <h3>Tambah soal</h3>
                             <div className="h-5 w-5 flex items-center justify-center text-primer-500">
                                 <AddIcon fill={'#110B63'} />
                             </div>
@@ -192,8 +298,13 @@ const AddExam = (
                             <Button
                                 radius="sm"
                                 className="w-[260px] bg-primer-500 text-white font-semibold z-10"
+                                onPress={submit}
+                                isDisabled={submitActive ? true : false}
                             >
-                                <h3>Simpan</h3>
+                                {submitActive ?
+                                    (<div className="loader"></div>) :
+                                    (<h3>Simpan</h3>)
+                                }
                             </Button>
                         </div>
                     </div>

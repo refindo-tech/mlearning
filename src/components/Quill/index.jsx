@@ -36,8 +36,11 @@ const TextEditor = ({value, handleValue}) => {
                     formats={TextEditor.formats} // Custom formats
                     onChange={handleValue} // Event handler for content changes
                     value={value} // Current value of the editor content
+                    // onChange={handleBody} // Event handler for content changes
+                    // value={body} // Current value of the editor content
                 />
-                {/* <button onClick={handleSubmit}>Submit</button> Button to submit the content */}
+                {/* Button to submit the content */}
+                {/* <button onClick={handleSubmit}>Submit</button> */}
             </div>
             {/* Div to display the submitted content, parsed as HTML */}
             {/* <div className="ql-editor">{parse(submittedContent)}</div> */}

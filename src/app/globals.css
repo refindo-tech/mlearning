@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import "~quill/dist/quill.snow.css";
 audio::-webkit-media-controls-enclosure {
     overflow: hidden;
 }

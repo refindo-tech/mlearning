@@ -31,19 +31,6 @@ const ReportAbsen = () => {
         setStasiun(value)
     }
     useEffect(() => {
-        const payload = {
-            idmapel: parseInt(idmapel),
-            stasiun: stasiun
-        }
-        const fetchAPI = async () => {
-            const response = await getAbsensiForTeacher(payload)
-            if (response) {
-                setDataAbsensi(response.data)
-            }
-        }
-        fetchAPI()
-    }, [idmapel, stasiun])
-    useEffect(() => {
         const fetchAPI = async () => {
             const req = { idmatapelajaran: idmapel }
             const response = await listStasiun(req)
@@ -65,6 +52,24 @@ const ReportAbsen = () => {
         }
         fetchAPI()
     }, [idmapel, router])
+    const [limit, setLimit] = useState(5)
+    const handleLimit = (value)=>{
+        setLimit(value)
+    }
+    useEffect(() => {
+        const payload = {
+            idmapel: parseInt(idmapel),
+            stasiun: stasiun,
+            limit:limit
+        }
+        const fetchAPI = async () => {
+            const response = await getAbsensiForTeacher(payload)
+            if (response) {
+                setDataAbsensi(response.data)
+            }
+        }
+        fetchAPI()
+    }, [idmapel, stasiun, limit])
     if (isLoad) {
         return (<Loading />)
     }
@@ -109,7 +114,8 @@ const ReportAbsen = () => {
                                                 variant="flat"
                                                 type="number"
                                                 min={1}
-                                                defaultValue="10"
+                                                defaultValue={limit}
+                                                onValueChange={(value)=>handleLimit(parseInt(value))}
                                                 className="w-[60px] h-10 rounded"
                                             />
                                             <p>baris</p>
@@ -128,7 +134,7 @@ const ReportAbsen = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="text-base">
-                                        {dataAbsensi && dataAbsensi.map((item, index) => (
+                                        { dataAbsensi?.map((item, index) => (
                                             <tr className="h-[60px] align-center" key={index}>
                                                 <td className="text-center w-[50px]">{index + 1}</td>
                                                 <td>{item.name}</td>
