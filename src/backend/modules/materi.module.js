@@ -121,6 +121,58 @@ class _materi {
             }
         }
     }
+    updateDescription = async(req)=>{
+        try {
+            const {idmapel, description} = req
+            const findMapel = await db.mataPelajaran.findFirst({
+                where:{
+                    id:parseInt(idmapel)
+                },
+                select:{
+                    description:true
+                }
+            })
+            if(findMapel){
+                const update = await db.mataPelajaran.update({
+                    where:{
+                        id:parseInt(idmapel)
+                    },
+                    data:{
+                        description:description
+                    }
+                })
+                if(update){
+                    return {
+                        status:true,
+                        message: 'Update Descprition Success',
+                        code:201
+                    }
+                }else{
+                    return {
+                        status:false,
+                        message: 'Update Descprition Failed',
+                        code:400
+                    }
+                }
+            }else{
+                return {
+                    status:false,
+                    message: 'Not Any Mapel Relevant',
+                    code:404
+                }
+            }
+        } catch (error) {
+            console.log({
+                message: 'Materi Module Add Description Error',
+                error: error.message,
+                code: 500
+            })
+            return {
+                message: 'Internal Server Error',
+                code: 500
+            }
+        }
+    }
 }
 const m$materi = new _materi()
 export default m$materi

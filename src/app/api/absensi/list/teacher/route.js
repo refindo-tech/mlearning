@@ -10,13 +10,22 @@ export async function GET(req){
         const idmapel = params.get('idmapel');
         const stasiun = params.get('stasiun');
         const limit = params.get('limit');
+        const name = params.get('name');
         const verify = await middleware.authTeacher(authorization) 
         let response
         if(verify.access){
-            const payload = {
+            let payload = {
                 stasiun,
                 idmapel : parseInt(idmapel),
                 limit:parseInt(limit)
+            }
+            if(name){
+                payload={
+                    stasiun,
+                    idmapel : parseInt(idmapel),
+                    limit:parseInt(limit),
+                    name
+                }
             }
             // response = await m$exam
             response = await m$absensi.getAbsensiForTeacher(payload)

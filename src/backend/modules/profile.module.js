@@ -164,20 +164,46 @@ class _profile {
     }
     listProfile = async (req) => {
         try {
-            const { limit } = req
-            const list = await db.siswa.findMany({
-                select: {
-                    ProfileSiswa: {
-                        select: {
-                            name: true,
-                            nisn: true,
-                            kelas: true,
-                            idsiswa: true
+            const { limit, name } = req
+            var list = []
+            if(name && name !== ''){
+                var list = await db.siswa.findMany({
+                    where:{
+                        ProfileSiswa:{
+                            some:{
+                                name:{
+                                    contains:name
+                                }
+                            }
                         }
-                    }
-                },
-                take: parseInt(limit)
-            })
+                    },
+                    select: {
+                        ProfileSiswa: {
+                            select: {
+                                name: true,
+                                nisn: true,
+                                kelas: true,
+                                idsiswa: true
+                            }
+                        }
+                    },
+                    take: parseInt(limit)
+                })
+            }else{
+                list = await db.siswa.findMany({
+                    select: {
+                        ProfileSiswa: {
+                            select: {
+                                name: true,
+                                nisn: true,
+                                kelas: true,
+                                idsiswa: true
+                            }
+                        }
+                    },
+                    take: parseInt(limit)
+                })
+            }
             const listProfileSiswa = list.map((item) => item.ProfileSiswa[0])
             return {
                 status: true,

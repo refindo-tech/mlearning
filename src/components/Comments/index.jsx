@@ -1,26 +1,42 @@
-import Script from 'next/script';
-const Comments = ({ idmapel, stasiun }) => {
+'use client'
+import { useEffect } from 'react';
+
+const Comments = ({ idDiskusi }) => {
+    useEffect(() => {
+        // Function to load Disqus
+        // console.log("identifier: "+`${idDiskusi}`)
+        if(idDiskusi){
+            const loadDisqus = () => {
+                window.disqus_config = function () {
+                    // this.page.url = `${window.location.origin}${window.location.pathname}?stasiun=${stasiun}`;  // Tambahkan query string
+                    this.page.url = window.location.href
+                    // this.page.identifier = `${idmapel}/${stasiun}`;  // Gunakan kombinasi idmapel dan stasiun sebagai identifier
+                    this.page.identifier = `identifier-${idDiskusi}`
+                };
+                // Check if Disqus is already loaded
+                if (window.DISQUS) {
+                    // Reset Disqus if it's already loaded
+                    window.DISQUS.reset({
+                        reload: true,
+                        config: window.disqus_config,
+                    });
+                } else {
+                    // If not loaded, dynamically insert Disqus script
+                    const d = document, s = d.createElement('script');
+                    s.src = 'https://mlearning-1.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                }
+            };
+            loadDisqus(); // Load Disqus when component mounts or `idmapel` / `stasiun` changes
+        }
+    }, [idDiskusi]); // Only re-run the effect if `idmapel` or `stasiun` changes
     return (
         <>
             <div id="disqus_thread"></div>
-            <Script id="disqus_thread">
-                {`
-                    var disqus_config = function () {
-                    this.page.url = document.location.href;  // Replace PAGE_URL with your page's canonical URL variable
-                // this.page.identifier = document.location.href.split('course/')[1]; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-                    this.page.identifier = '${idmapel}/${stasiun}'
-                    };
-                (function() { // DON'T EDIT BELOW THIS LINE
-                        var d = document, s = d.createElement('script');
-                s.src = 'https://mlearning-1.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-                })();`
-                }
-            </Script>
-            <Script id="dsq-count-scr" src="//m-learning-1.disqus.com/count.js" async></Script>
             <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         </>
-    )
-}
-export default Comments
+    );
+};
+
+export default Comments;

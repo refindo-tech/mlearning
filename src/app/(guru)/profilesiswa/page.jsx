@@ -14,11 +14,24 @@ const ProfilSiswa = () => {
     const [isLoad, setIsLoad] = useState(true)
     const [limitData, setLimitData] = useState(5)
     const [dataListProfile, setDataListProfile] = useState(null)
+    const [inputSearch, setInputSearch] = useState(null)
+    const handleSearch=(value)=>{
+        setInputSearch(value)
+    }
+    useEffect(()=>{
+        console.log(inputSearch)
+    },[inputSearch])
     const { AddIcon } = Icons
     useEffect(() => {
         const fetchAPI = async () => {
-            const payload={
+            let payload={
                 limit:limitData
+            }
+            if(inputSearch){
+                payload={
+                    limit:limitData,
+                    name:inputSearch
+                }
             }
             const response = await listProfile(payload)
             if (response) {
@@ -27,7 +40,7 @@ const ProfilSiswa = () => {
             }
         }
         fetchAPI()
-    }, [limitData])
+    }, [limitData, inputSearch])
     const handleLimit = (value)=>{
         setLimitData(value)
     }
@@ -70,7 +83,7 @@ const ProfilSiswa = () => {
                                                     <p>Tambah Siswa</p>
                                                 </div>
                                             </Button>
-                                            <SearchTable />
+                                            <SearchTable value={inputSearch} handleValue={handleSearch}/>
                                         </div>
                                     </div>
                                 </div>

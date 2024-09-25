@@ -4,7 +4,7 @@ import { Button, Textarea, RadioGroup, Radio } from "@nextui-org/react"
 import dynamic from "next/dynamic"
 import TextEditor from "../Quill"
 import Icons from "../Icons"
-const ModalAddDiskusi = ({ active, inActiveModalExam, saveMateri, handleDiskusi }) => {
+const ModalAddDescription = ({ active, handleModal, saveDesc }) => {
     const { AddIcon } = Icons
     const [option, setOption] = useState(null)
     const [listOptionAnswer, setListOptionAnswer] = useState([])
@@ -30,25 +30,14 @@ const ModalAddDiskusi = ({ active, inActiveModalExam, saveMateri, handleDiskusi 
     const handleCorrectAnswer = (value) => {
         setCorrectAnswer(value)
     }
-    const [input, setInput] = useState("")
+    const [valueMateri, setValueMateri] = useState(null)
     const [urlAudio, setUrlAudio] = useState(null)
     const handleUrlAudio = (value) => {
         setUrlAudio(value)
     }
-    const handleInput = (e) => {
-        setInput(e)
+    const handleValueMateri = (e) => {
+        setValueMateri(e)
     }
-
-    // const [input, setInput] = useState(null)
-    // const handleInput = (value) =>{
-    //     setInput(value)
-    // }
-
-
-    // const [isActiveModal, setIsActiveModal] = useState(false)
-    // const handleActiveModal = ()=>{
-    //     setIsActiveModal(!isActiveModal)
-    // }
 
     // useEffect(() => {
     //     console.log(valueMateri)
@@ -70,7 +59,7 @@ const ModalAddDiskusi = ({ active, inActiveModalExam, saveMateri, handleDiskusi 
                                 radius="sm"
                                 isIconOnly={true}
                                 className="bg-primer-500"
-                                onPress={inActiveModalExam}
+                                onPress={handleModal}
                             >
                                 <div className="h-5 w-5 text-white font-semibold">x</div>
                             </Button>
@@ -78,7 +67,7 @@ const ModalAddDiskusi = ({ active, inActiveModalExam, saveMateri, handleDiskusi 
                         <div className="w-[90%] mx-auto flex flex-col gap-5 overflow-y-auto overflow-x-hidden px-2 justify-between">
                             <div className="flex flex-col gap-5">
                                 <h3>Materi dalam bentuk teks atau video</h3>
-                                <TextEditor value={input} handleValue={handleInput} />
+                                <TextEditor value={valueMateri} handleValue={handleValueMateri} />
                                 <h3>Tambah materi dalam bentuk gambar atau audio</h3>
                                 <Button
                                     variant="bordered"
@@ -93,11 +82,11 @@ const ModalAddDiskusi = ({ active, inActiveModalExam, saveMateri, handleDiskusi 
                             <div className="flex justify-end">
                                 <Button
                                     radius="sm"
-                                    isDisabled={input === '' ? true : false}
+                                    isDisabled={valueMateri ? false : true}
                                     className="w-[260px] bg-primer-500 text-white"
                                     onPress={() => {
-                                        handleDiskusi(input, urlAudio)
-                                        inActiveModalExam()
+                                        saveDesc(valueMateri, urlAudio)
+                                        handleModal()
                                     }}
                                 >
                                     Tambahkan
@@ -110,4 +99,4 @@ const ModalAddDiskusi = ({ active, inActiveModalExam, saveMateri, handleDiskusi 
         </>
     )
 }
-export default ModalAddDiskusi
+export default ModalAddDescription

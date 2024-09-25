@@ -17,9 +17,17 @@ import { useRouter } from "next/navigation"
 const Discussion = () => {
     const router = useRouter()
     const path = usePathname()
+    const idmapel = path.split('/')[2]
+    const stasiun = path.split('/')[3]
     const [dataDiskusi, setDataDiskusi] = useState(null)
     const [dataListStasiun, setDataListStasiun] = useState([])
     const [dataAbsensi, setDataAbsensi] = useState([])
+    // const handleStasiunDiskusi = (value) =>{
+    //     setStasiunDiskusi(value)
+    // }
+    // useEffect(()=>{
+    //     console.log(idmapel, stasiun)
+    // },[idmapel, stasiun])
     useEffect(() => {
         const idmapel = path.split('/')[2]
         const stasiun = path.split('/')[3]
@@ -89,7 +97,7 @@ const Discussion = () => {
                                 <div className="flex flex-row items-end justify-between">
                                     <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                         {dataDiskusi &&
-                                            <h1 className="font-bold text-xl lg:text-3xl">{dataDiskusi.Materi.topic}</h1>
+                                            <h1 className="font-bold text-xl lg:text-3xl">{dataDiskusi.topic}</h1>
                                         }
                                     </div>
                                     <Image
@@ -107,7 +115,7 @@ const Discussion = () => {
                                 <div className="flex flex-col gap-5">
                                     {dataDiskusi &&
                                         <div className="bg-sekunder-300 text-justify p-3 rounded-lg">
-                                            {dataDiskusi.question}
+                                            <div className="ql-editor" dangerouslySetInnerHTML={{ __html: dataDiskusi.question }}></div>
                                             <div className="flex flex-col justify-center items-center">
                                                 {dataDiskusi.urlaudio && <AudioPlayer url={`${dataDiskusi.urlaudio}`} />}
                                                 {dataDiskusi.urlimage && <DisplayImageComponent url={`${dataDiskusi.urlimage}`} />}
@@ -129,7 +137,7 @@ const Discussion = () => {
                                     <h3 className="font-semibold text-xl">Portal Diskusi</h3>
                                     {/* <div className="border-2 border-gray-200 rounded-lg flex-grow bg-white">
                                 </div> */}
-                                    <Comments idmapel={idmapel} stasiun={stasiun}/>
+                                    <Comments idDiskusi={dataDiskusi.id} />
                                 </div>
                             </div>
                         </div>

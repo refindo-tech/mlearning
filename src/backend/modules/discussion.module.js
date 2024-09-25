@@ -9,11 +9,12 @@ class _discussion{
                     stasiun:stasiun,
                 },
                 select:{
+                    id:true,
                     question:true,
                     urlaudio:true,
                     urlimage:true,
                     urlvideo:true,
-                    Materi:true
+                    topic:true
                 }
             })
             if(!detail){
@@ -41,16 +42,34 @@ class _discussion{
             }
         }
     }
-    createDsicussion = async(req) =>{
+    createDicussion = async(req) =>{
         try {
-            const {idmapel, stasiun, question, urlaudio} = req
-            if(idmapel, stasiun, question){
+            const {idmapel, stasiun, question, topic, urlaudio} = req
+            const findMateri = await  db.materi.findFirst({
+                where:{
+                    stasiun:stasiun,
+                    idmatapelajaran:parseInt(idmapel)
+                },
+                select:{
+                    id:true
+                }
+            })
+            if(!findMateri){
+                return{
+                    status:false,
+                    message:"Not any materi in this stasiun",
+                    code:404
+                }
+            }
+            if(idmapel, stasiun, question, topic){
                 const create = await db.diskusi.create({
                     data:{
                         idmapel:parseInt(idmapel),
                         stasiun:stasiun,
                         question:question,
-                        urlaudio: urlaudio ? urlaudio:null
+                        urlaudio: urlaudio ? urlaudio:null,
+                        idmateri:findMateri.id,
+                        topic:topic
                     }
                 })
                 if(create){

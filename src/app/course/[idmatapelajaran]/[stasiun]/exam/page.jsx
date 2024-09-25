@@ -59,7 +59,7 @@ const Exam = () => {
                     } else {
                         setListQuestionExam(responseListQuestion.data.listQuestion)
                     }
-                    setTopic(responseListQuestion.data.other.MataPelajaran.Materi[0].topic)
+                    setTopic(responseListQuestion.data.other.topic)
                     setOtherData(responseListQuestion.data.other)
                 }
             }

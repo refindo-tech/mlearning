@@ -1,6 +1,4 @@
-import { error } from "console"
 import db from "../helpers/db"
-import { select } from "@nextui-org/react"
 class _exam {
     createExam = async(req) =>{
         try {
@@ -60,18 +58,7 @@ class _exam {
                     id: true,
                     idmapel: true,
                     stasiun: true,
-                    MataPelajaran: {
-                        select: {
-                            Materi: {
-                                where: {
-                                    stasiun: stasiun
-                                },
-                                select: {
-                                    topic: true
-                                }
-                            }
-                        }
-                    }
+                    topic:true
                 }
             })
             if (!exam) {
@@ -244,10 +231,7 @@ class _exam {
     }
     listExam = async (req) => {
         try {
-            const { idmapel, stasiun, limit } = req
-            if(limit){
-
-            }
+            const { idmapel, stasiun, limit } = req;
             const findExam = await db.exam.findFirst({
                 where: {
                     idmapel: parseInt(idmapel),
@@ -256,28 +240,32 @@ class _exam {
                 select: {
                     id: true
                 }
-            })
-            if(!findExam){
+            });
+            if (!findExam) {
                 return {
                     status: true,
                     message: 'success',
                     data: [],
                     code: 200
-                }
+                };
             }
-            const idExam = findExam.id
+            const idExam = findExam.id;
             const listExamAuthSiswa = await db.authExamSiswa.findMany({
                 where: { idexam: parseInt(idExam) },
                 select: {
                     idsiswa: true
-                },
-                take: 10
-            })
-            const listIdSiswa = listExamAuthSiswa.map((auth) => auth.idsiswa)
-            const detailSiswa = await db.profileSiswa.findMany({
+                }
+            });
+            
+            // Menggunakan Set untuk menghapus duplikasi idsiswa
+            let listIdSiswa = listExamAuthSiswa.map((auth) => auth.idsiswa);
+            console.log('listExamAuthSiswa:', listExamAuthSiswa);
+            console.log('listIdSiswa:', listIdSiswa);
+            // Menggunakan findMany untuk mendapatkan banyak profil siswa sekaligus
+            const listProfile = await db.profileSiswa.findMany({
                 where: {
                     idsiswa: {
-                        in: listIdSiswa
+                        in: listIdSiswa // Menggunakan operator 'in' untuk mendapatkan profil siswa dengan idsiswa yang ada di listIdSiswa
                     }
                 },
                 select: {
@@ -287,26 +275,28 @@ class _exam {
                     kelas: true
                 },
                 take:parseInt(limit)
-            })
+            });
+    
             return {
                 status: true,
                 message: 'success',
-                data: detailSiswa,
+                data: listProfile,
                 code: 200
-            }
+            };
         } catch (error) {
             console.log({
                 status: false,
                 message: 'Exam Modul List Exam Error',
                 error: error
-            })
+            });
             return {
                 status: false,
                 message: 'Internal Server Error',
                 code: 500
-            }
+            };
         }
-    }
+    };
+    
 }
 const m$exam = new _exam()
 export default m$exam

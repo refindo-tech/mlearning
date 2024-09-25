@@ -130,6 +130,7 @@ model Diskusi {
   idmapel       Int
   idmateri      Int
   // idguru        Int
+  topic         String?       @db.Text
   question      String        @db.Text
   urlvideo      String?       @db.Text
   urlaudio      String?       @db.Text

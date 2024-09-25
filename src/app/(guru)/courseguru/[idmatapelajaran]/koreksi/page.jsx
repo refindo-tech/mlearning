@@ -64,10 +64,10 @@ const KoreksiTugas = () => {
                 stasiun: stasiun,
                 limit: parseInt(limit)
             }
-            console.log(payloadListExam)
             if (stasiun) {
                 const response = await listExam(payloadListExam)
                 if (response) {
+                    console.log(response)
                     setDataListExam(response.data)
                 }
             }

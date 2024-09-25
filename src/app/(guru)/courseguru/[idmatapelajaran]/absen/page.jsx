@@ -20,6 +20,7 @@ const ReportAbsen = () => {
     const [dataAbsensi, setDataAbsensi] = useState(null)
     const [detailMapel, setDetailMapel] = useState(null)
     const [stasiun, setStasiun] = useState(null)
+    const [inputSearch, setInputSearch] = useState(null)
     const handleUrl = (value) => {
         if (value) {
             return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${value.stasiun}`
@@ -56,11 +57,22 @@ const ReportAbsen = () => {
     const handleLimit = (value)=>{
         setLimit(value)
     }
+    const handleInputSearch = (value)=>{
+        setInputSearch(value)
+    }
     useEffect(() => {
-        const payload = {
+        let payload = {
             idmapel: parseInt(idmapel),
             stasiun: stasiun,
             limit:limit
+        }
+        if(inputSearch){
+            payload={
+                idmapel: parseInt(idmapel),
+                stasiun: stasiun,
+                limit:limit,
+                name:inputSearch
+            }
         }
         const fetchAPI = async () => {
             const response = await getAbsensiForTeacher(payload)
@@ -69,7 +81,10 @@ const ReportAbsen = () => {
             }
         }
         fetchAPI()
-    }, [idmapel, stasiun, limit])
+    }, [idmapel, stasiun, limit, inputSearch])
+    useEffect(()=>{
+        console.log(inputSearch)
+    },[inputSearch])
     if (isLoad) {
         return (<Loading />)
     }
@@ -120,7 +135,7 @@ const ReportAbsen = () => {
                                             />
                                             <p>baris</p>
                                         </div>
-                                        <SearchTable />
+                                        <SearchTable value={inputSearch} handleValue={handleInputSearch}/>
                                     </div>
                                 </div>
                                 <table className="table-fixed w-full">
