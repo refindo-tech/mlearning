@@ -30,16 +30,18 @@ const Homepage = () => {
             <div className="relative ">
                 <Background />
                 {dataListClass &&
-                    <div className="w-full flex flex-col gap-5 lg:gap-10 p-10 z-10">
-                        <h1
-                            className="text-center text-lg font-semibold"
-                        >
-                            Mata pelajaran yang tersedia
-                        </h1>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {dataListClass.map((item, index) => (
-                                <SubjectCard key={index} subject={item} />
-                            ))}
+                    <div className="w-full min-h-screen flex flex-col justify-between p-10 z-10">
+                        <div className="flex flex-col gap-5 lg:gap-10">
+                            <h1
+                                className="text-center text-lg font-semibold"
+                            >
+                                Mata pelajaran yang tersedia
+                            </h1>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {dataListClass.map((item, index) => (
+                                    <SubjectCard key={index} subject={item} />
+                                ))}
+                            </div>
                         </div>
                         <Link
                             href={'/dashboard'}

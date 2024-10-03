@@ -7,12 +7,15 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { getDetailProfileByTeacher, editProfile, editProfileWali } from '@/backend/fetchAPI.js'
 import Loading from '@/app/loading'
+import Icons from '@/components/Icons'
 const ProfileSiswaEdit = () => {
     const path = usePathname()
     const router = useRouter()
     const idsiswa = path.split('/')[2]
+    const { AddIcon } = Icons
     const [isLoad, setIsLoad] = useState(true)
     const [submitLoad, setSubmitLoad] = useState(false)
+    const [selectedFile, setSelectedFile] = useState(null)
     const [dataEdit, setDataEdit] = useState(null)
     const [dataEditWali, setDataEditWali] = useState(null)
     const [detailSiswa, setDetailSiswa] = useState(null)
@@ -51,41 +54,46 @@ const ProfileSiswaEdit = () => {
     }
     const handleSubmitEdit = () => {
         const fetchAPI = async () => {
-            if(dataEdit && dataEditWali){
-                const payloadEditProfile = {
-                    idsiswa: parseInt(idsiswa),
-                    payload: dataEdit
-                }
+            const formData = new FormData()
+            if(selectedFile){
+                formData.append('photo', selectedFile)
+            }
+            formData.append('idsiswa', parseInt(idsiswa))
+            formData.append('payload', JSON.stringify(dataEdit))
+            if (dataEdit && dataEditWali) {
                 const payloadEditProfileWali = {
                     idsiswa: parseInt(idsiswa),
                     payload: dataEditWali
                 }
-                const response = await editProfile(payloadEditProfile)
+                const response = await editProfile(formData)
                 const responseWali = await editProfileWali(payloadEditProfileWali)
                 if (response && responseWali) {
-                    router.refresh()
+                    const newUrl = path.replace(`edit`,'')
+                    router.push(newUrl)
                 }
-            }else if(dataEdit){
-                const payloadEditProfile = {
-                    idsiswa: parseInt(idsiswa),
-                    payload: dataEdit
-                }
-                const response = await editProfile(payloadEditProfile)
+            } else if (dataEdit || selectedFile) {
+                const response = await editProfile(formData)
                 if (response) {
-                    router.refresh()
+                    const newUrl = path.replace(`edit`,'')
+                    router.push(newUrl)
                 }
-            }else if (dataEditWali) {
-                const payloadEditProfile = {
+            } else if (dataEditWali) {
+                const payloadEditProfileWali = {
                     idsiswa: parseInt(idsiswa),
                     payload: dataEditWali
                 }
-                const response = await editProfileWali(payloadEditProfile)
+                const response = await editProfileWali(payloadEditProfileWali)
                 if (response) {
-                    router.refresh()
+                    const newUrl = path.replace(`edit`,'')
+                    router.push(newUrl)
                 }
             }
         }
         fetchAPI()
+    }
+    const handleChangeFile = (e) => {
+        const file = e.target.files[0]
+        setSelectedFile(file)
     }
     if (isLoad) {
         return (<Loading />)
@@ -101,13 +109,34 @@ const ProfileSiswaEdit = () => {
                         <div className=' grid grid-cols-1 lg:grid-cols-2 gap-8'>
                             <div className='h-[300px] flex flex-row rounded-lg border-2 border-gray-200'>
                                 <div className='w-[90%] mx-auto flex items-center justify-center gap-10'>
-                                    <div className='h-[100px] w-[100px] flex items-center justify-center rounded-full bg-accent-orange'>
-                                        <Image
-                                            alt="avatar"
-                                            src="/assets/image/avatar.png"
-                                            className="block h-[88px] w-[88px]"
-                                        />
-                                    </div>
+                                    {selectedFile ?
+                                        (
+                                            <Image 
+                                                alt='preview'
+                                                src={URL.createObjectURL(selectedFile)}
+                                                className='h-[80px] w-[80px] rounded-full'
+                                            />
+                                        ):
+                                        (
+                                        <div>
+                                            <label htmlFor="photo">
+                                                <div
+                                                    className='h-[80px] w-[80px] rounded-full border-2 border-dashed border-primer-500 flex justify-center items-center'
+                                                >
+                                                    <AddIcon fill={'#110B63'} />
+                                                </div>
+                                            </label>
+                                            <input
+                                                name='photo'
+                                                id='photo'
+                                                type="file"
+                                                accept='.jpg, .png, .jpeg'
+                                                className='hidden'
+                                                onChange={(e) => handleChangeFile(e)}
+                                            />
+                                        </div>
+                                        )
+                                    }
                                     <Input
                                         name='name'
                                         defaultValue={detailSiswa.name ? `${detailSiswa.name}` : null}
@@ -251,112 +280,57 @@ const ProfileSiswaEdit = () => {
                     </div>
                     <div className='flex flex-col gap-4 pb-10'>
                         <h1 className='text-xl font-bold'>Informasi Lainnya</h1>
-                        {detailWali ?
-                            (<div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
+                        {detailWali &&
+                            <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
-                                    {detailWali.name &&
-                                        <Input
-                                            name='name'
-                                            defaultValue={`${detailWali.name}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan nama Orang Tua/Wali siswa'
-                                            type='text'
-                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
-                                        />
-                                    }
+                                    <Input
+                                        name='name'
+                                        defaultValue={detailWali.name ? `${detailWali.name}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan nama Orang Tua/Wali siswa'
+                                        type='text'
+                                        onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Pekerjaan Orang Tua/Wali</h3>
-                                    {detailWali.pekerjaan &&
-                                        <Input
-                                            name='pekerjaan'
-                                            defaultValue={`${detailWali.pekerjaan}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan pekerjaan Orang Tua/Wali siswa'
-                                            type='text'
-                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
-                                        />
-                                    }
+                                    <Input
+                                        name='pekerjaan'
+                                        defaultValue={detailWali.pekerjaan ? `${detailWali.pekerjaan}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan pekerjaan Orang Tua/Wali siswa'
+                                        type='text'
+                                        onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>No. Telepon Orang Tua/Wali</h3>
-                                    {detailWali.phone &&
-                                        <Input
-                                            name='phone'
-                                            defaultValue={`${detailWali.phone}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan no.telepon Orang Tua/Wali siswa'
-                                            type='number'
-                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
-                                        />
-                                    }
+                                    <Input
+                                        name='phone'
+                                        defaultValue={detailWali.phone ? `${detailWali.phone}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan no.telepon Orang Tua/Wali siswa'
+                                        type='number'
+                                        onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
+                                    />
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Alamat Orang Tua/Wali</h3>
-                                    {detailWali.alamat &&
-                                        <Input
-                                            name='alamat'
-                                            defaultValue={`${detailWali.alamat}`}
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan alamat Orang Tua/Wali siswa'
-                                            type='text'
-                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
-                                        />
-                                    }
+                                    <Input
+                                        name='alamat'
+                                        defaultValue={detailWali.alamat ? `${detailWali.alamat}` : null}
+                                        variant='bordered'
+                                        size='lg'
+                                        placeholder='Masukkan alamat Orang Tua/Wali siswa'
+                                        type='text'
+                                        onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
+                                    />
                                 </div>
-                            </div>) : (
-                                <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
-                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                        <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
-                                        <Input
-                                            name='name'
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan nama Orang Tua/Wali siswa'
-                                            type='text'
-                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
-                                        />
-                                    </div>
-                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                        <h3 className='text-lg font-bold'>Pekerjaan Orang Tua/Wali</h3>
-                                        <Input
-                                            name='pekerjaan'
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan pekerjaan Orang Tua/Wali siswa'
-                                            type='text'
-                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
-                                        />
-                                    </div>
-                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                        <h3 className='text-lg font-bold'>No. Telepon Orang Tua/Wali</h3>
-                                        <Input
-                                            name='phone'
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan no.telepon Orang Tua/Wali siswa'
-                                            type='number'
-                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
-                                        />
-                                    </div>
-                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                        <h3 className='text-lg font-bold'>Alamat Orang Tua/Wali</h3>
-                                        <Input
-                                            name='alamat'
-                                            variant='bordered'
-                                            size='lg'
-                                            placeholder='Masukkan alamat Orang Tua/Wali siswa'
-                                            type='text'
-                                            onChange={(e) => handleEditDataWali(e.target.name, e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-                            )
+                            </div>
                         }
                     </div>
                 </div>

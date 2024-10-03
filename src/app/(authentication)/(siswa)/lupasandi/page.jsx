@@ -56,7 +56,7 @@ const ForgotPasswordPage = () => {
                     >
                         Daftar
                     </Button>
-                    <a href="/" className="text-center text-accent-orange underline">Masuk untuk guru</a>
+                    <a href="/loginguru" className="text-center text-accent-orange underline">Masuk untuk guru</a>
                 </div>
             </div>
             <div className="absolute top-0 right-0">

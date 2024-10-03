@@ -10,7 +10,6 @@ export async function PUT(req){
         let response
         if(verify.access){
             const payloadEditProfile ={idsiswa, payload}
-            console.log(payloadEditProfile)
             response = await m$profile.editProfileWali(payloadEditProfile)
         }else{
             response = verify

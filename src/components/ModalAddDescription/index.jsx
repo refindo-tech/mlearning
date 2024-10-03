@@ -68,7 +68,7 @@ const ModalAddDescription = ({ active, handleModal, saveDesc }) => {
                             <div className="flex flex-col gap-5">
                                 <h3>Materi dalam bentuk teks atau video</h3>
                                 <TextEditor value={valueMateri} handleValue={handleValueMateri} />
-                                <h3>Tambah materi dalam bentuk gambar atau audio</h3>
+                                {/* <h3>Tambah materi dalam bentuk gambar atau audio</h3>
                                 <Button
                                     variant="bordered"
                                     className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
@@ -77,7 +77,7 @@ const ModalAddDescription = ({ active, handleModal, saveDesc }) => {
                                     <div className="h-5 w-5 flex items-center justify-center text-primer-500">
                                         <AddIcon fill={'#110B63'} />
                                     </div>
-                                </Button>
+                                </Button> */}
                             </div>
                             <div className="flex justify-end">
                                 <Button
@@ -86,6 +86,7 @@ const ModalAddDescription = ({ active, handleModal, saveDesc }) => {
                                     className="w-[260px] bg-primer-500 text-white"
                                     onPress={() => {
                                         saveDesc(valueMateri, urlAudio)
+                                        setValueMateri(null)
                                         handleModal()
                                     }}
                                 >

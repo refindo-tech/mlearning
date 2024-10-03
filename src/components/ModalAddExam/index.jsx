@@ -107,7 +107,7 @@ const arrayToString = ()=>{
                             <div className="flex flex-col gap-5">
                                 <h3>Pertanyaan dalam bentuk teks</h3>
                                 <TextEditor value={inputQuestion} handleValue={handleValueInputQuestion}/>
-                                <h3>Pertanyaan dalam bentuk gambar, audio, atau video</h3>
+                                {/* <h3>Pertanyaan dalam bentuk gambar, audio, atau video</h3>
                                 <Button
                                     variant="bordered"
                                     className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
@@ -116,7 +116,7 @@ const arrayToString = ()=>{
                                     <div className="h-5 w-5 flex items-center justify-center text-primer-500">
                                         <AddIcon fill={'#110B63'} />
                                     </div>
-                                </Button>
+                                </Button> */}
                             </div>
                             <div className="flex flex-col items-end gap-2">
                                 <h3>Pilih opsi jawaban</h3>

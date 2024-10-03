@@ -4,7 +4,7 @@ import m$profile from "@/backend/modules/profile.module.js";
 export async function GET(req){
     try {
         const authorization = req.headers.get('authorization');
-        const verify = await middleware.authUser(authorization) 
+        const verify = await middleware.authUser(authorization)
         let response
         if(!verify.access){
             response = verify

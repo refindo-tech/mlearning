@@ -1,3 +1,4 @@
+import { stat } from "fs/promises"
 import db from "../helpers/db.js"
 class _result {
     getResultSiswa = async (req) => {
@@ -59,6 +60,53 @@ class _result {
             console.log({
                 status: false,
                 message: 'Result Module Get Result Siswa Error',
+                error: error
+            })
+            return {
+                status: false,
+                message: 'Internal Server Error',
+                code: 500
+            }
+        }
+    }
+    listResultSiswa = async() =>{
+        try {
+            const list = await db.siswa.findMany({
+                select:{
+                    id:true,
+                    ProfileSiswa:{
+                        select:{
+                            name:true,
+                            nisn:true,
+                            kelas:true
+                        }
+                    },
+                    ResultExamSiswa:{
+                        select:{
+                            nilai:true
+                        }
+                    }
+                }
+            })
+            const listProfile = list.map((item)=>{
+                return{
+                    idsiswa:item.id,
+                    name:item.ProfileSiswa[0].name,
+                    nisn:item.ProfileSiswa[0].nisn,
+                    kelas:item.ProfileSiswa[0].kelas,
+                    nilai:item.ResultExamSiswa[0]?item.ResultExamSiswa[0].nilai:null
+                }
+            })
+            return{
+                status:true,
+                message:'List Result Siswa Success',
+                data:listProfile,
+                code:200
+            }
+        } catch (error) {
+            console.log({
+                status: false,
+                message: 'Result Module Get List Result Siswa Error',
                 error: error
             })
             return {

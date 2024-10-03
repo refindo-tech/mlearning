@@ -40,21 +40,22 @@ model Guru {
 }
 
 model ProfileSiswa {
-  id           Int       @id @default(autoincrement())
-  idsiswa      Int
-  nisn         String?   @db.VarChar(30)
-  name         String    @db.VarChar(120)
-  sekolah      String?   @db.VarChar(120)
-  kelas        String?   @db.VarChar(10)
-  ttl          String?   @db.VarChar(200)
-  gender       Gender?
-  agama        String?   @db.VarChar(20)
-  phone        String?
-  anakke       Int?
-  alamat       String?   @db.Text
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @default(now())
-  Siswa        Siswa     @relation(fields: [idsiswa], references: [id],onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  idsiswa    Int
+  nisn       String?  @db.VarChar(30)
+  name       String   @db.VarChar(120)
+  sekolah    String?  @db.VarChar(120)
+  kelas      String?  @db.VarChar(10)
+  ttl        String?  @db.VarChar(200)
+  urlimage   String?  @db.Text
+  gender     Gender?
+  agama      String?  @db.VarChar(20)
+  phone      String?
+  anakke     Int?
+  alamat     String?  @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  Siswa      Siswa    @relation(fields: [idsiswa], references: [id], onDelete: Cascade)
 }
 
 model ProfileWali {
@@ -66,18 +67,20 @@ model ProfileWali {
   alamat     String?  @db.Text
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  Siswa      Siswa    @relation(fields: [idsiswa], references: [id],onDelete: Cascade)
+  Siswa      Siswa    @relation(fields: [idsiswa], references: [id], onDelete: Cascade)
 }
 
 model ProfileGuru {
-  id         Int       @id @default(autoincrement())
-  name       String    @db.VarChar(120)
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(120)
   idguru     Int
   nuptk      String?
-  start      DateTime?
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
-  Guru       Guru      @relation(fields: [idguru], references: [id])
+  start      String?  @db.Text
+  ttl        String?  @db.Text
+  urlimage   String?  @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  Guru       Guru     @relation(fields: [idguru], references: [id], onDelete: Cascade)
 }
 
 model MataPelajaran {
@@ -106,8 +109,8 @@ model Absensi {
   matapelajaran   String?       @db.VarChar(120)
   status          StatusAbsen   @default(BELUM)
   date            DateTime?
-  MataPelajaran   MataPelajaran @relation(fields: [idmatapelajaran], references: [id])
-  Siswa           Siswa         @relation(fields: [idsiswa], references: [id],onDelete: Cascade)
+  MataPelajaran   MataPelajaran @relation(fields: [idmatapelajaran], references: [id], onDelete: Cascade)
+  Siswa           Siswa         @relation(fields: [idsiswa], references: [id], onDelete: Cascade)
 }
 
 model Materi {
@@ -121,8 +124,9 @@ model Materi {
   urlimage        String?       @db.Text
   created_at      DateTime      @default(now())
   updated_at      DateTime      @default(now())
-  MataPelajaran   MataPelajaran @relation(fields: [idmatapelajaran], references: [id])
+  MataPelajaran   MataPelajaran @relation(fields: [idmatapelajaran], references: [id], onDelete: Cascade)
   Diskusi         Diskusi[]
+  Exam            Exam?
 }
 
 model Diskusi {
@@ -131,21 +135,22 @@ model Diskusi {
   idmateri      Int
   // idguru        Int
   topic         String?       @db.Text
-  question      String        @db.Text
+  question      String?       @db.Text
   urlvideo      String?       @db.Text
   urlaudio      String?       @db.Text
   urlimage      String?       @db.Text
   stasiun       String        @db.VarChar(10)
   created_at    DateTime      @default(now())
   updated_at    DateTime      @default(now())
-  MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id])
-  Materi        Materi        @relation(fields: [idmateri], references: [id])
+  MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id], onDelete: Cascade)
+  Materi        Materi        @relation(fields: [idmateri], references: [id], onDelete: Cascade)
   // Guru          Guru          @relation(fields: [idguru], references: [id])
 }
 
 model Exam {
   id            Int             @id @default(autoincrement())
   // idguru        Int
+  idmateri      Int             @unique
   idmapel       Int
   stasiun       String          @db.VarChar(10)
   topic         String?         @db.Text
@@ -153,22 +158,23 @@ model Exam {
   updated_at    DateTime        @default(now())
   ExamQuestion  ExamQuestion[]
   AuthExamSiswa AuthExamSiswa[]
+  Materi        Materi          @relation(fields: [idmateri], references: [id], onDelete: Cascade)
   // Guru          Guru            @relation(fields: [idguru], references: [id])
-  MataPelajaran MataPelajaran   @relation(fields: [idmapel], references: [id])
+  MataPelajaran MataPelajaran   @relation(fields: [idmapel], references: [id], onDelete: Cascade)
 }
 
 model ExamQuestion {
-  id           Int      @id @default(autoincrement())
-  idexam       Int
-  text         String?  @db.Text
-  urlvideo     String?  @db.Text
-  urlimage     String?  @db.Text
-  urlaudio     String?  @db.Text
-  optionanswer String?  @db.Text
-  correctAnswer String? @db.Text
-  created_at   DateTime @default(now())
-  updated_at   DateTime @default(now())
-  Exam         Exam     @relation(fields: [idexam], references: [id])
+  id            Int      @id @default(autoincrement())
+  idexam        Int
+  text          String?  @db.Text
+  urlvideo      String?  @db.Text
+  urlimage      String?  @db.Text
+  urlaudio      String?  @db.Text
+  optionanswer  String?  @db.Text
+  correctAnswer String?  @db.Text
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+  Exam          Exam     @relation(fields: [idexam], references: [id], onDelete: Cascade)
 }
 
 model AuthExamSiswa {
@@ -181,8 +187,8 @@ model AuthExamSiswa {
   created_at    DateTime      @default(now())
   updated_at    DateTime      @default(now())
   Siswa         Siswa         @relation(fields: [idsiswa], references: [id], onDelete: Cascade)
-  MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id])
-  Exam          Exam          @relation(fields: [idexam], references: [id])
+  MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id], onDelete: Cascade)
+  Exam          Exam          @relation(fields: [idexam], references: [id], onDelete: Cascade)
 }
 
 model ResultExamSiswa {
@@ -193,8 +199,15 @@ model ResultExamSiswa {
   nilai         Int
   created_at    DateTime      @default(now())
   updated_at    DateTime      @default(now())
-  MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id])
-  Siswa         Siswa         @relation(fields: [idsiswa], references: [id],onDelete: Cascade)
+  MataPelajaran MataPelajaran @relation(fields: [idmapel], references: [id], onDelete: Cascade)
+  Siswa         Siswa         @relation(fields: [idsiswa], references: [id], onDelete: Cascade)
+}
+
+model News {
+  id         Int      @id @default(autoincrement())
+  text       String   @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 }
 
 enum Gender {

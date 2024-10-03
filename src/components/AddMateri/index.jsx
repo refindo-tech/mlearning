@@ -11,19 +11,29 @@ import YoutubeVideo from "@/components/YoutubeVideo"
 import Footer from "@/components/Footer"
 import { Button, Image, Input } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
-import { createMateri, updateDeskripsi } from "@/backend/fetchAPI"
+import { createMateri, updateDeskripsi, deleteMateri } from "@/backend/fetchAPI"
 import parse from 'html-react-parser'
-// import "react-quill/dist/quill.snow.css"; // Imports the Quill editor's default "snow" theme CSS
 import "quill/dist/quill.snow.css";
 import Icons from '../Icons'
 import ModalAddDescription from "@/components/ModalAddDescription"
-const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun, handleChevronRight, handleChevronLeft }) => {
+const AddMateri = (
+    {
+        detailMapel,
+        resetMapel,
+        reloadStasiun,
+        handleActiveInputTopic,
+        isInputActive,
+        stasiun,
+        handleChevronRight,
+        handleChevronLeft,
+    }
+) => {
     const { AddIcon } = Icons
     const path = usePathname()
     const router = useRouter()
     const idmapel = path.split('/')[2]
     const [isActiveModal, setIsActiveModal] = useState(false)
-    const [topic, setTopic] = useState(null)
+    const [topic, setTopic] = useState('')
     const [detailmateri, setDetailmateri] = useState(null)
     const [urlAudio, setUrlAudio] = useState(null)
     const [isActiveSubmit, setIsActiveSubmit] = useState(false)
@@ -33,12 +43,11 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
     const handletopic = (value) => {
         setTopic(value)
     }
-    // const handleDetailMateri = (value)=>{
-    //     setDetailmateri(value)
-    // }
-    // const handleUrlAudio = (value)=>{
-    //     setUrlAudio(value)
-    // }
+    useEffect(() => {
+        setTopic('')
+        setDetailmateri(null)
+        setUrlAudio(null)
+    }, [stasiun])
     const saveMateri = (materi, audio) => {
         if (materi && audio) {
             setDetailmateri(materi)
@@ -57,14 +66,17 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
         }
     }, [detailMapel])
     const resetDescMapel = () => {
+        setIsHasUpdateDesc(true)
         setDescMapel(null)
     }
     const saveDesc = (materi, audio) => {
         if (materi && audio) {
             setDescMapel(materi)
             setUrlAudio(audio)
+            setIsHasUpdateDesc(true)
         }
         if (materi) {
+            setIsHasUpdateDesc(true)
             setDescMapel(materi)
         }
     }
@@ -77,8 +89,9 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
         const fetchAPI = async () => {
             const response = await updateDeskripsi(payload)
             if (response) {
-                setIsHasUpdateDesc(true)
+                setIsHasUpdateDesc(false)
                 setIsSubmitDesc(false)
+                window.location.reload()
             }
         }
         fetchAPI()
@@ -89,6 +102,22 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
     useEffect(() => {
         console.log(detailmateri)
     }, [detailmateri])
+    const hapusMateri = () => {
+        const fetchAPI = async () => {
+            const payload = {
+                idmateri: detailMapel.id
+            }
+            const response = await deleteMateri(payload)
+            if (response) {
+                setDetailmateri(null)
+                setTopic(null)
+                reloadStasiun()
+                // stasiun = null
+                window.location.reload()
+            }
+        }
+        fetchAPI()
+    }
     const submit = () => {
         setIsActiveSubmit(true)
         let payload = {
@@ -110,7 +139,9 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
             const response = await createMateri(payload)
             if (response) {
                 setIsActiveSubmit(false)
-                router.refresh()
+                reloadStasiun()
+                // router.refresh()
+                window.location.reload()
             }
         }
         fetchAPI()
@@ -127,14 +158,12 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                     {stasiun &&
                         <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
                             <button
-                                // onClick={handleBack}
                                 onClick={handleChevronLeft}
                                 className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
                             >
                                 <ChevronLeft size={32} />
                             </button>
                             <button
-                                // onClick={handleNextStep}
                                 onClick={handleChevronRight}
                                 className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
                             >
@@ -169,6 +198,7 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                                         <input
                                             // variant="bordered"
                                             placeholder="Tambah judul"
+                                            value={topic || ''}
                                             disabled={isInputActive ? true : false}
                                             className="w-[105px] text-white placeholder:text-white bg-transparent focus:outline-none"
                                             onChange={(e) => handletopic(e.target.value)}
@@ -215,79 +245,72 @@ const AddMateri = ({ detailMapel, handleActiveInputTopic, isInputActive, stasiun
                                                 </div>
                                             </div>
                                         }
+                                        <div className="flex justify-end z-10 gap-5">
+                                            <Button
+                                                variant="bordered"
+                                                radius="sm"
+                                                className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
+                                                onPress={hapusMateri}
+                                            >
+                                                <h3>Hapus Materi</h3>
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             ) :
                             (
-                                // <>{detailMapel.MataPelajaran.description ?
-                                //     (
-                                //         <div className="flex flex-col gap-5">
-                                //             <div className="p-10 indent-8 text-justify z-10 ql-editor" dangerouslySetInnerHTML={{ __html: descMapel }} />
-                                //             <Button
-                                //                 variant="bordered"
-                                //                 radius="sm"
-                                //                 // isDisabled={descMapel ? false : true}
-                                //                 className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none b-0"
-                                //                 onPress={resetDescMapel}
-                                //             >
-                                //                 <h3>Hapus Materi</h3>
-                                //             </Button>
-                                //         </div>
-                                //     ) :
-                                //     (
-                                        <div className="w-[90%] mx-auto py-10 flex flex-col gap-10">
-                                            <ModalAddDescription active={isActiveDesc} handleModal={handleModalDescription} saveDesc={saveDesc} />
-                                            <div className="w-full flex flex-col gap-10">
-                                                {descMapel ?
-                                                    (
-                                                        <div className="ql-editor z-10" dangerouslySetInnerHTML={{ __html: descMapel }} />
-                                                    ) :
-                                                    (
-                                                        <Button
-                                                            variant="bordered"
-                                                            className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
-                                                            onPress={handleModalDescription}
-                                                        >
-                                                            <h3>Tambah materi pengenalan mata pelajaran</h3>
-                                                            <div className="h-5 w-5 flex items-center justify-center text-primer-500">
-                                                                <AddIcon fill={'#110B63'} />
-                                                            </div>
-                                                        </Button>
-                                                    )
-                                                }
-                                                {!isHasUpdateDesc &&
-                                                    <div className="flex justify-end z-10 gap-5">
-                                                        {descMapel &&
-                                                            <Button
-                                                                variant="bordered"
-                                                                radius="sm"
-                                                                className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
-                                                                onPress={resetDescMapel}
-                                                            >
-                                                                <h3>Hapus Materi</h3>
-                                                            </Button>
-                                                        }
-                                                        <Button
-                                                            radius="sm"
-                                                            // isDisabled={descMapel ? false : true}
-                                                            className="w-[260px] bg-primer-500 text-white font-semibold"
-                                                            onPress={submitDesc}
-                                                        >
-                                                            {isSubmitDesc ?
-                                                                (
-                                                                    <div className="loader"></div>
-                                                                ) :
-                                                                (
-                                                                    <h3>Simpan</h3>
-                                                                )
-                                                            }
-                                                        </Button>
+                                <div className="w-[90%] mx-auto py-10 flex flex-col gap-10">
+                                    <ModalAddDescription active={isActiveDesc} handleModal={handleModalDescription} saveDesc={saveDesc} />
+                                    <div className="w-full flex flex-col gap-10">
+                                        {descMapel ?
+                                            (
+                                                <div className="ql-editor z-10" dangerouslySetInnerHTML={{ __html: descMapel }} />
+                                            ) :
+                                            (
+                                                <Button
+                                                    variant="bordered"
+                                                    className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
+                                                    onPress={handleModalDescription}
+                                                >
+                                                    <h3>Tambah materi pengenalan mata pelajaran</h3>
+                                                    <div className="h-5 w-5 flex items-center justify-center text-primer-500">
+                                                        <AddIcon fill={'#110B63'} />
                                                     </div>
-                                                }
-                                            </div>
+                                                </Button>
+                                            )
+                                        }
+                                        <div className="flex justify-end z-10 gap-5">
+                                            {descMapel !== null &&
+                                                <Button
+                                                    variant="bordered"
+                                                    radius="sm"
+                                                    className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
+                                                    onPress={resetDescMapel}
+                                                >
+                                                    <h3>Hapus Materi</h3>
+                                                </Button>
+                                            }
+                                            {isHasUpdateDesc &&
+                                                <Button
+                                                    radius="sm"
+                                                    // isDisabled={descMapel ? false : true}
+                                                    isDisabled={isSubmitDesc ? true : false}
+                                                    className="w-[260px] bg-primer-500 text-white font-semibold"
+                                                    onPress={submitDesc}
+                                                >
+                                                    {isSubmitDesc ?
+                                                        (
+                                                            <div className="loader"></div>
+                                                        ) :
+                                                        (
+                                                            <h3>Simpan</h3>
+                                                        )
+                                                    }
+                                                </Button>
+                                            }
                                         </div>
-                                //     )}
-                                // </>
+                                    </div>
+                                </div>
                             )
                         }
                         </>

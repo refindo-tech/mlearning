@@ -173,6 +173,44 @@ class _materi {
             }
         }
     }
+    deleteMateri = async(req)=>{
+        try {
+            const {idmateri} = req
+            const findMateri = await db.materi.findFirst({
+                where:{id:parseInt(idmateri)}
+            })
+            if(findMateri){
+                const deleteMateri = await db.materi.delete({
+                    where:{
+                        id:parseInt(idmateri)
+                    }
+                })
+                if(deleteMateri){
+                    return {
+                        status:true,
+                        message: 'Delete Materi Success',
+                        code: 200
+                    }
+                }
+            }else{
+                return {
+                    status:false,
+                    message: 'Not any materi that relevant',
+                    code: 404
+                }
+            }
+        } catch (error) {
+            console.log({
+                message: 'Materi Module Delete Materi Error',
+                error: error.message,
+                code: 500
+            })
+            return {
+                message: 'Internal Server Error',
+                code: 500
+            }
+        }
+    }
 }
 const m$materi = new _materi()
 export default m$materi

@@ -17,7 +17,6 @@ import AddMateri from '@/components/AddMateri'
 import AddDiskusi from '@/components/AddDiskusi'
 import AddExam from '@/components/AddExam'
 import Icons from "@/components/Icons"
-// import "react-quill/dist/quill.snow.css"; // Imports the Quill editor's default "snow" theme CSS
 import "quill/dist/quill.snow.css";
 const CourseHomePage = () => {
     const path = usePathname()
@@ -33,6 +32,9 @@ const CourseHomePage = () => {
     const [isInputActive, setIsInputActive] = useState(true)
     const [detailMapel, setDetailMapel] = useState(null)
     const [stasiun, setStasiun] = useState(null)
+    const handleIsLoad = ()=>{
+        setIsLoad(true)
+    }
     const { AddIcon } = Icons
     const handleUrl = (value) => {
         if (value) {
@@ -82,6 +84,7 @@ const CourseHomePage = () => {
             const response = await listStasiun(req)
             if (response) {
                 setDataListStasiun(response.data)
+                // setIsLoadStasiun(false)
             }
         }
         fetchAPI()
@@ -106,22 +109,14 @@ const CourseHomePage = () => {
         }
         fetchAPI()
     }, [idmapel, stasiun])
-    // const [isActiveModal, setIsActiveModal] = useState(false)
-    // const activeModalAddExam = () => {
-    //     setIsActiveModal(true)
-    // }
-    // const handleInActiveModalAddExam = () => {
-    //     setIsActiveModal(false)
-    // }
+    const resetMapel = ()=>{
+        setDetailMapel(null)
+    }
     if (isLoad) {
         return (<Loading />)
     }
     return (
         <>
-            {/* <ModalAddExam
-                active={isActiveModal}
-                inActiveModalExam={handleInActiveModalAddExam}
-            /> */}
             <Navbar />
             <div className="w-full min-h-screen flex flex-row overflow-x-hidden">
                 <aside className="w-[15%]">
@@ -134,7 +129,9 @@ const CourseHomePage = () => {
                 {context.materi &&
                     <AddMateri
                         detailMapel={detailMapel}
+                        resetMapel={resetMapel}
                         handleActiveInputTopic={handleActiveInputTopic}
+                        reloadStasiun={handleIsLoad}
                         isInputActive={isInputActive}
                         stasiun={stasiun}
                         handleChevronLeft={handleChevronLeft}

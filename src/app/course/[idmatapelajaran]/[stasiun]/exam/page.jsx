@@ -31,7 +31,7 @@ const Exam = () => {
         const stasiun = path.split('/')[3]
         const payloadListQuestion = {
             idmapel: idmapel,
-            stasiun: stasiun
+            stasiun: decodeURIComponent(stasiun)
         }
         const fetchAPI = async () => {
             const req = { idmatapelajaran: idmapel }
@@ -48,6 +48,7 @@ const Exam = () => {
             }
             const responseListQuestion = await listQuestion(payloadListQuestion)
             if (responseListQuestion) {
+                console.log(responseListQuestion)
                 if (responseListQuestion.message === 'Not Any Exam Relevant') {
                     const newPath = path.replace('/exam', '')
                     router.push(newPath)
@@ -100,6 +101,7 @@ const Exam = () => {
             updatedAnswers[index] = value; // Ganti jawaban pada indeks soal dengan jawaban baru
             return updatedAnswers;
         })
+    
     }
     const submitAnswer = async () => {
         const payload = {

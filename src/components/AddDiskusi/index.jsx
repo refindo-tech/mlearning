@@ -18,7 +18,7 @@ import "quill/dist/quill.snow.css";
 import Comments from "@/components/Comments"
 const AddDiskusi = (
     {
-        // detailMapel,
+        detailMapel,
         // handleActiveInputTopic,
         // isInputActive,
         stasiun,
@@ -31,20 +31,37 @@ const AddDiskusi = (
     const { AddIcon } = Icons
     const [dataDiskusi, setDataDiskusi] = useState(null)
     const [contentIsLoad, setContentIsLoad] = useState(true)
+    const [idDiskusi, setIdDiskusi] = useState(null)
+    const [readyIdentifier, setReadyIdentifier] = useState(false)
+    const [currentIdDiskusi, setCurrentIdDiskusi] = useState(null);
+    const [waitingForNewId, setWaitingForNewId] = useState(true);
     useEffect(() => {
         const payload = {
             idmapel: parseInt(idmapel),
             stasiun: stasiun
         }
         const fetchAPI = async () => {
+            setWaitingForNewId(true); // Reset saat pindah stasiun
+            setCurrentIdDiskusi(null); // Kosongkan idDiskusi saat perpindahan stasiun
             const response = await detailDiskusi(payload)
             if (response) {
                 setContentIsLoad(false)
                 setDataDiskusi(response.data)
+                setIdDiskusi(response.data.id)
             }
         }
         fetchAPI()
+        setIdDiskusi(null)
+        setReadyIdentifier(false)
     }, [idmapel, stasiun])
+    // useEffect(() => {
+    //     if (idDiskusi) {
+    //         setTimeout(() => { // Tambahkan delay kecil untuk memastikan
+    //             setWaitingForNewId(false);
+    //             setCurrentIdDiskusi(idDiskusi); // Setel idDiskusi baru
+    //         }, 5000); // Delay 100ms atau sesuai kebutuhan
+    //     }
+    // }, [idDiskusi]);
     const [topic, setTopic] = useState(null)
     const [isInputActive, setIsInputActive] = useState(true)
     const handletopic = (value) => {
@@ -58,22 +75,15 @@ const AddDiskusi = (
         setIsActiveModal(!isActiveModal)
     }
     const [tempDiskusi, setTempDiskusi] = useState(null)
-    const resetDiskusi = ()=>{
+    const resetDiskusi = () => {
         setTempDiskusi(dataDiskusi)
         setDataDiskusi(null)
     }
-    const [idDiskusi, setIdDiskusi] = useState(null)
-    useEffect(()=>{
-        if(dataDiskusi){
-            // console.log('idDiskusi: ',dataDiskusi.id)
-            setIdDiskusi(dataDiskusi.id)
-        }
-    },[dataDiskusi])
     const [isDiskusi, setIsDiskusi] = useState(null)
     const [urlAudio, setUrlAudio] = useState(null)
     const handleDiskusi = (value, url) => {
         setIsDiskusi(value),
-        setUrlAudio(url)
+            setUrlAudio(url)
     }
     const [isSubmit, setIsSubmit] = useState(false)
     const submitDiskusi = () => {
@@ -82,26 +92,26 @@ const AddDiskusi = (
             stasiun: stasiun,
             idmapel: parseInt(idmapel),
             question: isDiskusi,
-            topic:topic
+            topic: topic
         }
         const fetchAPI = async () => {
-            if(tempDiskusi){
-                //DELETE DISKUSI SEBELUMNYA
-            } else if(tempDiskusi && dataDiskusi){
-                //DELETE DISKUSI SEBELUMNYA DAN CREATE DISKUSI BARU
-            }else{
-                //CREATE DISKUSI SAJA
-                const response = await createDiskusi(payload)
-                if (response) {
-                    setIsSubmit(false)
-                    router.refresh()
-                }
+            // if (tempDiskusi) {
+            //     //DELETE DISKUSI SEBELUMNYA
+            // } else if (tempDiskusi && dataDiskusi) {
+            //     //DELETE DISKUSI SEBELUMNYA DAN CREATE DISKUSI BARU
+            // } else {
+            //     //CREATE DISKUSI SAJA
+            // }
+            const response = await createDiskusi(payload)
+            if (response) {
+                setIsSubmit(false)
+                window.location.reload()
             }
         }
         fetchAPI()
     }
-    if(contentIsLoad){
-        return(<div className="loader"></div>)
+    if (contentIsLoad) {
+        return (<div className="loader"></div>)
     }
     return (
         <div className=" w-[85%] border-l-2 border-gray-200">
@@ -174,19 +184,32 @@ const AddDiskusi = (
                             <div className="w-[90%] mx-auto flex flex-col gap-5 z-10">
                                 <h3 className="font-semibold text-lg">Simak materi berikut ini!</h3>
                                 <div className="ql-editor rounded-lg bg-yellow-500" dangerouslySetInnerHTML={{ __html: dataDiskusi.question }}></div>
-                                <div className="flex justify-end">
+                                <div className="flex justify-end gap-5">
                                     <Button
                                         variant="bordered"
                                         radius="sm"
                                         onPress={resetDiskusi}
+                                        className="w-[260px] text-primer-300 font-semibold border-0 outline-none"
                                     >
                                         Hapus
                                     </Button>
+                                    <Button
+                                        radius="sm"
+                                        className="w-[260px] bg-primer-500 text-white font-semibold"
+                                        // isDisabled={isDiskusi ? false : true}
+                                        onPress={submitDiskusi}
+                                    >
+                                        <h3>Simpan</h3>
+                                    </Button>
                                 </div>
                                 <h3 className="font-semibold text-lg">Portal Diskusi</h3>
-                                {idDiskusi&&
-                                    <Comments idDiskusi={idDiskusi} />
-                                }
+                                {/* {idDiskusi &&
+                                } */}
+                                {readyIdentifier && idDiskusi && <Comments idmapel={idmapel} stasiun={stasiun} idDiskusi={idDiskusi} />}
+                                {/* {!waitingForNewId && currentIdDiskusi && (
+                                    <Comments idmapel={idmapel} stasiun={stasiun} idDiskusi={currentIdDiskusi} />
+                                )} */}
+                                {/* {detailMapel&&<Comments idmapel={idmapel} stasiun={stasiun} idDiskusi={detailMapel.id} />} */}
                             </div>
                         </div>
                     ) :
@@ -233,7 +256,8 @@ const AddDiskusi = (
                                             <Button
                                                 radius="sm"
                                                 className="w-[260px] bg-primer-500 text-white font-semibold"
-                                                isDisabled={isDiskusi ? false : true}
+                                                // isDisabled={isDiskusi ? false : true}
+                                                onPress={submitDiskusi}
                                             >
                                                 <h3>Simpan</h3>
                                             </Button>

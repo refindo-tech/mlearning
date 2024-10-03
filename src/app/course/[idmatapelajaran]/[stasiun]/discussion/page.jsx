@@ -9,7 +9,7 @@ import AudioPlayer from "@/components/AudioPlayer"
 import YoutubeVideo from "@/components/YoutubeVideo"
 import DisplayImageComponent from '@/components/DisplayImageComponent'
 import { Button, Image } from "@nextui-org/react"
-import { detailDiskusi, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI"
+import { detailDiskusi, listStasiun, getAbsensiByIdSiswa, detailMateri } from "@/backend/fetchAPI"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
@@ -22,6 +22,7 @@ const Discussion = () => {
     const [dataDiskusi, setDataDiskusi] = useState(null)
     const [dataListStasiun, setDataListStasiun] = useState([])
     const [dataAbsensi, setDataAbsensi] = useState([])
+    const [detailMapel, setDetailMapel] = useState(null)
     // const handleStasiunDiskusi = (value) =>{
     //     setStasiunDiskusi(value)
     // }
@@ -49,10 +50,20 @@ const Discussion = () => {
                 router.push('/onboarding')
             }
             const responseDetailDiskusi = await detailDiskusi(payloadDetailDiskusi)
-            if (!responseDetailDiskusi.data) {
-                router.push('exam')
+            if(responseDetailDiskusi){
+                if (!responseDetailDiskusi.data) {
+                    router.push('exam')
+                }
+                setDataDiskusi(responseDetailDiskusi.data)
             }
-            setDataDiskusi(responseDetailDiskusi.data)
+            const payloadDetailMateri = {
+                idmapel:parseInt(idmapel),
+                stasiun:decodeURIComponent(stasiun)
+            }
+            const responseDetailMateri = await detailMateri(payloadDetailMateri)
+            if(responseDetailMateri){
+                setDetailMapel(responseDetailMateri.data)
+            }
         }
         fetchAPI()
     }, [path, router])
@@ -137,7 +148,7 @@ const Discussion = () => {
                                     <h3 className="font-semibold text-xl">Portal Diskusi</h3>
                                     {/* <div className="border-2 border-gray-200 rounded-lg flex-grow bg-white">
                                 </div> */}
-                                    <Comments idDiskusi={dataDiskusi.id} />
+                                    {detailMapel&&<Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idDiskusi={detailMapel.id} />}
                                 </div>
                             </div>
                         </div>

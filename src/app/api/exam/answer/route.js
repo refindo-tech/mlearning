@@ -15,6 +15,7 @@ export async function POST(req){
         let response
         if(!verify.access){
             response = verify
+            return NextResponse.json(response, {status:response.code})
         }
         const payload = {
             idexam,

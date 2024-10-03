@@ -37,6 +37,7 @@ const CorrectionExam = () => {
             }
             const responseListQuestion = await listQuestionTeacher(payloadListQuestion)
             if (responseListQuestion) {
+                console.log(responseListQuestion)
                 if (responseListQuestion.message === 'Not Any Exam Relevant') {
                     setError(`Not any exam in ${stasiunFromPath}`)
                 }
@@ -44,7 +45,7 @@ const CorrectionExam = () => {
                     if (responseListQuestion.data.listQuestion.length !== 0) {
                         setListQuestionExam(responseListQuestion.data.listQuestion)
                     }
-                    setTopic(responseListQuestion.data.other.MataPelajaran.Materi[0].topic)
+                    setTopic(responseListQuestion.data.other.topic)
                     setOtherData(responseListQuestion.data.other)
                 }
             }

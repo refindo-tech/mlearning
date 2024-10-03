@@ -15,22 +15,22 @@ const ProfilSiswa = () => {
     const [limitData, setLimitData] = useState(5)
     const [dataListProfile, setDataListProfile] = useState(null)
     const [inputSearch, setInputSearch] = useState(null)
-    const handleSearch=(value)=>{
+    const handleSearch = (value) => {
         setInputSearch(value)
     }
-    useEffect(()=>{
-        console.log(inputSearch)
-    },[inputSearch])
+    useEffect(() => {
+        console.log(dataListProfile)
+    }, [dataListProfile])
     const { AddIcon } = Icons
     useEffect(() => {
         const fetchAPI = async () => {
-            let payload={
-                limit:limitData
+            let payload = {
+                limit: limitData
             }
-            if(inputSearch){
-                payload={
-                    limit:limitData,
-                    name:inputSearch
+            if (inputSearch) {
+                payload = {
+                    limit: limitData,
+                    name: inputSearch
                 }
             }
             const response = await listProfile(payload)
@@ -41,12 +41,12 @@ const ProfilSiswa = () => {
         }
         fetchAPI()
     }, [limitData, inputSearch])
-    const handleLimit = (value)=>{
+    const handleLimit = (value) => {
         setLimitData(value)
     }
-    if(isLoad){
-        return(
-            <Loading/>
+    if (isLoad) {
+        return (
+            <Loading />
         )
     }
     return (
@@ -67,13 +67,13 @@ const ProfilSiswa = () => {
                                                 variant="faded"
                                                 type="number"
                                                 min={1}
-                                                onValueChange={(value)=>handleLimit(parseInt(value))}
+                                                onValueChange={(value) => handleLimit(parseInt(value))}
                                                 defaultValue={limitData}
                                                 className="w-[60px] h-10 rounded"
                                             />
                                             <p>baris</p>
                                         </div>
-                                        <div className="flex gap-3">
+                                        {/* <div className="flex gap-3">
                                             <Button
                                                 radius="sm"
                                                 className="bg-primer-300 w-[260px]"
@@ -83,8 +83,8 @@ const ProfilSiswa = () => {
                                                     <p>Tambah Siswa</p>
                                                 </div>
                                             </Button>
-                                            <SearchTable value={inputSearch} handleValue={handleSearch}/>
-                                        </div>
+                                        </div> */}
+                                        <SearchTable value={inputSearch} handleValue={handleSearch} />
                                     </div>
                                 </div>
                                 <table className="table-fixed w-full">
@@ -111,7 +111,7 @@ const ProfilSiswa = () => {
                                                     (<td>-</td>)
                                                 }
                                                 <td className="text-center">
-                                                    <ActionGroup idsiswa={item.idsiswa}/>
+                                                    <ActionGroup idsiswa={item.idsiswa} />
                                                 </td>
                                             </tr>
                                         ))}
@@ -127,21 +127,21 @@ const ProfilSiswa = () => {
     )
 }
 export default ProfilSiswa
-const ActionGroup = ({idsiswa}) => {
+const ActionGroup = ({ idsiswa }) => {
     const router = useRouter()
     const url = usePathname()
     const { EditIcon, TrashIcon } = Icons
-    const [isLoad,setIsLoad] = useState(false)
+    const [isLoad, setIsLoad] = useState(false)
     const handleDetailProfile = () => {
         router.push(`${url}/${parseInt(idsiswa)}`)
     }
-    const handleDeleteProfile = ()=>{
-        const payload={
-            idsiswa:parseInt(idsiswa)
+    const handleDeleteProfile = () => {
+        const payload = {
+            idsiswa: parseInt(idsiswa)
         }
-        const fetchAPI = async()=>{
+        const fetchAPI = async () => {
             const response = await deleteProfileSiswa(payload)
-            if(response){
+            if (response) {
                 setIsLoad(false)
                 router.refresh()
             }
@@ -161,21 +161,21 @@ const ActionGroup = ({idsiswa}) => {
                 </div>
             </Button>
             <Button
-                isDisabled={isLoad?true:false}
+                isDisabled={isLoad ? true : false}
                 radius="sm"
                 className="bg-accent-red"
-                onPress={()=>{
+                onPress={() => {
                     setIsLoad(true)
                     handleDeleteProfile()
                 }}
             >
-                <>{isLoad?(
+                <>{isLoad ? (
                     <div className="loader"></div>
-                ):(
-                <div className="flex justify-center gap-3 text-white text-base">
-                    <TrashIcon />
-                    <p>Hapus</p>
-                </div>
+                ) : (
+                    <div className="flex justify-center gap-3 text-white text-base">
+                        <TrashIcon />
+                        <p>Hapus</p>
+                    </div>
                 )}
                 </>
             </Button>

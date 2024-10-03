@@ -47,13 +47,26 @@ const ProfileSiswa = () => {
                     {detailSiswa &&
                         <div className=' grid grid-cols-1 lg:grid-cols-2 gap-8'>
                             <div className='h-[300px] flex flex-row items-center pl-5 lg:pl-10 gap-10 rounded-lg border-2 border-gray-200'>
-                                <div className='h-[100px] w-[100px] flex items-center justify-center rounded-full bg-accent-orange'>
-                                    <Image
-                                        alt="avatar"
-                                        src="/assets/image/avatar.png"
-                                        className="block h-[88px] w-[88px]"
-                                    />
-                                </div>
+                            {detailSiswa.urlimage ?
+                                    (
+                                        <Image
+                                            alt="avatar"
+                                            src={`${detailSiswa.urlimage}`}
+                                            className={'block h-[100px] w-[100px] rounded-full'}
+                                        />
+                                    ) :
+                                    (
+                                        <div
+                                            className='h-[100px] w-[100px] flex items-center justify-center rounded-full bg-accent-orange'
+                                        >
+                                            <Image
+                                                alt="avatar"
+                                                src='/assets/image/avatar.png'
+                                                className={'block h-[88px] w-[88px]'}
+                                            />
+                                        </div>
+                                    )
+                                }
                                 {detailSiswa.name ? (
                                     <h3 className='text-2xl font-bold'>{detailSiswa.name}</h3>
                                 ) : (

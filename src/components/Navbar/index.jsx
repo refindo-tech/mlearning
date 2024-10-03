@@ -6,12 +6,15 @@ import { X, Search } from "lucide-react"
 import SearchComponent from '@/components/SearchComponent'
 import PopoverUser from '@/components/PopoverUser'
 import Icons from "@/components/Icons"
+import { getDetailProfile, getProfileGuruNavbar } from "@/backend/fetchAPI"
 const Navbar = () => {
     const router = useRouter()
     const [token, setToken] = useState(null)
     const [role, setRole] = useState(null)
     const [isHide, setIsHide] = useState(false)
     const [isModal, setIsModal] = useState(false)
+    const [profileSiswa, setProfileSiswa] = useState(null)
+    const [profileGuru, setProfileGuru] = useState(null)
     const handleModal = () => {
         setIsModal(!isModal)
     }
@@ -29,7 +32,25 @@ const Navbar = () => {
         }else if (siswa && guru){
             setToken(null)
         }
+        const detailProfile = async()=>{
+            const responseProfileSiswa = await getDetailProfile()
+            if(responseProfileSiswa){
+                console.log(responseProfileSiswa)
+                if(responseProfileSiswa.data){
+                    setProfileSiswa(responseProfileSiswa.data.siswa)
+                }
+            }
+            const responseProfileGuru = await getProfileGuruNavbar()
+            if(responseProfileGuru){
+                console.log(responseProfileGuru)
+                setProfileGuru(responseProfileGuru.data)
+            }
+        }
+        detailProfile()
     }, [])
+    // useEffect(()=>{
+    //     console.log(profileSiswa)
+    // }, [profileSiswa])
     const handleHide = () => {
         setIsHide(true)
     }
@@ -71,7 +92,7 @@ const Navbar = () => {
                                             <a href="/about">Tentang M-Learning</a>
                                         </li>
                                         <li className="px-4 py-2">
-                                            <a href="/help">Bantuan</a>
+                                            <a href="/profileguru">Kelola Guru</a>
                                         </li>
                                     </>
                                 ) : (
@@ -169,7 +190,7 @@ const Navbar = () => {
                                 <a href="/about">Tentang M-Learning</a>
                             </li>
                             <li className="px-4 py-2">
-                                <a href="/help">Bantuan</a>
+                                <a href="/profileguru">Kelola Guru</a>
                             </li>
                         </>
                     ) : (
@@ -194,7 +215,7 @@ const Navbar = () => {
                         className="hidden lg:flex flex-row items-center gap-2"
                     >
                         <SearchComponent />
-                        <PopoverUser handleLogout={handleLogout}/>
+                        <PopoverUser profileGuru={profileGuru} profileSiswa={profileSiswa} handleLogout={handleLogout}/>
                     </div>
                 ) : (
                     <div className="hidden lg:flex flex-row items-center gap-2">

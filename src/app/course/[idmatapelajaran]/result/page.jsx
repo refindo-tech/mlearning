@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import AsideCourse from "@/components/AsideCourse"
 import { Button, Image, Link } from "@nextui-org/react"
-import { listStasiun, getAbsensiByIdSiswa, getResultSiswa, getDetailProfile } from '@/backend/fetchAPI.js'
+import { listStasiun, getAbsensiByIdSiswa, getResultSiswa, getDetailProfile, detailMateri } from '@/backend/fetchAPI.js'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 const ResultCoursePage = () => {
     const path = usePathname()
@@ -15,6 +15,7 @@ const ResultCoursePage = () => {
     const [isLoaded, setIsLoad] = useState(true)
     const [dataListStasiun, setDataListStasiun] = useState([])
     const [dataAbsensi, setDataAbsensi] = useState([])
+    const [detailMapel, setDetailMapel] = useState(null)
     const [dataResult, setDataResult] = useState(null)
     const [detailSiswa, setDetailSiswa] = useState(null)
     useEffect(() => {
@@ -47,9 +48,17 @@ const ResultCoursePage = () => {
             }else{
                 router.push('/onboarding')
             }
+            const responseDetailMapel = await detailMateri(payload)
+            if(responseDetailMapel){
+                console.log(responseDetailMapel)
+                setDetailMapel(responseDetailMapel.data.MataPelajaran)
+            }
         }
         fetchAPI()
     }, [path, router])
+    useEffect(()=>{
+        console.log(detailMapel)
+    },[detailMapel])
     if (isLoaded) {
         return (<Loading />)
     }
@@ -80,7 +89,8 @@ const ResultCoursePage = () => {
                             </div>
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
-                                    <h1 className="font-bold text-xl lg:text-3xl">Paragraf Induktif dan Deduktif</h1>
+                                    {detailMapel&&detailMapel.name&&<h1 className="font-bold text-xl lg:text-3xl">{detailMapel.name}</h1>}
+                                    {detailMapel&&detailMapel.kelas&&<h2 className=" text-xl">{detailMapel.kelas}</h2>}
                                 </div>
                                 <Image
                                     alt="icon-card"

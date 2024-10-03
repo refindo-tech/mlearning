@@ -4,12 +4,14 @@ import CircleElipsis from "./CircleElipsis";
 import EditIcon from './EditIcon'
 import AddIcon from './AddIcon'
 import TrashIcon from './TrashIcon'
+import HorizontalDots from './HorizontalDots'
 const Icons ={
     "EyeFilledIcon":EyeFilledIcon,
     "EyeSlashFilledIcon":EyeSlashFilledIcon,
     "CircleElipsis":CircleElipsis,
     "EditIcon":EditIcon,
     "AddIcon":AddIcon,
-    "TrashIcon":TrashIcon
+    "TrashIcon":TrashIcon,
+    "HorizontalDots":HorizontalDots
 }
 export default Icons

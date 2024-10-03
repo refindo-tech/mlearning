@@ -172,16 +172,17 @@ export const detailDiskusi = async (req) => {
 export const listQuestion = async (req) => {
     try {
         const { idmapel, stasiun } = req
+        const queryString = new URLSearchParams(req).toString()
         const token = sessionStorage.getItem('tokensiswa')
-        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/exam`
-        const createUrl = () => {
-            if (idmapel && stasiun) {
-                return url + `?idmapel=` + idmapel + '&stasiun=' + `${decodeURIComponent(stasiun)}`
-            } else {
-                return url
-            }
-        }
-        const response = await fetch(createUrl(),
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/exam?${queryString}`
+        // const createUrl = () => {
+        //     if (idmapel && stasiun) {
+        //         return url + `?idmapel=` + idmapel + '&stasiun=' + `${decodeURIComponent(stasiun)}`
+        //     } else {
+        //         return url
+        //     }
+        // }
+        const response = await fetch(url,
             {
                 method: 'GET',
                 headers: {
@@ -584,10 +585,9 @@ export const editProfile = async (req) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/profile/siswa/update`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(req)
+            body: req
         })
         if (response.ok) {
             const data = await response.json()
@@ -712,6 +712,289 @@ export const updateDeskripsi = async (req) => {
             body: JSON.stringify(req)
         })
         if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const deleteMateri = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/materi/delete/?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const listProfileGuru = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/profile/guru/list?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const getDetailProfileGuru = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/profile/guru/detail?${queryString}`
+        const response = await fetch(url,{
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const editProfileGuru = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/profile/guru/update`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: req
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const deleteProfileGuru = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/profile/guru/delete/?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const listResultSiswa = async () => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        // const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/result/list`
+        const response = await fetch(url,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const deleteExam = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/exam/teacher/delete/?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const addGuru = async (formData) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/authentication/guru/add`, {
+            method: 'POST',
+            headers: {
+                'Authorization':`Bearer ${token}`
+            },
+            body: formData
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const getResultSiswaByTeacher = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString();
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/result/guru?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const accessGuru = async () => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/authentication/guru/access`, {
+            method: 'GET',
+            headers: {
+                'Authorization':`Bearer ${token}`
+            },
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const addNews = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/news/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':`Bearer ${token}`
+            },
+            body: JSON.stringify(req)
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const listNews = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/news/list`, {method: 'GET'})
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const deleteNews = async (req) => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        const queryString = new URLSearchParams(req).toString()
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/news/delete/?${queryString}`
+        const response = await fetch(url,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
+            const data = await response.json()
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const getProfileGuruNavbar = async () => {
+    try {
+        const token = sessionStorage.getItem('tokenguru')
+        let url = `${process.env.NEXT_PUBLIC_BASE_API}/api/profile/guru/navbar`
+        const response = await fetch(url,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        if (response) {
             const data = await response.json()
             return data
         }

@@ -28,10 +28,11 @@ const AsideTeacher = ({ listStasiun, handleStasiun, absen, manage }) => {
     //     return absensi !== undefined
     // }
     const createNewStasiun = ()=>{
-        setTotalStasiun((prev)=>[
-            ...prev,
-            totalStasiun.length+1
-        ])
+        setTotalStasiun((prev)=>{
+            const data = [...prev]
+            const lastData = data[data.length - 1]
+            return [...prev, lastData+1]
+        })
     }
     const handleIsActive = ()=>{
         if(isActive){

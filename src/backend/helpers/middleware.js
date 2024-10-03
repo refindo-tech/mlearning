@@ -1,5 +1,4 @@
 import db from '@/backend/helpers/db.js'
-import { access } from 'fs'
 import jwt from 'jsonwebtoken'
 class _authaccess {
     authTeacher = async(req) =>{
@@ -13,13 +12,14 @@ class _authaccess {
                     error:error
                 }
             }
-            const decoded = jwt.verify(token,process.env.SECRET_KEY)
+            const decoded = jwt.verify(token, process.env.SECRET_KEY)
             if(!decoded) throw new Error(decoded)
             const guru = await db.guru.findUnique({
                 where:{
                     email:decoded.email
                 },
                 select:{
+                    id:true,
                     ProfileGuru:{
                         select:{
                             name:true

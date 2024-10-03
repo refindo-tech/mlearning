@@ -1,26 +1,79 @@
 import db from "../helpers/db"
 class _exam {
-    createExam = async(req) =>{
+    createExam = async (req) => {
         try {
-            const {idmapel, stasiun, data} = req
-            const create = await db.exam.create({
-                data:{
-                    idmapel:parseInt(idmapel),
-                    stasiun:stasiun,
+            const { idmapel, stasiun, data, topic } = req
+            const findMateri = await db.materi.findFirst({
+                where: {
+                    idmatapelajaran: parseInt(idmapel),
+                    stasiun: stasiun
+                },
+                select: {
+                    id: true
+                }
+            })
+            const findExam = await db.exam.findFirst({
+                where:{
+                    idmateri:parseInt(findMateri.id)
                 },
                 select:{
                     id:true
                 }
             })
-            if(create){
-                for(let i =0; i<data.length; i++){
+            if(!findExam){
+                const create = await db.exam.create({
+                    data: {
+                        idmapel: parseInt(idmapel),
+                        stasiun: stasiun,
+                        idmateri: findMateri.id,
+                        topic: topic
+                    },
+                    select: {
+                        id: true
+                    }
+                })
+                if (create) {
+                    for (let i = 0; i < data.length; i++) {
+                        await db.examQuestion.create({
+                            data: {
+                                idexam: create.id,
+                                text: data[i].text,
+                                urlaudio: data[i].urlaudio ? data[i].urlaudio : null,
+                                optionanswer: data[i].optionanswer ? data[i].optionanswer : null,
+                                correctAnswer: data[i].correctAnswer ? data[i].correctAnswer : null
+                            }
+                        })
+                    }
+                }
+                return {
+                    status: true,
+                    message: 'Create Exam Success',
+                    code: 201
+                }
+            }
+            await db.exam.update({
+                where:{
+                    id:parseInt(findExam.id)
+                },
+                data:{
+                    topic:topic
+                }
+            })
+            for (let i = 0; i < data.length; i++) {
+                const findQuestion = await db.examQuestion.findFirst({
+                    where:{
+                        idexam:findExam.id,
+                        text:data[i].text
+                    }
+                })
+                if(!findQuestion){
                     await db.examQuestion.create({
-                        data:{
-                            idexam:create.id,
-                            text:data[i].text,
-                            urlaudio:data[i].urlaudio ? data[i].urlaudio : null,
-                            optionanswer:data[i].optionanswer ? data[i].optionanswer : null,
-                            correctAnswer:data[i].correctAnswer ? data[i].correctAnswer : null
+                        data: {
+                            idexam: findExam.id,
+                            text: data[i].text,
+                            urlaudio: data[i].urlaudio ? data[i].urlaudio : null,
+                            optionanswer: data[i].optionanswer ? data[i].optionanswer : null,
+                            correctAnswer: data[i].correctAnswer ? data[i].correctAnswer : null
                         }
                     })
                 }
@@ -58,7 +111,7 @@ class _exam {
                     id: true,
                     idmapel: true,
                     stasiun: true,
-                    topic:true
+                    topic: true
                 }
             })
             if (!exam) {
@@ -107,6 +160,11 @@ class _exam {
                     }
                 })
                 if (addData) console.log(addData)
+                // await db.authExamSiswa.create({
+                //     data: {
+                //         idexam, idmapel, idsiswa, stasiun, answer: answer[i]
+                //     }
+                // })
             }
             return {
                 status: true,
@@ -130,8 +188,8 @@ class _exam {
         try {
             const { idexam, idmapel, idsiswa, stasiun } = req
             const findExam = await db.exam.findFirst({
-                where:{idmapel:parseInt(idmapel), stasiun},
-                select:{id:true}
+                where: { idmapel: parseInt(idmapel), stasiun },
+                select: { id: true }
             })
             const idExam = findExam.id
             const verify = await db.authExamSiswa.findMany({
@@ -168,14 +226,14 @@ class _exam {
             const result = total / nilai.length
             const isResult = await db.resultExamSiswa.findFirst({
                 where: {
-                    idsiswa:parseInt(idsiswa),
+                    idsiswa: parseInt(idsiswa),
                     idmapel: parseInt(idmapel),
                     stasiun: stasiun,
                 }
             })
-            if(isResult){
+            if (isResult) {
                 const editNilai = await db.resultExamSiswa.update({
-                    where:{id:isResult.id},
+                    where: { id: isResult.id },
                     data: {
                         idmapel: parseInt(idmapel),
                         stasiun: stasiun,
@@ -194,7 +252,7 @@ class _exam {
                     message: 'success',
                     code: 200
                 }
-            }else{
+            } else {
                 const addData = await db.resultExamSiswa.create({
                     data: {
                         idmapel: parseInt(idmapel),
@@ -256,7 +314,7 @@ class _exam {
                     idsiswa: true
                 }
             });
-            
+
             // Menggunakan Set untuk menghapus duplikasi idsiswa
             let listIdSiswa = listExamAuthSiswa.map((auth) => auth.idsiswa);
             console.log('listExamAuthSiswa:', listExamAuthSiswa);
@@ -274,9 +332,9 @@ class _exam {
                     nisn: true,
                     kelas: true
                 },
-                take:parseInt(limit)
+                take: parseInt(limit)
             });
-    
+
             return {
                 status: true,
                 message: 'success',
@@ -296,7 +354,39 @@ class _exam {
             };
         }
     };
-    
+    deleteExam = async (req) => {
+        try {
+            const { idexam } = req
+            const deleteData = await db.exam.delete({
+                where: {
+                    id: parseInt(idexam)
+                }
+            })
+            if (!deleteData) {
+                return {
+                    status: false,
+                    message: 'Delete Exam Failed',
+                    error: 400
+                }
+            }
+            return {
+                status: true,
+                message: 'Delete Exam Success',
+                error: 201
+            }
+        } catch (error) {
+            console.log({
+                status: false,
+                message: 'Exam Modul List Exam Error',
+                error: error
+            });
+            return {
+                status: false,
+                message: 'Internal Server Error',
+                code: 500
+            };
+        }
+    }
 }
 const m$exam = new _exam()
 export default m$exam
