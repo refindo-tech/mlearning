@@ -32,6 +32,7 @@ const AddMateri = (
     const path = usePathname()
     const router = useRouter()
     const idmapel = path.split('/')[2]
+    const idmateri = path.split('/')[4]
     const [isActiveModal, setIsActiveModal] = useState(false)
     const [topic, setTopic] = useState('')
     const [detailmateri, setDetailmateri] = useState(null)
@@ -57,45 +58,6 @@ const AddMateri = (
             setDetailmateri(materi)
         }
     }
-    const [descMapel, setDescMapel] = useState(null)
-    const [isSubmitDesc, setIsSubmitDesc] = useState(false)
-    const [isHasUpdateDesc, setIsHasUpdateDesc] = useState(false)
-    useEffect(() => {
-        if (detailMapel) {
-            setDescMapel(detailMapel.MataPelajaran.description)
-        }
-    }, [detailMapel])
-    const resetDescMapel = () => {
-        setIsHasUpdateDesc(true)
-        setDescMapel(null)
-    }
-    const saveDesc = (materi, audio) => {
-        if (materi && audio) {
-            setDescMapel(materi)
-            setUrlAudio(audio)
-            setIsHasUpdateDesc(true)
-        }
-        if (materi) {
-            setIsHasUpdateDesc(true)
-            setDescMapel(materi)
-        }
-    }
-    const submitDesc = () => {
-        setIsSubmitDesc(true)
-        const payload = {
-            idmapel: parseInt(idmapel),
-            description: descMapel
-        }
-        const fetchAPI = async () => {
-            const response = await updateDeskripsi(payload)
-            if (response) {
-                setIsHasUpdateDesc(false)
-                setIsSubmitDesc(false)
-                window.location.reload()
-            }
-        }
-        fetchAPI()
-    }
     const resetDetailMateri = () => {
         setDetailmateri(null)
     }
@@ -112,8 +74,8 @@ const AddMateri = (
                 setDetailmateri(null)
                 setTopic(null)
                 reloadStasiun()
-                // stasiun = null
-                window.location.reload()
+                const newUrl = path.replace(`/${idmateri}/${stasiun}`,'')
+                router.push(newUrl)
             }
         }
         fetchAPI()
@@ -122,14 +84,14 @@ const AddMateri = (
         setIsActiveSubmit(true)
         let payload = {
             idmapel: parseInt(idmapel),
-            stasiun: stasiun,
+            stasiun: decodeURIComponent(stasiun),
             detailMateri: detailmateri,
             topic: topic
         }
         if (urlAudio) {
             payload = {
                 idmapel: parseInt(idmapel),
-                stasiun: stasiun,
+                stasiun: decodeURIComponent(stasiun),
                 detailMateri: detailmateri,
                 topic: topic,
                 urlaudio: urlAudio
@@ -139,16 +101,13 @@ const AddMateri = (
             const response = await createMateri(payload)
             if (response) {
                 setIsActiveSubmit(false)
-                reloadStasiun()
-                // router.refresh()
-                window.location.reload()
+                if(response.data){
+                    const newUrl = path.replace(`/add/${stasiun}`,`/${response.data.id}/${decodeURIComponent(stasiun)}`)
+                    router.push(newUrl)
+                }
             }
         }
         fetchAPI()
-    }
-    const [isActiveDesc, setIsActiveDesc] = useState(false)
-    const handleModalDescription = () => {
-        setIsActiveDesc(!isActiveDesc)
     }
     return (
         <div className=" w-[85%] border-l-2 border-gray-200">
@@ -174,21 +133,10 @@ const AddMateri = (
                     <div className="flex flex-row items-end justify-between">
                         {detailMapel ?
                             (
-                                <>{detailMapel.id ?
-                                    (
-                                        <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
-                                            <h1 className="font-bold text-xl lg:text-3xl">{detailMapel.topic}</h1>
-                                            <h3 className="font-normal text-xs lg:text-lg">{detailMapel.stasiun.toUpperCase()}</h3>
-                                        </div>
-                                    ) :
-                                    (
-                                        <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
-                                            {detailMapel.MataPelajaran.name && <h1 className="font-bold text-xl lg:text-3xl">{detailMapel.MataPelajaran.name}</h1>}
-                                            {detailMapel.MataPelajaran.kelas && <h3 className="font-normal text-xs lg:text-lg">{detailMapel.MataPelajaran.kelas}</h3>}
-                                        </div>
-                                    )
-                                }
-                                </>
+                                <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
+                                    <h1 className="font-bold text-xl lg:text-3xl">{detailMapel.topic}</h1>
+                                    {/* <h3 className="font-normal text-xs lg:text-lg">{detailMapel.stasiun.toUpperCase()}</h3> */}
+                                </div>
                             ) :
                             (
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
@@ -212,7 +160,7 @@ const AddMateri = (
                                             <AddIcon />
                                         </Button>
                                     </div>
-                                    <h3 className="font-normal text-xs lg:text-lg">{stasiun.toUpperCase()}</h3>
+                                    <h3 className="font-normal text-xs lg:text-lg">{decodeURIComponent(stasiun.toUpperCase())}</h3>
                                 </div>
                             )
                         }
@@ -230,90 +178,31 @@ const AddMateri = (
                 <Background />
                 {detailMapel ?
                     (
-                        <>{detailMapel.id ?
-                            (
-                                <div className="relative top-0 w-[90%] flex flex-col gap-5 mx-auto py-10 z-10">
-                                    <h3 className="font-semibold text-xl">Simak materi berikut ini!</h3>
-                                    <div className="flex flex-col gap-5">
-                                        {detailMapel &&
-                                            <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg text-justify">
-                                                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailMapel.detailmateri }} />
-                                                <div className="flex flex-col justify-center items-center">
-                                                    {detailMapel.urlaudio && <AudioPlayer url={`${detailMapel.urlaudio}`} />}
-                                                    {detailMapel.urlimage && <DisplayImageComponent url={`${detailMapel.urlimage}`} />}
-                                                    {detailMapel.urlvideo && <YoutubeVideo urlvideo={detailMapel.urlvideo} />}
-                                                </div>
-                                            </div>
-                                        }
-                                        <div className="flex justify-end z-10 gap-5">
-                                            <Button
-                                                variant="bordered"
-                                                radius="sm"
-                                                className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
-                                                onPress={hapusMateri}
-                                            >
-                                                <h3>Hapus Materi</h3>
-                                            </Button>
+                        <div className="relative top-0 w-[90%] flex flex-col gap-5 mx-auto py-10 z-10">
+                            <h3 className="font-semibold text-xl">Simak materi berikut ini!</h3>
+                            <div className="flex flex-col gap-5">
+                                {detailMapel &&
+                                    <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg text-justify">
+                                        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailMapel.detailmateri }} />
+                                        <div className="flex flex-col justify-center items-center">
+                                            {detailMapel.urlaudio && <AudioPlayer url={`${detailMapel.urlaudio}`} />}
+                                            {detailMapel.urlimage && <DisplayImageComponent url={`${detailMapel.urlimage}`} />}
+                                            {detailMapel.urlvideo && <YoutubeVideo urlvideo={detailMapel.urlvideo} />}
                                         </div>
                                     </div>
+                                }
+                                <div className="flex justify-end z-10 gap-5">
+                                    <Button
+                                        variant="bordered"
+                                        radius="sm"
+                                        className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
+                                        onPress={hapusMateri}
+                                    >
+                                        <h3>Hapus Materi</h3>
+                                    </Button>
                                 </div>
-                            ) :
-                            (
-                                <div className="w-[90%] mx-auto py-10 flex flex-col gap-10">
-                                    <ModalAddDescription active={isActiveDesc} handleModal={handleModalDescription} saveDesc={saveDesc} />
-                                    <div className="w-full flex flex-col gap-10">
-                                        {descMapel ?
-                                            (
-                                                <div className="ql-editor z-10" dangerouslySetInnerHTML={{ __html: descMapel }} />
-                                            ) :
-                                            (
-                                                <Button
-                                                    variant="bordered"
-                                                    className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
-                                                    onPress={handleModalDescription}
-                                                >
-                                                    <h3>Tambah materi pengenalan mata pelajaran</h3>
-                                                    <div className="h-5 w-5 flex items-center justify-center text-primer-500">
-                                                        <AddIcon fill={'#110B63'} />
-                                                    </div>
-                                                </Button>
-                                            )
-                                        }
-                                        <div className="flex justify-end z-10 gap-5">
-                                            {descMapel !== null &&
-                                                <Button
-                                                    variant="bordered"
-                                                    radius="sm"
-                                                    className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
-                                                    onPress={resetDescMapel}
-                                                >
-                                                    <h3>Hapus Materi</h3>
-                                                </Button>
-                                            }
-                                            {isHasUpdateDesc &&
-                                                <Button
-                                                    radius="sm"
-                                                    // isDisabled={descMapel ? false : true}
-                                                    isDisabled={isSubmitDesc ? true : false}
-                                                    className="w-[260px] bg-primer-500 text-white font-semibold"
-                                                    onPress={submitDesc}
-                                                >
-                                                    {isSubmitDesc ?
-                                                        (
-                                                            <div className="loader"></div>
-                                                        ) :
-                                                        (
-                                                            <h3>Simpan</h3>
-                                                        )
-                                                    }
-                                                </Button>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        }
-                        </>
+                            </div>
+                        </div>
                     ) : (
                         <>
                             {detailmateri ?

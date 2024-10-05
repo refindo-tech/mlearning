@@ -219,7 +219,7 @@ class _exam {
     correctionExam = async (req) => {
         try {
             let total = 0
-            const { idmapel, idsiswa, stasiun, nilai } = req
+            const { idmapel, idsiswa, stasiun, nilai, idexam } = req
             for (let i = 0; i < nilai.length; i++) {
                 total = total + nilai[i]
             }
@@ -229,6 +229,7 @@ class _exam {
                     idsiswa: parseInt(idsiswa),
                     idmapel: parseInt(idmapel),
                     stasiun: stasiun,
+                    idexam:parseInt(idexam)
                 }
             })
             if (isResult) {
@@ -258,7 +259,8 @@ class _exam {
                         idmapel: parseInt(idmapel),
                         idsiswa: parseInt(idsiswa),
                         stasiun: stasiun,
-                        nilai: Math.round(result)
+                        nilai: Math.round(result),
+                        idexam:parseInt(idexam)
                     }
                 })
                 if (!addData) {

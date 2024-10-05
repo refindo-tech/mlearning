@@ -30,7 +30,7 @@ class _absensi {
     }
     addAbsen = async(req)=>{
         try {
-            const {idmapel, stasiun, idsiswa} = req
+            const {idmapel, stasiun, idsiswa, idmateri} = req
             const profile = await db.profileSiswa.findFirst({
                 where:{
                     idsiswa:parseInt(idsiswa)
@@ -41,6 +41,7 @@ class _absensi {
                     data:{
                         idmatapelajaran:parseInt(idmapel),
                         idsiswa:parseInt(idsiswa),
+                        idmateri:parseInt(idmateri),
                         name:profile.name?profile.name:null,
                         nisn:profile.nisn?profile.nisn:null,
                         kelas:profile.kelas?profile.kelas:null,

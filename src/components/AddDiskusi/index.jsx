@@ -20,7 +20,7 @@ const AddDiskusi = (
     {
         detailMapel,
         // handleActiveInputTopic,
-        // isInputActive,
+        // isInputActive
         stasiun,
         handleChevronLeft,
         handleChevronRight
@@ -28,40 +28,24 @@ const AddDiskusi = (
     const path = usePathname()
     const router = useRouter()
     const idmapel = path.split('/')[2]
+    const idmateri = path.split('/')[4]
     const { AddIcon } = Icons
     const [dataDiskusi, setDataDiskusi] = useState(null)
     const [contentIsLoad, setContentIsLoad] = useState(true)
-    const [idDiskusi, setIdDiskusi] = useState(null)
-    const [readyIdentifier, setReadyIdentifier] = useState(false)
-    const [currentIdDiskusi, setCurrentIdDiskusi] = useState(null);
-    const [waitingForNewId, setWaitingForNewId] = useState(true);
     useEffect(() => {
         const payload = {
             idmapel: parseInt(idmapel),
-            stasiun: stasiun
+            stasiun: decodeURIComponent(stasiun)
         }
         const fetchAPI = async () => {
-            setWaitingForNewId(true); // Reset saat pindah stasiun
-            setCurrentIdDiskusi(null); // Kosongkan idDiskusi saat perpindahan stasiun
             const response = await detailDiskusi(payload)
             if (response) {
                 setContentIsLoad(false)
                 setDataDiskusi(response.data)
-                setIdDiskusi(response.data.id)
             }
         }
         fetchAPI()
-        setIdDiskusi(null)
-        setReadyIdentifier(false)
     }, [idmapel, stasiun])
-    // useEffect(() => {
-    //     if (idDiskusi) {
-    //         setTimeout(() => { // Tambahkan delay kecil untuk memastikan
-    //             setWaitingForNewId(false);
-    //             setCurrentIdDiskusi(idDiskusi); // Setel idDiskusi baru
-    //         }, 5000); // Delay 100ms atau sesuai kebutuhan
-    //     }
-    // }, [idDiskusi]);
     const [topic, setTopic] = useState(null)
     const [isInputActive, setIsInputActive] = useState(true)
     const handletopic = (value) => {
@@ -89,19 +73,12 @@ const AddDiskusi = (
     const submitDiskusi = () => {
         setIsSubmit(true)
         const payload = {
-            stasiun: stasiun,
+            stasiun: decodeURIComponent(stasiun),
             idmapel: parseInt(idmapel),
             question: isDiskusi,
             topic: topic
         }
         const fetchAPI = async () => {
-            // if (tempDiskusi) {
-            //     //DELETE DISKUSI SEBELUMNYA
-            // } else if (tempDiskusi && dataDiskusi) {
-            //     //DELETE DISKUSI SEBELUMNYA DAN CREATE DISKUSI BARU
-            // } else {
-            //     //CREATE DISKUSI SAJA
-            // }
             const response = await createDiskusi(payload)
             if (response) {
                 setIsSubmit(false)
@@ -119,14 +96,12 @@ const AddDiskusi = (
                 <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                     <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
                         <button
-                            // onClick={handleBack}
                             onClick={handleChevronLeft}
                             className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
                         >
                             <ChevronLeft size={32} />
                         </button>
                         <button
-                            // onClick={handleNextStep}
                             onClick={handleChevronRight}
                             className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
                         >
@@ -138,7 +113,7 @@ const AddDiskusi = (
                             (
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                     <h1 className="font-bold text-3xl">{dataDiskusi.topic}</h1>
-                                    <h3 className="font-normal text-lg">{stasiun.toUpperCase()}</h3>
+                                    <h3 className="font-normal text-lg">{decodeURIComponent(stasiun.toUpperCase())}</h3>
                                 </div>
                             ) :
                             (
@@ -147,7 +122,6 @@ const AddDiskusi = (
                                         className="flex items-center gap-1 h-10 w-fit border-3 border-dashed border-white rounded-lg px-2"
                                     >
                                         <input
-                                            // variant="bordered"
                                             placeholder="Tambah judul"
                                             disabled={isInputActive ? true : false}
                                             onChange={(e) => handletopic(e.target.value)}
@@ -162,7 +136,7 @@ const AddDiskusi = (
                                             <AddIcon />
                                         </Button>
                                     </div>
-                                    <h3 className="font-normal text-xs lg:text-lg">{stasiun.toUpperCase()}</h3>
+                                    <h3 className="font-normal text-xs lg:text-lg">{decodeURIComponent(stasiun.toUpperCase())}</h3>
                                 </div>
                             )
                         }
@@ -203,13 +177,7 @@ const AddDiskusi = (
                                     </Button>
                                 </div>
                                 <h3 className="font-semibold text-lg">Portal Diskusi</h3>
-                                {/* {idDiskusi &&
-                                } */}
-                                {readyIdentifier && idDiskusi && <Comments idmapel={idmapel} stasiun={stasiun} idDiskusi={idDiskusi} />}
-                                {/* {!waitingForNewId && currentIdDiskusi && (
-                                    <Comments idmapel={idmapel} stasiun={stasiun} idDiskusi={currentIdDiskusi} />
-                                )} */}
-                                {/* {detailMapel&&<Comments idmapel={idmapel} stasiun={stasiun} idDiskusi={detailMapel.id} />} */}
+                                {detailMapel&&<Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idmateri={idmateri} />}
                             </div>
                         </div>
                     ) :

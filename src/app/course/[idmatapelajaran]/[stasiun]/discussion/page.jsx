@@ -146,9 +146,7 @@ const Discussion = () => {
                                 </div>
                                 <div className="w-full min-h-screen flex flex-col gap-4">
                                     <h3 className="font-semibold text-xl">Portal Diskusi</h3>
-                                    {/* <div className="border-2 border-gray-200 rounded-lg flex-grow bg-white">
-                                </div> */}
-                                    {detailMapel&&<Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idDiskusi={detailMapel.id} />}
+                                    {detailMapel&&<Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idmateri={detailMapel.id} />}
                                 </div>
                             </div>
                         </div>

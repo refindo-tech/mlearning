@@ -13,6 +13,7 @@ import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { detailMateri, listStasiun, getAbsensiByIdSiswa, addAbsen } from "@/backend/fetchAPI"
 import { usePathname } from "next/navigation"
+import "quill/dist/quill.snow.css";
 const Stasiun = () => {
     const router = useRouter()
     const path = usePathname()
@@ -78,7 +79,8 @@ const Stasiun = () => {
         const stasiun = path.split('/')[3]
         const payload = {
             idmapel,
-            stasiun
+            stasiun,
+            idmateri:parseInt(dataMateri.id)
         }
         const response = await addAbsen(payload)
         if (response) {
@@ -141,7 +143,7 @@ const Stasiun = () => {
                             <div className="flex flex-col gap-5">
                                 {dataMateri &&
                                     <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg text-justify">
-                                        <div className="indent-3" dangerouslySetInnerHTML={{__html:dataMateri.detailmateri}}/>
+                                        <div className="ql-editor" dangerouslySetInnerHTML={{__html:dataMateri.detailmateri}}/>
                                         <div className="flex flex-col justify-center items-center">
                                             {dataMateri.urlaudio && <AudioPlayer url={`${dataMateri.urlaudio}`} />}
                                             {dataMateri.urlimage && <DisplayImageComponent url={`${dataMateri.urlimage}`} />}

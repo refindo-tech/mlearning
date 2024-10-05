@@ -33,24 +33,23 @@ const Navbar = () => {
             setToken(null)
         }
         const detailProfile = async()=>{
-            const responseProfileSiswa = await getDetailProfile()
-            if(responseProfileSiswa){
-                console.log(responseProfileSiswa)
-                if(responseProfileSiswa.data){
-                    setProfileSiswa(responseProfileSiswa.data.siswa)
+            if(siswa){
+                const responseProfileSiswa = await getDetailProfile()
+                if(responseProfileSiswa){
+                    if(responseProfileSiswa.data){
+                        setProfileSiswa(responseProfileSiswa.data.siswa)
+                    }
                 }
             }
-            const responseProfileGuru = await getProfileGuruNavbar()
-            if(responseProfileGuru){
-                console.log(responseProfileGuru)
-                setProfileGuru(responseProfileGuru.data)
+            if(guru){
+                const responseProfileGuru = await getProfileGuruNavbar()
+                if(responseProfileGuru){
+                    setProfileGuru(responseProfileGuru.data)
+                }
             }
         }
         detailProfile()
     }, [])
-    // useEffect(()=>{
-    //     console.log(profileSiswa)
-    // }, [profileSiswa])
     const handleHide = () => {
         setIsHide(true)
     }

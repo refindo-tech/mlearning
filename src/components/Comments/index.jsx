@@ -1,17 +1,16 @@
 'use client'
 import { useEffect } from 'react';
 
-const Comments = ({idmapel, stasiun, idDiskusi }) => {
+const Comments = ({idmapel, stasiun, idmateri }) => {
     useEffect(() => {
         // Function to load Disqus
-        console.log(`identifier-${idmapel}-${stasiun}-${idDiskusi}`)
-        if (idmapel && stasiun && idDiskusi) {
+        if (idmapel && stasiun && idmateri) {
             const loadDisqus = () => {
                 window.disqus_config = function () {
                     // this.page.url = `${window.location.origin}${window.location.pathname}?stasiun=${stasiun}`;  // Tambahkan query string
                     this.page.url = window.location.href
                     // this.page.identifier = `${idmapel}/${stasiun}`;  // Gunakan kombinasi idmapel dan stasiun sebagai identifier
-                    this.page.identifier = `identifier-${idmapel}-${stasiun}-${idDiskusi}`
+                    this.page.identifier = `identifier-${idmapel}-${stasiun}-${idmateri}`
                 };
                 // Check if Disqus is already loaded
                 if (window.DISQUS) {
@@ -30,7 +29,7 @@ const Comments = ({idmapel, stasiun, idDiskusi }) => {
             };
             loadDisqus(); // Load Disqus when component mounts or `idmapel` / `stasiun` changes;
         }
-    }, [idmapel, stasiun, idDiskusi]); // Only re-run the effect if `idmapel` or `stasiun` changes
+    }, [idmapel, stasiun, idmateri]); // Only re-run the effect if `idmapel` or `stasiun` changes
     return (
         <>
             <div id="disqus_thread"></div>

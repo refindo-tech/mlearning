@@ -37,7 +37,6 @@ const CorrectionExam = () => {
             }
             const responseListQuestion = await listQuestionTeacher(payloadListQuestion)
             if (responseListQuestion) {
-                console.log(responseListQuestion)
                 if (responseListQuestion.message === 'Not Any Exam Relevant') {
                     setError(`Not any exam in ${stasiunFromPath}`)
                 }
@@ -71,14 +70,6 @@ const CorrectionExam = () => {
         const newUrl = path.replace(`${currentUrlSegment}`, `${newUrlSegment}`)
         router.push(`${newUrl}`)
     }
-    const nextStep = () => {
-        const newPath = path.replace('/exam', '')
-        router.push(newPath)
-    }
-    const backStep = () => {
-        const newPath = path.replace('/exam', '/discussion')
-        router.push(newPath)
-    }
     useEffect(() => {
         const verify = async () => {
             let payload = {
@@ -109,6 +100,7 @@ const CorrectionExam = () => {
             idmapel: parseInt(idmapel),
             idsiswa: idSiswaFromPath,
             stasiun: stasiunFromPath,
+            idexam: otherData.id,
             nilai: nilai
         }
         const postData = await postCorrectionExam(payload)
@@ -136,23 +128,10 @@ const CorrectionExam = () => {
                 <div className="lg:w-[85%] w-full lg:border-l-2 lg:border-gray-200">
                     <div className="h-fit static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
-                            <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
-                                <button
-                                    onClick={backStep}
-                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white cursor-pointer"
-                                >
-                                    <ChevronLeft size={32} />
-                                </button>
-                                <button
-                                    onClick={nextStep}
-                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white hover:cursor-pointer"
-                                >
-                                    <ChevronRight size={32} />
-                                </button>
-                            </div>
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                     {topic && <h1 className="font-bold text-xl lg:text-3xl">{topic}</h1>}
+                                    {otherData && <h1 className="font-semibold text-xl">{otherData.stasiun.toUpperCase()}</h1> }
                                 </div>
                                 <Image
                                     alt="icon-card"
@@ -162,7 +141,7 @@ const CorrectionExam = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="relative w-full">
+                    <div className="min-h-screen relative w-full">
                         <Background />
                         {error ? (
                             <div className="w-full min-h-[50vh] flex items-center justify-center font-semibold text-lg">

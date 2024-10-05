@@ -101,12 +101,16 @@ class _materi {
                     detailmateri:detailMateri,
                     topic:topic,
                     urlaudio:urlaudio ? urlaudio : null
+                },
+                select:{
+                    id:true
                 }
             })
             if(create){
                 return{
                     code:201,
                     message:"Success create materi",
+                    data:create
                 }
             }
         } catch (error) {
@@ -144,13 +148,13 @@ class _materi {
                 if(update){
                     return {
                         status:true,
-                        message: 'Update Descprition Success',
+                        message: 'Update Description Success',
                         code:201
                     }
                 }else{
                     return {
                         status:false,
-                        message: 'Update Descprition Failed',
+                        message: 'Update Description Failed',
                         code:400
                     }
                 }

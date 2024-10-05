@@ -72,7 +72,7 @@ const AddExam = (
         const fetchAPI = async()=>{
             const payload = {
                 idmapel:idmapel,
-                stasiun:stasiun
+                stasiun:decodeURIComponent(stasiun)
             }
             const response = await listQuestionTeacher(payload)
             if(response){
@@ -116,7 +116,7 @@ const AddExam = (
         setSubmitActive(true)
         let payload = {
             idmapel: parseInt(idmapel),
-            stasiun: stasiun,
+            stasiun: decodeURIComponent(stasiun),
             topic: topic,
             data: listQuestion
         }
@@ -179,7 +179,7 @@ const AddExam = (
                                 <AddIcon />
                             </Button>
                         </div>
-                        <h3 className="font-normal text-xs lg:text-lg">{stasiun.toUpperCase()}</h3>
+                        <h3 className="font-normal text-xs lg:text-lg">{decodeURIComponent(stasiun.toUpperCase())}</h3>
                     </div>
                 </div>
             </div>

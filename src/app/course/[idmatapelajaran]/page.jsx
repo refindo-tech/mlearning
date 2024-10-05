@@ -9,6 +9,7 @@ import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { detailMateri, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
+import "quill/dist/quill.snow.css";
 const CourseHomePage = () => {
     const path = usePathname()
     const router = useRouter()
@@ -110,7 +111,7 @@ const CourseHomePage = () => {
                         <Background />
                         <div className="relative top-0 w-[90%] hidden lg:flex flex-col gap-5 mx-auto py-10 z-10">
                             {detailMapel && detailMapel.MataPelajaran.description &&
-                                (<div className="indent-8 text-justify" dangerouslySetInnerHTML={{__html:detailMapel.MataPelajaran.description}}/>)}
+                                (<div className="ql-editor" dangerouslySetInnerHTML={{__html:detailMapel.MataPelajaran.description}}/>)}
                             <div className="flex justify-end">
                                 <Button
                                     as={Link}

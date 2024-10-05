@@ -7,7 +7,6 @@ import { accessGuru, listNews, deleteNews } from '@/backend/fetchAPI'
 import ModalAddBerita from '@/components/ModalAddBerita'
 import Icons from '../Icons'
 const Aside = () => {
-    const router = useRouter()
     const [access, setAccess] = useState(false)
     const [dataListNews, setDataListNews] = useState(null)
     const [isActiveModal, setIsActiveModal] = useState(false)
@@ -85,7 +84,7 @@ const Aside = () => {
                                                         <DropdownTrigger
                                                             variant='light'
                                                         >
-                                                            <div>
+                                                            <div className='hover:cursor-pointer'>
                                                                 <HorizontalDots />
                                                             </div>
                                                         </DropdownTrigger>
@@ -98,10 +97,8 @@ const Aside = () => {
                                                         >
                                                             <DropdownItem
                                                                 key={'delete'}
+                                                                variant='light'
                                                                 color='danger'
-                                                            // onPress={()=>{
-                                                            //     handleDeleteNews(item.id)
-                                                            // }}
                                                             >
                                                                 Delete
                                                             </DropdownItem>

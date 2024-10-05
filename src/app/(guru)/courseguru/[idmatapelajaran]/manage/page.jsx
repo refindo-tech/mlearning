@@ -3,80 +3,78 @@ import Background from "@/components/Background"
 import Loading from "@/app/loading.jsx"
 import AsideTeacher from '@/components/AsideTeacher'
 import Navbar from "@/components/Navbar"
-import AudioPlayer from "@/components/AudioPlayer"
-import DisplayImageComponent from "@/components/DisplayImageComponent"
-import YoutubeVideo from "@/components/YoutubeVideo"
-import Footer from "@/components/Footer"
 import { Button, Image, Input } from "@nextui-org/react"
-import { ChevronRight, ChevronLeft } from 'lucide-react'
-import ModalAddExam from "@/components/ModalAddExam"
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { detailMateri, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
-import AddMateri from '@/components/AddMateri'
-import AddDiskusi from '@/components/AddDiskusi'
-import AddExam from '@/components/AddExam'
+import { detailMateri, listStasiun, updateDeskripsi } from "@/backend/fetchAPI.js"
+import ModalAddDescription from "@/components/ModalAddDescription"
 import Icons from "@/components/Icons"
 import "quill/dist/quill.snow.css";
 const CourseHomePage = () => {
     const path = usePathname()
     const router = useRouter()
     const idmapel = path.split('/')[2]
+    const [isActiveDesc, setIsActiveDesc] = useState(false)
+    const [isSubmitDesc, setIsSubmitDesc] = useState(false)
     const [isLoad, setIsLoad] = useState(true)
     const [context, setContext] = useState({
         materi: true,
         discussion: false,
         exam: false
     })
-    const [dataListStasiun, setDataListStasiun] = useState([])
-    const [isInputActive, setIsInputActive] = useState(true)
-    const [detailMapel, setDetailMapel] = useState(null)
-    const [stasiun, setStasiun] = useState(null)
-    const handleIsLoad = ()=>{
-        setIsLoad(true)
-    }
-    const { AddIcon } = Icons
-    const handleUrl = (value) => {
-        if (value) {
-            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${value.stasiun}`
-        } else {
-            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/result`
+    const saveDesc = (materi, audio) => {
+        if (materi && audio) {
+            setDescMapel(materi)
+            setUrlAudio(audio)
+            setIsHasUpdateDesc(true)
+        }
+        if (materi) {
+            setIsHasUpdateDesc(true)
+            setDescMapel(materi)
         }
     }
-    const handleChevronRight = () => {
-        setContext((prevData) => {
-            if (prevData.materi) {
-                return { ...prevData, materi: false, discussion: true, exam: false }
+    const submitDesc = () => {
+        setIsSubmitDesc(true)
+        const payload = {
+            idmapel: parseInt(idmapel),
+            description: descMapel
+        }
+        const fetchAPI = async () => {
+            const response = await updateDeskripsi(payload)
+            if (response) {
+                setIsHasUpdateDesc(false)
+                setIsSubmitDesc(false)
+                window.location.reload()
             }
-            if (prevData.discussion) {
-                return { ...prevData, materi: false, discussion: false, exam: true }
-            }
-            if (prevData.exam) {
-                return { ...prevData, materi: true, discussion: false, exam: false }
-            }
-        })
+        }
+        fetchAPI()
     }
-    const handleChevronLeft = () => {
-        setContext((prevData) => {
-            if (prevData.materi) {
-                return { ...prevData, materi: true, discussion: false, exam: false }
-            }
-            if (prevData.discussion) {
-                return { ...prevData, materi: true, discussion: false, exam: false }
-            }
-            if (prevData.exam) {
-                return { ...prevData, materi: false, discussion: true, exam: false }
-            }
-        })
-    }
+    const [dataListStasiun, setDataListStasiun] = useState([])
+    const [detailMapel, setDetailMapel] = useState(null)
+    const [stasiun, setStasiun] = useState(null)
+    const { AddIcon } = Icons
     useEffect(() => {
         console.log(context)
     }, [context])
     const handleStasiun = (value) => {
-        setStasiun(value)
+        const payload = {
+            idmapel: idmapel,
+            stasiun: value
+        }
+        const fetchAPI = async () => {
+            const response = await detailMateri(payload)
+            if (response) {
+                if (response.data) {
+                    router.push(`${path}/${response.data.id}/${value}`)
+                }else{
+                    router.push(`${path}/add/${value}`)
+                }
+            }
+        }
+        fetchAPI()
     }
-    const handleActiveInputTopic = () => {
-        setIsInputActive(!isInputActive)
+    const handleModalDescription = () => {
+        setIsActiveDesc(!isActiveDesc)
     }
     useEffect(() => {
         const fetchAPI = async () => {
@@ -84,7 +82,6 @@ const CourseHomePage = () => {
             const response = await listStasiun(req)
             if (response) {
                 setDataListStasiun(response.data)
-                // setIsLoadStasiun(false)
             }
         }
         fetchAPI()
@@ -109,8 +106,18 @@ const CourseHomePage = () => {
         }
         fetchAPI()
     }, [idmapel, stasiun])
-    const resetMapel = ()=>{
-        setDetailMapel(null)
+
+
+    const [descMapel, setDescMapel] = useState(null)
+    const [isHasUpdateDesc, setIsHasUpdateDesc] = useState(false)
+    useEffect(() => {
+        if (detailMapel) {
+            setDescMapel(detailMapel.MataPelajaran.description)
+        }
+    }, [detailMapel])
+    const resetDescMapel = () => {
+        setIsHasUpdateDesc(true)
+        setDescMapel(null)
     }
     if (isLoad) {
         return (<Loading />)
@@ -126,39 +133,80 @@ const CourseHomePage = () => {
                         handleStasiun={handleStasiun}
                     />
                 </aside>
-                {context.materi &&
-                    <AddMateri
-                        detailMapel={detailMapel}
-                        resetMapel={resetMapel}
-                        handleActiveInputTopic={handleActiveInputTopic}
-                        reloadStasiun={handleIsLoad}
-                        isInputActive={isInputActive}
-                        stasiun={stasiun}
-                        handleChevronLeft={handleChevronLeft}
-                        handleChevronRight={handleChevronRight}
-                    />
-                }
-                {context.discussion &&
-                    <AddDiskusi
-                        detailMapel={detailMapel}
-                        handleActiveInputTopic={handleActiveInputTopic}
-                        isInputActive={isInputActive}
-                        stasiun={stasiun}
-                        handleChevronLeft={handleChevronLeft}
-                        handleChevronRight={handleChevronRight}
-                    />
-                }
-                {context.exam &&
-                    <AddExam
-                        detailMapel={detailMapel}
-                        handleActiveInputTopic={handleActiveInputTopic}
-                        isInputActive={isInputActive}
-                        stasiun={stasiun}
-                        handleChevronLeft={handleChevronLeft}
-                        handleChevronRight={handleChevronRight}
-                        // activeModalAddExam={activeModalAddExam}
-                    />
-                }
+                <div className=" w-[85%] border-l-2 border-gray-200">
+                    <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
+                        <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
+                            <div className="flex flex-row items-end justify-between">
+                                <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
+                                    {detailMapel.MataPelajaran.name && <h1 className="font-bold text-xl lg:text-3xl">{detailMapel.MataPelajaran.name}</h1>}
+                                    {detailMapel.MataPelajaran.kelas && <h3 className="font-normal text-xs lg:text-lg">{detailMapel.MataPelajaran.kelas}</h3>}
+                                </div>
+                                <Image
+                                    alt="icon-card"
+                                    src="/assets/image/openedbooksm.png"
+                                    className="block lg:hidden"
+                                />
+                            </div>
+                            <div className="hidden lg:block absolute bottom-0 right-0 h-[200px] w-[250px] bg-[url('/assets/image/openedbook.png')] bg-no-repeat bg-cover bg-center">
+                            </div>
+                        </div>
+                    </div>
+                    <div className="relative min-h-screen">
+                        <Background />
+                        <div className="w-[90%] mx-auto py-10 flex flex-col gap-10">
+                            <ModalAddDescription active={isActiveDesc} handleModal={handleModalDescription} saveDesc={saveDesc} />
+                            <div className="w-full flex flex-col gap-10">
+                                {descMapel ?
+                                    (
+                                        <div className="ql-editor z-10" dangerouslySetInnerHTML={{ __html: descMapel }} />
+                                    ) :
+                                    (
+                                        <Button
+                                            variant="bordered"
+                                            className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
+                                            onPress={handleModalDescription}
+                                        >
+                                            <h3>Tambah materi pengenalan mata pelajaran</h3>
+                                            <div className="h-5 w-5 flex items-center justify-center text-primer-500">
+                                                <AddIcon fill={'#110B63'} />
+                                            </div>
+                                        </Button>
+                                    )
+                                }
+                                <div className="flex justify-end z-10 gap-5">
+                                    {descMapel !== null &&
+                                        <Button
+                                            variant="bordered"
+                                            radius="sm"
+                                            className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
+                                            onPress={resetDescMapel}
+                                        >
+                                            <h3>Hapus Materi</h3>
+                                        </Button>
+                                    }
+                                    {isHasUpdateDesc &&
+                                        <Button
+                                            radius="sm"
+                                            // isDisabled={descMapel ? false : true}
+                                            isDisabled={isSubmitDesc ? true : false}
+                                            className="w-[260px] bg-primer-500 text-white font-semibold"
+                                            onPress={submitDesc}
+                                        >
+                                            {isSubmitDesc ?
+                                                (
+                                                    <div className="loader"></div>
+                                                ) :
+                                                (
+                                                    <h3>Simpan</h3>
+                                                )
+                                            }
+                                        </Button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     )

@@ -5,7 +5,7 @@ export async function POST(req){
     try {
         const authorization = req.headers.get('authorization');
         const data = await req.json()
-        const {idsiswa,idmapel, stasiun, nilai} = data
+        const {idsiswa,idmapel, stasiun, nilai, idexam} = data
         // Parsing URL untuk mendapatkan query parameters
         // const url = new URL(req.url);
         // const params = url.searchParams;
@@ -17,7 +17,7 @@ export async function POST(req){
         //     response = verify
         // }
         if(verify.access){
-            const payload = {idmapel, idsiswa, stasiun, nilai}
+            const payload = {idmapel, idsiswa, stasiun, nilai, idexam}
             // response = await m$exam.answerExam(payload)
             response = await m$exam.correctionExam(payload)
         }else{
