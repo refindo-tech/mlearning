@@ -2,22 +2,25 @@
 import { Popover, PopoverTrigger, PopoverContent, Button, Link, User, Card, CardBody, CardHeader, CardFooter } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 // import { UserTwitterCard } from "./UserTwitterCard";
-const PopoverUser = () => {
-    const router = useRouter()
-    const handleLogout = () =>{
-        sessionStorage.removeItem('tokensiswa')
-        router.push('/onboarding')
-    }
+const PopoverUser = ({ profileSiswa, profileGuru, handleLogout }) => {
     return (
-        <Popover showArrow placement="bottom">
+        <Popover showArrow placement="bottom" className="h-[100px] w-[220px]">
             <PopoverTrigger>
-                <User
-                    as='button'
-                    className="transition-transform"
-                // avatarProps={{
-                //     src: "https://i.pravatar.cc/150?u=a04258114e29026702d"
-                // }}
-                />
+            {profileSiswa && profileSiswa.urlimage ? (
+                    <User
+                        as="button"
+                        className="transition-transform"
+                        avatarProps={{ src: profileSiswa.urlimage }}
+                    />
+                ) : profileGuru && profileGuru.urlimage ? (
+                    <User
+                        as="button"
+                        className="transition-transform"
+                        avatarProps={{ src: profileGuru.urlimage }}
+                    />
+                ) : (
+                    <User as="button" className="transition-transform" />
+                )}
             </PopoverTrigger>
             <PopoverContent
                 className="p-0"
@@ -32,14 +35,14 @@ const PopoverUser = () => {
                         <Button
                             as={Link}
                             href="/profile"
-                            className="bg-transparent text-left text-gray-500"
+                            className="bg-transparent text-left text-gray-500 hover:shadow"
                         >
                             Profile
                         </Button>
                         <Button
-                            color="danger"
-                            variant="flat"
+                            variant="light"
                             onPress={handleLogout}
+                            className="text-accent-orange hover:shadow bg-transparent"
                         >
                             Logout
                         </Button>

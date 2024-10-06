@@ -6,25 +6,67 @@ import { X, Search } from "lucide-react"
 import SearchComponent from '@/components/SearchComponent'
 import PopoverUser from '@/components/PopoverUser'
 import Icons from "@/components/Icons"
+import Loading from "@/app/loading"
+import { getDetailProfile, getProfileGuruNavbar } from "@/backend/fetchAPI"
 const Navbar = () => {
     const router = useRouter()
     const [token, setToken] = useState(null)
+    const [role, setRole] = useState(null)
+    const [isLoad, setIsLoad] = useState(false)
     const [isHide, setIsHide] = useState(false)
     const [isModal, setIsModal] = useState(false)
+    const [profileSiswa, setProfileSiswa] = useState(null)
+    const [profileGuru, setProfileGuru] = useState(null)
     const handleModal = () => {
         setIsModal(!isModal)
     }
     const { CircleElipsis } = Icons
     useEffect(() => {
         const verify = sessionStorage.getItem('tokensiswa') || sessionStorage.getItem('tokenguru')
-        setToken(verify)
+        const siswa = sessionStorage.getItem('tokensiswa')
+        const guru = sessionStorage.getItem('tokenguru')
+        if (guru) {
+            setRole('guru')
+            setToken(verify)
+        }else if (siswa) {
+            setRole('siswa')
+            setToken(verify)
+        }else if (siswa && guru){
+            setToken(null)
+        }
+        const detailProfile = async()=>{
+            if(siswa){
+                const responseProfileSiswa = await getDetailProfile()
+                if(responseProfileSiswa){
+                    if(responseProfileSiswa.data){
+                        setProfileSiswa(responseProfileSiswa.data.siswa)
+                    }
+                }
+            }
+            if(guru){
+                const responseProfileGuru = await getProfileGuruNavbar()
+                if(responseProfileGuru){
+                    setProfileGuru(responseProfileGuru.data)
+                }
+            }
+        }
+        detailProfile()
     }, [])
     const handleHide = () => {
         setIsHide(true)
     }
-    const handleLogout = () =>{
+    const handleLogout = () => {
+        setIsLoad(true)
         sessionStorage.removeItem('tokensiswa')
+        sessionStorage.removeItem('tokenguru')
+        setRole(null)
+        setToken(null)
         router.push('/onboarding')
+    }
+    if(isLoad){
+        return(
+            <Loading/>
+        )
     }
     return (
         <nav className="sticky top-0 w-full h-[80px] bg-white flex items-center shadow-xl z-20">
@@ -45,18 +87,37 @@ const Navbar = () => {
                                 <X size={16} className="text-white" />
                             </button>
                             <ul className="flex flex-col justify-center gap-3 font-semibold  text-center">
-                                <li className="px-4 py-2">
-                                    <a href="/dashboard">Materi Belajar</a>
-                                </li>
-                                <li className="px-4 py-2">
-                                    <a href="/about">Tentang M-Learning</a>
-                                </li>
-                                <li className="px-4 py-2">
-                                    <a href="/help">Bantuan</a>
-                                </li>
-                                <li className="px-4 py-2">
-                                    <a href="/">Portal Guru</a>
-                                </li>
+                                {role === 'guru' ? (
+                                    <>
+                                        <li className="px-4 py-2">
+                                            <a href="/dashboardguru">Kelola Kelas</a>
+                                        </li>
+                                        <li className="px-4 py-2">
+                                            <a href="/profilesiswa">Kelola Siswa</a>
+                                        </li>
+                                        <li className="px-4 py-2">
+                                            <a href="/about">Tentang M-Learning</a>
+                                        </li>
+                                        <li className="px-4 py-2">
+                                            <a href="/profileguru">Kelola Guru</a>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <>
+                                        <li className="px-4 py-2">
+                                            <a href="/dashboard">Materi Belajar</a>
+                                        </li>
+                                        <li className="px-4 py-2">
+                                            <a href="/about">Tentang M-Learning</a>
+                                        </li>
+                                        <li className="px-4 py-2">
+                                            <a href="/help">Bantuan</a>
+                                        </li>
+                                        <li className="px-4 py-2">
+                                            <a href="/dashboardguru">Portal Guru</a>
+                                        </li>
+                                    </>
+                                )}
                             </ul>
                         </div>
                         {token ? (
@@ -124,25 +185,44 @@ const Navbar = () => {
                 )
                 }
                 <ul className="hidden lg:flex flex-row items-center gap-5 font-semibold">
-                    <li className="px-4 py-2">
-                        <a href="/dashboard">Materi Belajar</a>
-                    </li>
-                    <li className="px-4 py-2">
-                        <a href="/about">Tentang M-Learning</a>
-                    </li>
-                    <li className="px-4 py-2">
-                        <a href="/help">Bantuan</a>
-                    </li>
-                    <li className="px-4 py-2">
-                        <a href="/">Portal Guru</a>
-                    </li>
+                    {role === 'guru' ? (
+                        <>
+                            <li className="px-4 py-2">
+                                <a href="/dashboardguru">Kelola Kelas</a>
+                            </li>
+                            <li className="px-4 py-2">
+                                <a href="/profilesiswa">Kelola Siswa</a>
+                            </li>
+                            <li className="px-4 py-2">
+                                <a href="/about">Tentang M-Learning</a>
+                            </li>
+                            <li className="px-4 py-2">
+                                <a href="/profileguru">Kelola Guru</a>
+                            </li>
+                        </>
+                    ) : (
+                        <>
+                            <li className="px-4 py-2">
+                                <a href="/dashboard">Materi Belajar</a>
+                            </li>
+                            <li className="px-4 py-2">
+                                <a href="/about">Tentang M-Learning</a>
+                            </li>
+                            <li className="px-4 py-2">
+                                <a href="/help">Bantuan</a>
+                            </li>
+                            <li className="px-4 py-2">
+                                <a href="/dashboardguru">Portal Guru</a>
+                            </li>
+                        </>
+                    )}
                 </ul>
                 {token ? (
                     <div
                         className="hidden lg:flex flex-row items-center gap-2"
                     >
                         <SearchComponent />
-                        <PopoverUser />
+                        <PopoverUser profileGuru={profileGuru} profileSiswa={profileSiswa} handleLogout={handleLogout}/>
                     </div>
                 ) : (
                     <div className="hidden lg:flex flex-row items-center gap-2">
@@ -177,7 +257,7 @@ const Navbar = () => {
                     </div>
                 )}
             </div>
-        </nav>
+        </nav >
     )
 }
 export default Navbar

@@ -1,17 +1,33 @@
 import { Textarea } from "@nextui-org/react"
-const EssayAnswer = ({handleAnswerQuestion}) => {
+const EssayAnswer = ({ isDisabled, handleAnswerQuestion, answeredQuestion }) => {
     return (
-        <Textarea
-            variant="bordered"
-            size="sm"
-            minRows={1}
-            maxRows={30}
-            placeholder="Tulis jawabanmu disini"
-            className="rounded-lg focus:outline-none border-primer-300 border-1 text-accent-orange"
-            onValueChange={(value)=>{
-                handleAnswerQuestion(value)
-            }}
-        />
+        <>{
+            answeredQuestion ? (
+                <Textarea
+                    variant="bordered"
+                    isDisabled={true}
+                    value={`${answeredQuestion.answer}`}
+                    maxRows={30}
+                    placeholder="Tulis jawabanmu disini"
+                    className="rounded-xl focus:outline-none border-primer-300 border-1 text-accent-orange"
+                    onValueChange={(value) => {
+                        handleAnswerQuestion(value)
+                    }}
+                />
+            ) : (
+                <Textarea
+                    variant="bordered"
+                    maxRows={30}
+                    isDisabled={isDisabled?true:false}
+                    placeholder="Tulis jawabanmu disini"
+                    className="rounded-xl focus:outline-none border-primer-300 border-1 text-accent-orange"
+                    onValueChange={(value) => {
+                        handleAnswerQuestion(value)
+                    }}
+                />
+            )
+        }
+        </>
     )
 }
 export default EssayAnswer

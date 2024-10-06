@@ -9,7 +9,7 @@ import AudioPlayer from "@/components/AudioPlayer"
 import YoutubeVideo from "@/components/YoutubeVideo"
 import DisplayImageComponent from '@/components/DisplayImageComponent'
 import { Button, Image } from "@nextui-org/react"
-import { detailDiskusi, listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI"
+import { detailDiskusi, listStasiun, getAbsensiByIdSiswa, detailMateri } from "@/backend/fetchAPI"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
@@ -17,9 +17,18 @@ import { useRouter } from "next/navigation"
 const Discussion = () => {
     const router = useRouter()
     const path = usePathname()
+    const idmapel = path.split('/')[2]
+    const stasiun = path.split('/')[3]
     const [dataDiskusi, setDataDiskusi] = useState(null)
     const [dataListStasiun, setDataListStasiun] = useState([])
     const [dataAbsensi, setDataAbsensi] = useState([])
+    const [detailMapel, setDetailMapel] = useState(null)
+    // const handleStasiunDiskusi = (value) =>{
+    //     setStasiunDiskusi(value)
+    // }
+    // useEffect(()=>{
+    //     console.log(idmapel, stasiun)
+    // },[idmapel, stasiun])
     useEffect(() => {
         const idmapel = path.split('/')[2]
         const stasiun = path.split('/')[3]
@@ -41,10 +50,20 @@ const Discussion = () => {
                 router.push('/onboarding')
             }
             const responseDetailDiskusi = await detailDiskusi(payloadDetailDiskusi)
-            if (!responseDetailDiskusi.data) {
-                router.push('exam')
+            if(responseDetailDiskusi){
+                if (!responseDetailDiskusi.data) {
+                    router.push('exam')
+                }
+                setDataDiskusi(responseDetailDiskusi.data)
             }
-            setDataDiskusi(responseDetailDiskusi.data)
+            const payloadDetailMateri = {
+                idmapel:parseInt(idmapel),
+                stasiun:decodeURIComponent(stasiun)
+            }
+            const responseDetailMateri = await detailMateri(payloadDetailMateri)
+            if(responseDetailMateri){
+                setDetailMapel(responseDetailMateri.data)
+            }
         }
         fetchAPI()
     }, [path, router])
@@ -89,7 +108,7 @@ const Discussion = () => {
                                 <div className="flex flex-row items-end justify-between">
                                     <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                         {dataDiskusi &&
-                                            <h1 className="font-bold text-xl lg:text-3xl">{dataDiskusi.Materi.topic}</h1>
+                                            <h1 className="font-bold text-xl lg:text-3xl">{dataDiskusi.topic}</h1>
                                         }
                                     </div>
                                     <Image
@@ -107,11 +126,11 @@ const Discussion = () => {
                                 <div className="flex flex-col gap-5">
                                     {dataDiskusi &&
                                         <div className="bg-sekunder-300 text-justify p-3 rounded-lg">
-                                            {dataDiskusi.question}
+                                            <div className="ql-editor" dangerouslySetInnerHTML={{ __html: dataDiskusi.question }}></div>
                                             <div className="flex flex-col justify-center items-center">
                                                 {dataDiskusi.urlaudio && <AudioPlayer url={`${dataDiskusi.urlaudio}`} />}
                                                 {dataDiskusi.urlimage && <DisplayImageComponent url={`${dataDiskusi.urlimage}`} />}
-                                                {dataDiskusi.urlvideo && <YoutubeVideo idvideo={dataDiskusi.urlvideo} />}
+                                                {dataDiskusi.urlvideo && <YoutubeVideo urlvideo={dataDiskusi.urlvideo} />}
                                             </div>
                                         </div>
                                     }
@@ -127,9 +146,7 @@ const Discussion = () => {
                                 </div>
                                 <div className="w-full min-h-screen flex flex-col gap-4">
                                     <h3 className="font-semibold text-xl">Portal Diskusi</h3>
-                                    {/* <div className="border-2 border-gray-200 rounded-lg flex-grow bg-white">
-                                </div> */}
-                                    <Comments />
+                                    {detailMapel&&<Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idmateri={detailMapel.id} />}
                                 </div>
                             </div>
                         </div>

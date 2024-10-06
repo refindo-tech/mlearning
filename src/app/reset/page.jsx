@@ -42,9 +42,10 @@ const ResetPasswordPage = () => {
     const payload = {token,email,password}
     const changePassword = async()=>{
         validation()
+        setIsLoad(true)
         const response = await resetPassword(payload)
         if(response){
-            console.log(response)
+            setIsLoad(false)
             router.push('/login')
         }
     }

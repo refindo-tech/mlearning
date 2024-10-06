@@ -1,7 +1,21 @@
 'use client'
+import { useState } from "react"
 import { Input, Image, Button, Link } from "@nextui-org/react"
-
+import { forgotPasswordGuru } from '@/backend/fetchAPI.js'
 const ForgotPasswordPage = () => {
+    const [isLoad, setIsLoad] = useState(false)
+    const [email, setEmail] = useState('')
+    const handleEmailValue=(value)=>{
+        setEmail(value)
+    }
+    const handleForgotPassword = async () => {
+        setIsLoad(true)
+        const payload = { email }
+        const response = await forgotPasswordGuru(payload)
+        if (response) {
+            setIsLoad(false)
+        }
+    }
     return (
         <div className="h-screen w-full flex items-center justify-center bg-gradient-to-b from-primer-400 to-primer-500">
             <div className="w-[90%] lg:w-[25%] bg-white rounded-lg py-[30px] flex flex-col items-center z-20">
@@ -19,22 +33,23 @@ const ForgotPasswordPage = () => {
                         color="default"
                         variant="light"
                         label="Email"
+                        value={email}
                         placeholder="Enter your email"
+                        onChange={(e) => handleEmailValue(e.target.value)}
                     />
                     <Button
+                        onPress={handleForgotPassword}
+                        isDisabled={isLoad?true:false}
                         className="h-[60px] bg-primer-500 text-white text-xl font-semibold"
                     >
-                        Konfirmasi
+                        {isLoad ? (
+                            <div className="loader"></div>
+                        ) : (
+                            <p>Konfirmasi</p>
+                        )}
                     </Button>
-                    <p className="text-center">Sudah punya akun? <a href="/login">Masuk</a></p>
-                    <Button
-                        as={Link}
-                        href="/register"
-                        className="h-[60px] bg-gray-100 text-xl font-semibold shadow-xl"
-                    >
-                        Daftar
-                    </Button>
-                    <a href="/" className="text-center text-accent-orange underline">Masuk untuk guru</a>
+                    <p className="text-center">Sudah punya akun? <a href="/loginguru">Masuk</a></p>
+                    <a href="/login" className="text-center text-accent-orange underline">Masuk untuk siswa</a>
                 </div>
             </div>
             <div className="absolute top-0 right-0">

@@ -5,8 +5,8 @@ export async function POST(req){
     try {
         const authorization = req.headers.get('authorization');
         const data = await req.json()
-        const {idmapel, stasiun} = data
-        const verify = await middleware(authorization) 
+        const {idmapel, stasiun, idmateri} = data
+        const verify = await middleware.authUser(authorization) 
         let response
         if(!verify.access){
             response = verify
@@ -14,9 +14,9 @@ export async function POST(req){
         const payload = {
             idmapel,
             idsiswa: verify.id,
-            stasiun:stasiun
+            stasiun:stasiun,
+            idmateri
         }
-        console.log(payload)
         response = await m$absensi.addAbsen(payload)
         return NextResponse.json(response, {status:response.code})
         // return NextResponse.json(payload, {status:200})

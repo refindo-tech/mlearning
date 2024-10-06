@@ -30,7 +30,7 @@ class _absensi {
     }
     addAbsen = async(req)=>{
         try {
-            const {idmapel, stasiun, idsiswa} = req
+            const {idmapel, stasiun, idsiswa, idmateri} = req
             const profile = await db.profileSiswa.findFirst({
                 where:{
                     idsiswa:parseInt(idsiswa)
@@ -41,6 +41,7 @@ class _absensi {
                     data:{
                         idmatapelajaran:parseInt(idmapel),
                         idsiswa:parseInt(idsiswa),
+                        idmateri:parseInt(idmateri),
                         name:profile.name?profile.name:null,
                         nisn:profile.nisn?profile.nisn:null,
                         kelas:profile.kelas?profile.kelas:null,
@@ -59,6 +60,47 @@ class _absensi {
             console.log({
                 status:false,
                 message:'Absensi Modul Add Absen Error',
+                error:error
+            })
+            return{
+                status:false,
+                message:'Internal Server Error',
+                code:500
+            }
+        }
+    }
+    getAbsensiForTeacher = async(req)=>{
+        try {
+            const {idmapel, stasiun, limit, name} = req
+            let list = await db.absensi.findMany({
+                where:{
+                    idmatapelajaran:parseInt(idmapel),
+                    stasiun
+                },
+                take:parseInt(limit)
+            })
+            if(name && name !== ''){
+                list = await db.absensi.findMany({
+                    where:{
+                        idmatapelajaran:parseInt(idmapel),
+                        stasiun,
+                        name:{
+                            contains:name
+                        }
+                    },
+                    take:parseInt(limit)
+                })
+            }
+            return{
+                status:true,
+                message:'success',
+                data:list,
+                code:200
+            }
+        } catch (error) {
+            console.log({
+                status:false,
+                message:'Absensi Modul Get Absensi By Stasiun Error',
                 error:error
             })
             return{

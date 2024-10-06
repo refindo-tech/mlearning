@@ -93,7 +93,7 @@ class _authentication {
         const {email, password, name} = payload
         const hashPassword = bcrypt.hashSync(password, 10)
         try {
-            await db.guru.create({
+            const create = await db.guru.create({
                 data: {
                     email: email,
                     password: hashPassword,
@@ -104,9 +104,11 @@ class _authentication {
                     }
                 }
             })
-            return {
-                message: 'success',
-                code: 201
+            if(create){
+                return {
+                    message: 'RegisterGuru Success',
+                    code: 201
+                }
             }
         } catch (error) {
             if(error.code=== 'P2002'){
@@ -155,7 +157,7 @@ class _authentication {
                 id:guru.id,
                 email:guru.email,
                 nuptk:guru.ProfileGuru[0]?.nuptk,
-            },process.env.SECRET_KEY,{expiresIn:'1h'})
+            },process.env.SECRET_KEY,{expiresIn:'24h'})
             return {
                 message: 'login success',
                 token:token,
@@ -164,6 +166,49 @@ class _authentication {
         } catch (error) {
             console.log({
                 message:'Authentication Module Login Guru Error',
+                error:error.message
+            })
+            return {
+                message: 'Internal Server Error',
+                code: 500
+            }
+        }
+    }
+    AddGuru = async (req) => {
+        console.log(req)
+        const {payload, ProfileGuru} = req
+        const hashPassword = bcrypt.hashSync(payload.password, 10)
+        try {
+            if(payload.email && payload.password && ProfileGuru.name){
+                const create = await db.guru.create({
+                    data: {
+                        email: payload.email,
+                        password: hashPassword,
+                        ProfileGuru:{
+                            create:ProfileGuru
+                        }
+                    }
+                })
+                if(create){
+                    return {
+                        message: 'Add Guru Success',
+                        code: 201
+                    }
+                }
+            }
+            return {
+                message: 'Email, Password, and Name Must Have Value',
+                code: 404
+            }
+        } catch (error) {
+            if(error.code=== 'P2002'){
+                return {
+                    message: 'Email has used',
+                    code: 400
+                }
+            }
+            console.log({
+                message:'Authentication Module Register Guru Error',
                 error:error.message
             })
             return {

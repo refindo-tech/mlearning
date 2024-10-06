@@ -11,10 +11,11 @@ export async function POST(req){
         // const params = url.searchParams;
         // const idMataPelajaran = params.get('idmapel');
         // const stasiun = params.get('stasiun');
-        const verify = await middleware(authorization) 
+        const verify = await middleware.authUser(authorization) 
         let response
         if(!verify.access){
             response = verify
+            return NextResponse.json(response, {status:response.code})
         }
         const payload = {
             idexam,

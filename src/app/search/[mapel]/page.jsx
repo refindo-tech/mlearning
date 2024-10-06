@@ -8,37 +8,38 @@ import Background from "@/components/Background"
 import Aside from "@/components/Aside"
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { listClass } from "@/backend/fetchAPI.js"
+import { listClass, accessGuru } from "@/backend/fetchAPI.js"
 const Search = () => {
     const router = useRouter()
     const path = usePathname()
     const mapel = path.split('/')[2]
-    const [access, setAccess] = useState(null)
+    const [isLoad, setIsLoad] = useState(true)
+    const [teacherAccess, setTeacherAccess] = useState(false)
     const [dataListClass, setDataListClass] = useState([])
-    useEffect(() => {
-        const validateAccess = () => {
-            const getToken = sessionStorage.getItem('tokensiswa')
-            if (!getToken) {
-                router.push('login/')
-            }
-        }
-        validateAccess()
-    }, [router])
     useEffect(() => {
         const payload = {
             name: decodeURIComponent(mapel)
         }
         const fetchData = async () => {
+            const tokenguru = sessionStorage.getItem('tokenguru')
+            if (tokenguru) {
+                const responseAccess = await accessGuru()
+                if (responseAccess) {
+                    setTeacherAccess(true)
+                } else {
+                    setTeacherAccess(false)
+                }
+            }
             const response = await listClass(payload)
             if (response) {
                 console.log(response)
                 setDataListClass(response.data)
-                setAccess(true)
+                setIsLoad(false)
             }
         }
         fetchData()
     }, [mapel])
-    if (access === null) {
+    if (isLoad) {
         return (<Loading />)
     }
     return (
@@ -53,11 +54,11 @@ const Search = () => {
                                 <h1
                                     className="font-semibold text-lg"
                                 >
-                                    {`Hasil dari pencarian "${mapel}"`}
+                                    {`Hasil dari pencarian "${decodeURIComponent(mapel)}"`}
                                 </h1>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                     {dataListClass.map((item, index) => (
-                                        <SubjectCard key={index} subject={item} />
+                                        <SubjectCard key={index} subject={item} teacherAccess={teacherAccess} />
                                     ))}
                                 </div>
                             </div>
@@ -96,19 +97,32 @@ const Search = () => {
     )
 }
 
-const SubjectCard = ({ subject }) => (
-    <Link href={`course/${subject.id}`} className="flex flex-col p-2 gap-3 rounded-xl border-2 border-gray-200 bg-white h-[200px]">
-        <div className="w-full h-[90px] flex items-center justify-end bg-primer-300 rounded">
-            <Image
-                alt="icon-card"
-                src="/assets/image/iconcard.png"
-                className="block h-[60px] w-[100px]"
-            />
+const SubjectCard = ({ subject, teacherAccess }) => {
+    const router = useRouter()
+    const handleRouter = ()=>{
+        if(teacherAccess){
+            router.push(`/courseguru/${subject.id}`)
+        }else{
+            router.push(`/course/${subject.id}`)
+        }
+    }
+    return (
+        <div 
+            onClick={handleRouter}
+            className="hover:cursor-pointer flex flex-col p-2 gap-3 rounded-xl border-2 border-gray-200 bg-white h-[200px]"
+        >
+            <div className="w-full h-[90px] flex items-center justify-end bg-primer-300 rounded">
+                <Image
+                    alt="icon-card"
+                    src="/assets/image/iconcard.png"
+                    className="block h-[60px] w-[100px]"
+                />
+            </div>
+            <div className="flex flex-col justify-between flex-grow">
+                <h1 className="text-lg font-semibold line-clamp-2">{subject.name}</h1>
+                <h3 className="text-sm">{subject.kelas}</h3>
+            </div>
         </div>
-        <div className="flex flex-col justify-between flex-grow">
-            <h1 className="text-lg font-semibold line-clamp-2">{subject.name}</h1>
-            <h3 className="text-sm">{subject.kelas}</h3>
-        </div>
-    </Link>
-)
+    )
+}
 export default Search 
