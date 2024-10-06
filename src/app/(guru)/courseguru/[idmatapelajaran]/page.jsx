@@ -8,7 +8,7 @@ import { Button, Image, Link } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { detailMateri, listStasiun, getAbsensiForTeacher } from "@/backend/fetchAPI.js"
+import { detailMateri, listStasiun, accessGuru } from "@/backend/fetchAPI.js"
 const CourseHomePage = () => {
     const path = usePathname()
     const router = useRouter()
@@ -16,15 +16,12 @@ const CourseHomePage = () => {
     const [isLoad, setIsLoad] = useState(true)
     const [dataListStasiun, setDataListStasiun] = useState([])
     const [detailMapel, setDetailMapel] = useState(null)
-    const handleUrl = (value) => {
-        if (value) {
-            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${value.stasiun}`
-        } else {
-            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/result`
-        }
-    }
     useEffect(() => {
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             const req = { idmatapelajaran: idmapel }
             const response = await listStasiun(req)
             if (response) {
@@ -33,12 +30,6 @@ const CourseHomePage = () => {
             const payload = {
                 idmapel: idmapel
             }
-            // const responseAbsensi = await getAbsensiByIdSiswa(payload)
-            // if (responseAbsensi.status) {
-            //     setDataAbsensi(responseAbsensi.data)
-            // } else {
-            //     router.push('/onboarding')
-            // }
             const responseDetailMateri = await detailMateri(payload)
             if (responseDetailMateri) {
                 if (!responseDetailMateri.data) {

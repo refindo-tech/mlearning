@@ -20,6 +20,7 @@ const Exam = () => {
     const path = usePathname()
     const [topic, setTopic] = useState(null)
     const [otherData, setOtherData] = useState(null)
+    const [isLoad,setIsLoad] = useState(false)
     const [listQuestionExam, setListQuestionExam] = useState(null)
     const [isHasAnswer, setIsHasAnswer] = useState(null)
     const [answerQuestion, setAnswerQuestion] = useState([])
@@ -104,6 +105,7 @@ const Exam = () => {
     
     }
     const submitAnswer = async () => {
+        setIsLoad(true)
         const payload = {
             idexam: otherData.id,
             idmapel: otherData.idmapel,
@@ -112,6 +114,7 @@ const Exam = () => {
         }
         const postData = await postAnswerQuestion(payload)
         if (postData) {
+            setIsLoad(false)
             const newPath = path.replace('/exam', '')
             router.push(newPath)
         }
@@ -215,9 +218,13 @@ const Exam = () => {
                                     <Button
                                         size="sm"
                                         onPress={submitAnswer}
+                                        isDisabled={isLoad?true:false}
                                         className="bg-primer-500 text-white h-10 w-[200px] flex text-md items-center text-center rounded"
                                     >
-                                        Kumpulkan
+                                        {isLoad?
+                                            (<div className="loader"></div>):
+                                            (<p>Kumpulkan</p>)
+                                        }
                                     </Button>
                                 }
                             </div>

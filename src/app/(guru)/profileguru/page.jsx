@@ -7,7 +7,7 @@ import Icons from "@/components/Icons"
 import { Button } from "@nextui-org/react"
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { listProfileGuru, deleteProfileGuru } from "@/backend/fetchAPI.js"
+import { listProfileGuru, deleteProfileGuru, accessGuru } from "@/backend/fetchAPI.js"
 import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
 import ModalAddGuru from '@/components/ModalAddGuru'
@@ -20,12 +20,13 @@ const ProfilGuru = () => {
     const handleSearch = (value) => {
         setInputSearch(value)
     }
-    useEffect(() => {
-        console.log(inputSearch)
-    }, [inputSearch])
     const { AddIcon } = Icons
     useEffect(() => {
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             let payload = {
                 limit: limitData
             }
@@ -57,7 +58,6 @@ const ProfilGuru = () => {
     return (
         <>
             <Navbar />
-
             {isActiveModal ?
                 (
                     <ModalAddGuru active={isActiveModal} handleModal={handleIsActiveModal} />

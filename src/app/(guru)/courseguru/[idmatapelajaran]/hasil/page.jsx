@@ -8,7 +8,7 @@ import { Button, Image, Link } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { detailMateri, listProfile, getAbsensiForTeacher } from "@/backend/fetchAPI.js"
+import { detailMateri, listProfile, accessGuru} from "@/backend/fetchAPI.js"
 import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
 import Icons from "@/components/Icons"
@@ -40,28 +40,6 @@ const ReportAbsen = () => {
     const handleInputSearch = (value) => {
         setInputSearch(value)
     }
-    // useEffect(() => {
-    //     let payload = {
-    //         idmapel: parseInt(idmapel),
-    //         stasiun: stasiun,
-    //         limit:limit
-    //     }
-    //     if(inputSearch){
-    //         payload={
-    //             idmapel: parseInt(idmapel),
-    //             stasiun: stasiun,
-    //             limit:limit,
-    //             name:inputSearch
-    //         }
-    //     }
-    //     const fetchAPI = async () => {
-    //         const response = await getAbsensiForTeacher(payload)
-    //         if (response) {
-    //             setDataAbsensi(response.data)
-    //         }
-    //     }
-    //     fetchAPI()
-    // }, [idmapel, stasiun, limit, inputSearch])
     useEffect(() => {
         const fetchAPI = async () => {
             let req = {
@@ -82,6 +60,10 @@ const ReportAbsen = () => {
     }, [limit, inputSearch])
     useEffect(() => {
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             const payload = {
                 idmapel: idmapel
             }
@@ -191,10 +173,6 @@ const ReportAbsen = () => {
                                                         </div>
                                                     </Button>
                                                 </td>
-                                                {/* {item.status === 'SUDAH'?
-                                                    (<td className="text-center">Sudah Absen</td>) :
-                                                    (<td className="text-center">Belum Absen</td>) 
-                                                } */}
                                             </tr>
                                         ))}
                                     </tbody>

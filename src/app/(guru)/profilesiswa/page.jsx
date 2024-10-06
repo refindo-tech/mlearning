@@ -7,7 +7,7 @@ import Icons from "@/components/Icons"
 import { Button } from "@nextui-org/react"
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { listProfile, deleteProfileSiswa } from "@/backend/fetchAPI.js"
+import { listProfile, deleteProfileSiswa, accessGuru } from "@/backend/fetchAPI.js"
 import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
 const ProfilSiswa = () => {
@@ -24,6 +24,10 @@ const ProfilSiswa = () => {
     const { AddIcon } = Icons
     useEffect(() => {
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             let payload = {
                 limit: limitData
             }
@@ -73,17 +77,6 @@ const ProfilSiswa = () => {
                                             />
                                             <p>baris</p>
                                         </div>
-                                        {/* <div className="flex gap-3">
-                                            <Button
-                                                radius="sm"
-                                                className="bg-primer-300 w-[260px]"
-                                            >
-                                                <div className="flex gap-3 items-center justify-center text-white text-base">
-                                                    <AddIcon />
-                                                    <p>Tambah Siswa</p>
-                                                </div>
-                                            </Button>
-                                        </div> */}
                                         <SearchTable value={inputSearch} handleValue={handleSearch} />
                                     </div>
                                 </div>

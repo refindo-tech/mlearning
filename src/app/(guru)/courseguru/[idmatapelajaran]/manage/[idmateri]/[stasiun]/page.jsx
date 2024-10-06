@@ -62,9 +62,6 @@ const CourseHomePage = () => {
             }
         })
     }
-    useEffect(() => {
-        console.log(context)
-    }, [context])
     const handleStasiun = (value) => {
         const payload = {
             idmapel: idmapel,

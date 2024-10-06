@@ -3,9 +3,9 @@ import Loading from "@/app/loading.jsx"
 import { useState, useEffect } from "react"
 import { usePathname, useSearchParams, useRouter } from "next/navigation"
 import { Input, Image, Button, Link } from "@nextui-org/react"
-import { verifyTokenReset, resetPassword } from "@/backend/fetchAPI.js"
+import { verifyTokenResetGuru, resetPasswordGuru } from "@/backend/fetchAPI.js"
 import Icons from '@/components/Icons'
-const ResetPasswordPage = () => {
+const ResetPasswordGuruPage = () => {
     const path = usePathname()
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -43,19 +43,18 @@ const ResetPasswordPage = () => {
     const changePassword = async()=>{
         validation()
         setIsLoad(true)
-        const response = await resetPassword(payload)
+        const response = await resetPasswordGuru(payload)
         if(response){
             setIsLoad(false)
-            router.push('/login')
+            router.push('/loginguru')
         }
     }
     useEffect(()=>{
         const payload = {token,email}
         const fetchAPI = async()=>{
-            const response = await verifyTokenReset(payload)
+            const response = await verifyTokenResetGuru(payload)
             if(response){
                 setLoadPage(false)
-                console.log(response)
                 if(!response.status){
                     setError(response.message)
                     router.push('/')
@@ -129,7 +128,7 @@ const ResetPasswordPage = () => {
                             <p>Reset</p>
                         )}
                     </Button>
-                    <p className="text-center">Sudah punya akun? <a href="/login">Masuk</a></p>
+                    <p className="text-center">Sudah punya akun? <a href="/loginguru">Masuk</a></p>
                     <Button
                         as={Link}
                         href="/register"
@@ -137,7 +136,7 @@ const ResetPasswordPage = () => {
                     >
                         Daftar
                     </Button>
-                    <a href="/" className="text-center text-accent-orange underline">Masuk untuk guru</a>
+                    <a href="/login" className="text-center text-accent-orange underline">Masuk untuk siswa</a>
                 </div>
             </div>
             <div className="absolute top-0 right-0">
@@ -168,4 +167,4 @@ const ResetPasswordPage = () => {
     )
 }
 
-export default ResetPasswordPage
+export default ResetPasswordGuruPage

@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar"
 import { Button, Image, Input } from "@nextui-org/react"
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { detailMateri, listStasiun, updateDeskripsi } from "@/backend/fetchAPI.js"
+import { detailMateri, listStasiun, updateDeskripsi, accessGuru } from "@/backend/fetchAPI.js"
 import ModalAddDescription from "@/components/ModalAddDescription"
 import Icons from "@/components/Icons"
 import "quill/dist/quill.snow.css";
@@ -78,6 +78,10 @@ const CourseHomePage = () => {
     }
     useEffect(() => {
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             const req = { idmatapelajaran: idmapel }
             const response = await listStasiun(req)
             if (response) {

@@ -8,7 +8,7 @@ import { Button, Image, Link } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { detailMateri, listStasiun, getAbsensiByIdSiswa, getAbsensiForTeacher, listProfile } from "@/backend/fetchAPI.js"
+import { detailMateri, listStasiun, accessGuru, getAbsensiForTeacher } from "@/backend/fetchAPI.js"
 import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
 const ReportAbsen = () => {
@@ -21,19 +21,15 @@ const ReportAbsen = () => {
     const [detailMapel, setDetailMapel] = useState(null)
     const [stasiun, setStasiun] = useState(null)
     const [inputSearch, setInputSearch] = useState(null)
-    const [listProfile, setListProfile] = useState(null)
-    const handleUrl = (value) => {
-        if (value) {
-            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${value.stasiun}`
-        } else {
-            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/result`
-        }
-    }
     const handleStasiun = (value) => {
         setStasiun(value)
     }
     useEffect(() => {
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             const req = { idmatapelajaran: idmapel }
             const response = await listStasiun(req)
             if (response) {

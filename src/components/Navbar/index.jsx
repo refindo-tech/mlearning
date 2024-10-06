@@ -6,11 +6,13 @@ import { X, Search } from "lucide-react"
 import SearchComponent from '@/components/SearchComponent'
 import PopoverUser from '@/components/PopoverUser'
 import Icons from "@/components/Icons"
+import Loading from "@/app/loading"
 import { getDetailProfile, getProfileGuruNavbar } from "@/backend/fetchAPI"
 const Navbar = () => {
     const router = useRouter()
     const [token, setToken] = useState(null)
     const [role, setRole] = useState(null)
+    const [isLoad, setIsLoad] = useState(false)
     const [isHide, setIsHide] = useState(false)
     const [isModal, setIsModal] = useState(false)
     const [profileSiswa, setProfileSiswa] = useState(null)
@@ -54,11 +56,17 @@ const Navbar = () => {
         setIsHide(true)
     }
     const handleLogout = () => {
+        setIsLoad(true)
         sessionStorage.removeItem('tokensiswa')
         sessionStorage.removeItem('tokenguru')
         setRole(null)
         setToken(null)
         router.push('/onboarding')
+    }
+    if(isLoad){
+        return(
+            <Loading/>
+        )
     }
     return (
         <nav className="sticky top-0 w-full h-[80px] bg-white flex items-center shadow-xl z-20">

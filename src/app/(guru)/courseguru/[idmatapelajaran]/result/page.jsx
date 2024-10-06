@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import AsideCourse from "@/components/AsideCourse"
 import { Button, Image, Link } from "@nextui-org/react"
-import { listStasiun, getAbsensiByIdSiswa, getResultSiswa, getDetailProfile } from '@/backend/fetchAPI.js'
+import { listStasiun, getAbsensiByIdSiswa, getResultSiswa, getDetailProfile, accessGuru } from '@/backend/fetchAPI.js'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 const ResultCoursePage = () => {
     const path = usePathname()
@@ -20,6 +20,10 @@ const ResultCoursePage = () => {
     useEffect(() => {
         const idmapel = path.split('/')[2]
         const fetchAPI = async () => {
+            const responseVerify = await accessGuru()
+            if(!responseVerify){
+                router.push('/onboarding')
+            }
             const req = { idmatapelajaran: idmapel }
             const response = await listStasiun(req)
             if (response) {

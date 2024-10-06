@@ -5,7 +5,7 @@ import Footer from '@/components/Footer'
 import Background from '@/components/Background'
 import { useRouter, usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { getDetailProfileGuru, editProfileGuru} from '@/backend/fetchAPI.js'
+import { getDetailProfileGuru, editProfileGuru, accessGuru} from '@/backend/fetchAPI.js'
 import Loading from '@/app/loading'
 import Icons from '@/components/Icons'
 const ProfileGuruEdit = () => {
@@ -23,6 +23,10 @@ const ProfileGuruEdit = () => {
             idguru: parseInt(idguru)
         }
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             const response = await getDetailProfileGuru(payload)
             if (response.status) {
                 setIsLoad(false)

@@ -4,7 +4,6 @@ import Loading from "@/app/loading.jsx"
 import { useRouter, usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import ModalAddMateri from '@/components/ModalAddMateri'
-import ModaAddDescription from '@/components/ModalAddDescription'
 import AudioPlayer from "@/components/AudioPlayer"
 import DisplayImageComponent from "@/components/DisplayImageComponent"
 import YoutubeVideo from "@/components/YoutubeVideo"
@@ -12,10 +11,9 @@ import Footer from "@/components/Footer"
 import { Button, Image, Input } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { createMateri, updateDeskripsi, deleteMateri } from "@/backend/fetchAPI"
-import parse from 'html-react-parser'
 import "quill/dist/quill.snow.css";
 import Icons from '../Icons'
-import ModalAddDescription from "@/components/ModalAddDescription"
+import DownloadMateri from '@/components/DownloadMateri'
 const AddMateri = (
     {
         detailMapel,
@@ -61,9 +59,6 @@ const AddMateri = (
     const resetDetailMateri = () => {
         setDetailmateri(null)
     }
-    useEffect(() => {
-        console.log(detailmateri)
-    }, [detailmateri])
     const hapusMateri = () => {
         const fetchAPI = async () => {
             const payload = {
@@ -74,7 +69,7 @@ const AddMateri = (
                 setDetailmateri(null)
                 setTopic(null)
                 reloadStasiun()
-                const newUrl = path.replace(`/${idmateri}/${stasiun}`,'')
+                const newUrl = path.replace(`/${idmateri}/${stasiun}`, '')
                 router.push(newUrl)
             }
         }
@@ -101,8 +96,8 @@ const AddMateri = (
             const response = await createMateri(payload)
             if (response) {
                 setIsActiveSubmit(false)
-                if(response.data){
-                    const newUrl = path.replace(`/add/${stasiun}`,`/${response.data.id}/${decodeURIComponent(stasiun)}`)
+                if (response.data) {
+                    const newUrl = path.replace(`/add/${stasiun}`, `/${response.data.id}/${decodeURIComponent(stasiun)}`)
                     router.push(newUrl)
                 }
             }
@@ -183,7 +178,7 @@ const AddMateri = (
                             <div className="flex flex-col gap-5">
                                 {detailMapel &&
                                     <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg text-justify">
-                                        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailMapel.detailmateri }} />
+                                        <div id="quill-content" className="ql-editor" dangerouslySetInnerHTML={{ __html: detailMapel.detailmateri }} />
                                         <div className="flex flex-col justify-center items-center">
                                             {detailMapel.urlaudio && <AudioPlayer url={`${detailMapel.urlaudio}`} />}
                                             {detailMapel.urlimage && <DisplayImageComponent url={`${detailMapel.urlimage}`} />}
@@ -191,15 +186,18 @@ const AddMateri = (
                                         </div>
                                     </div>
                                 }
-                                <div className="flex justify-end z-10 gap-5">
-                                    <Button
-                                        variant="bordered"
-                                        radius="sm"
-                                        className="w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
-                                        onPress={hapusMateri}
-                                    >
-                                        <h3>Hapus Materi</h3>
-                                    </Button>
+                                <div className="flex flex-col justify-end gap-5">
+                                    <div className="flex justify-end z-10">
+                                        <DownloadMateri />
+                                    </div>
+                                    <div className="flex justify-end z-10">
+                                        <button
+                                            className="text-end w-[260px] bg-transparent font-semibold text-primer-300 outline-none border-0"
+                                            onClick={hapusMateri}
+                                        >
+                                            <h3 className="hover:underline hover:underline-offset-4 focus:text-primer-500">Hapus Materi</h3>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -210,8 +208,6 @@ const AddMateri = (
                                     <div className="w-[90%] mx-auto py-10 flex flex-col gap-5 z-10">
                                         <div className=" w-full p-5 rounded-lg bg-yellow-500 text-wrap">
                                             <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailmateri }} />
-                                            {/* {parse(detailmateri)} */}
-                                            {/* {detailmateri} */}
                                         </div>
                                         <div className="flex justify-end gap-5">
                                             <Button

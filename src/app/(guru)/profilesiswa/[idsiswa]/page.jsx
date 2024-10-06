@@ -6,7 +6,7 @@ import Footer from '@/components/Footer'
 import Background from '@/components/Background'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { getDetailProfileByTeacher } from '@/backend/fetchAPI.js'
+import { getDetailProfileByTeacher, accessGuru } from '@/backend/fetchAPI.js'
 const ProfileSiswa = () => {
     const path = usePathname()
     const idsiswa = path.split('/')[2]
@@ -19,6 +19,10 @@ const ProfileSiswa = () => {
             idsiswa: parseInt(idsiswa)
         }
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             const response = await getDetailProfileByTeacher(payload)
             if (response.status) {
                 setIsLoad(false)

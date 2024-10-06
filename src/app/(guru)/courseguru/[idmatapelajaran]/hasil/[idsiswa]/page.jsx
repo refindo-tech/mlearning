@@ -5,17 +5,14 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import AsideCourse from "@/components/AsideCourse"
 import { Button, Image, Link } from "@nextui-org/react"
-import { listStasiun, getAbsensiByIdSiswa, getResultSiswaByTeacher, getDetailProfileByTeacher, detailMateri } from '@/backend/fetchAPI.js'
+import { accessGuru, getResultSiswaByTeacher, getDetailProfileByTeacher, detailMateri } from '@/backend/fetchAPI.js'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 const ResultCoursePage = () => {
     const path = usePathname()
     const router = useRouter()
     const idsiswa = path.split('/')[4]
     const [isLoaded, setIsLoad] = useState(true)
-    const [dataListStasiun, setDataListStasiun] = useState([])
-    const [dataAbsensi, setDataAbsensi] = useState([])
     const [detailMapel, setDetailMapel] = useState(null)
     const [dataResult, setDataResult] = useState(null)
     const [detailSiswa, setDetailSiswa] = useState(null)
@@ -23,6 +20,10 @@ const ResultCoursePage = () => {
         const idmapel = path.split('/')[2]
         const idsiswa = path.split('/')[4]
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             const payloadResult = {idmapel, idsiswa}
             const responseResult = await getResultSiswaByTeacher(payloadResult)
             if (responseResult) {
@@ -64,7 +65,7 @@ const ResultCoursePage = () => {
                 <div className="w-full">
                     <div className="h-fit static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
-                            <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
+                            {/* <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
                                 <button
                                     className="h-10 w-10 flex  items-center justify-center rounded-full bg-white"
                                 >
@@ -75,7 +76,7 @@ const ResultCoursePage = () => {
                                 >
                                     <ChevronRight size={32} />
                                 </button>
-                            </div>
+                            </div> */}
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                     {detailMapel&&detailMapel.name&&<h1 className="font-bold text-xl lg:text-3xl">{detailMapel.name}</h1>}

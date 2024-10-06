@@ -13,7 +13,7 @@ import EssayAnswer from '@/components/EssayAnswer'
 import DisplayImageComponent from "@/components/DisplayImageComponent"
 import { Button, Image, Checkbox, Input } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
-import { listQuestionTeacher, listExamAnswerKoreksi, listStasiun, postCorrectionExam } from "@/backend/fetchAPI.js"
+import { listQuestionTeacher, listExamAnswerKoreksi, listStasiun, postCorrectionExam, accessGuru } from "@/backend/fetchAPI.js"
 import { useRouter } from "next/navigation"
 const CorrectionExam = () => {
     const router = useRouter()
@@ -29,8 +29,13 @@ const CorrectionExam = () => {
     const [listQuestionExam, setListQuestionExam] = useState(null)
     const [answeredQuestion, setAnsweredQuestion] = useState([])
     const [dataListStasiun, setDataListStasiun] = useState([])
+    const [activeSubmit, setActiveSubmit] = useState(false)
     useEffect(() => {
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             let payloadListQuestion = {
                 idmapel: idmapel,
                 stasiun: stasiunFromPath
@@ -96,6 +101,7 @@ const CorrectionExam = () => {
         })
     }
     const submitNilai = async () => {
+        setActiveSubmit(true)
         const payload = {
             idmapel: parseInt(idmapel),
             idsiswa: idSiswaFromPath,
@@ -105,7 +111,8 @@ const CorrectionExam = () => {
         }
         const postData = await postCorrectionExam(payload)
         if (postData) {
-            const nowUrlSegment = `/${idSiswaFromPath}/${encodeURI(stasiunFromPath)}`
+            setActiveSubmit(false)
+            const nowUrlSegment = `/exam/${idSiswaFromPath}/${encodeURI(stasiunFromPath)}`
             const newPath = path.replace(`${nowUrlSegment}`, '')
             router.push(newPath)
         }
@@ -205,9 +212,13 @@ const CorrectionExam = () => {
                                         <Button
                                             size="sm"
                                             onPress={submitNilai}
+                                            isDisabled={activeSubmit?true:false}
                                             className="bg-primer-500 text-white h-10 w-[200px] flex text-md items-center text-center rounded"
                                         >
-                                            Simpan
+                                            {activeSubmit?
+                                                (<div className="loader"></div>):
+                                                (<p>Simpan</p>)
+                                            }
                                         </Button>
                                     }
                                 </div>

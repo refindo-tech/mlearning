@@ -8,7 +8,7 @@ import Background from "@/components/Background"
 import Aside from "@/components/Aside"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import {listClass} from "@/backend/fetchAPI.js"
+import { listClass, accessGuru } from "@/backend/fetchAPI.js"
 const DashboardGuru = () => {
     const router = useRouter()
     const [isLoad, setIsLoad] = useState(null)
@@ -18,38 +18,40 @@ const DashboardGuru = () => {
         "kelas 11": false,
         "kelas 12": false,
     })
-    const handleClassButton = (kelas)=>{
+    const handleClassButton = (kelas) => {
         setClassButton({
             "kelas 10": kelas === "kelas 10",
             "kelas 11": kelas === "kelas 11",
             "kelas 12": kelas === "kelas 12",
         });
     }
-    // useEffect(()=>{
-    //     const validateAccess = ()=>{
-    //         const getToken=sessionStorage.getItem('tokensiswa')
-    //         if(!getToken){
-    //             router.push('login/')
-    //         }
-    //     }
-    //     validateAccess()
-    // },[router])
-    useEffect(()=>{
-        const selectedClass = Object.keys(classButton).find(kelas => classButton[kelas]===true)
-        if(selectedClass){
-            const payload = {kelas:String(selectedClass)}
-            const fetchData = async()=>{
+    useEffect(() => {
+        const validateAccess = async () => {
+            const response = await accessGuru()
+            if (!response) {
+                router.push('/')
+            }
+        }
+        validateAccess()
+    }, [router])
+    useEffect(() => {
+        const selectedClass = Object.keys(classButton).find(kelas => classButton[kelas] === true)
+        if (selectedClass) {
+            const payload = { kelas: String(selectedClass) }
+            const fetchData = async () => {
                 const response = await listClass(payload)
-                if(response){
+                if (response) {
                     setDataListClass(response.data)
                     setIsLoad(true)
+                } else {
+                    setIsLoad(false)
                 }
             }
             fetchData()
         }
-    },[classButton])
-    if(isLoad === null){
-        return (<Loading/>)
+    }, [classButton])
+    if (isLoad === null) {
+        return (<Loading />)
     }
     return (
         <div className="flex flex-col min-h-screen">
@@ -61,28 +63,25 @@ const DashboardGuru = () => {
                         <div className="w-fit bg-gray-200 flex flex-row p-1 gap-x-2 rounded-2xl font-semibold mb-10">
                             <Button
                                 id="kelas 10"
-                                className={`${
-                                    classButton["kelas 10"] ? "bg-white" : "bg-gray-200 text-gray-400"
-                                }`}
-                                onPress={(e)=>handleClassButton(e.target.id)}
+                                className={`${classButton["kelas 10"] ? "bg-white" : "bg-gray-200 text-gray-400"
+                                    }`}
+                                onPress={(e) => handleClassButton(e.target.id)}
                             >
                                 Kelas 10
                             </Button>
                             <Button
                                 id="kelas 11"
-                                className={`${
-                                    classButton["kelas 11"] ? "bg-white" : "bg-gray-200 text-gray-400"
-                                }`}
-                                onPress={(e)=>handleClassButton(e.target.id)}
+                                className={`${classButton["kelas 11"] ? "bg-white" : "bg-gray-200 text-gray-400"
+                                    }`}
+                                onPress={(e) => handleClassButton(e.target.id)}
                             >
                                 Kelas 11
                             </Button>
                             <Button
                                 id="kelas 12"
-                                className={`${
-                                    classButton["kelas 12"] ? "bg-white" : "bg-gray-200 text-gray-400"
-                                }`}
-                                onPress={(e)=>handleClassButton(e.target.id)}
+                                className={`${classButton["kelas 12"] ? "bg-white" : "bg-gray-200 text-gray-400"
+                                    }`}
+                                onPress={(e) => handleClassButton(e.target.id)}
                             >
                                 Kelas 12
                             </Button>

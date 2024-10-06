@@ -6,35 +6,19 @@ import Footer from '@/components/Footer'
 import Background from '@/components/Background'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { getDetailProfileByTeacher, getDetailProfileGuru } from '@/backend/fetchAPI.js'
+import { accessGuru, getDetailProfileGuru } from '@/backend/fetchAPI.js'
 const ProfileGuru = () => {
     const path = usePathname()
     const idguru = path.split('/')[2]
     const router = useRouter()
     const [isLoad, setIsLoad] = useState(true)
     const [detailGuru, setDetailGuru] = useState(null)
-    // useEffect(() => {
-    //     const payload = {
-    //         idsiswa: parseInt(idsiswa)
-    //     }
-    //     const fetchAPI = async () => {
-    //         const response = await getDetailProfileByTeacher(payload)
-    //         if (response.status) {
-    //             setIsLoad(false)
-    //             if (response.data.siswa) {
-    //                 setDetailSiswa(response.data.siswa)
-    //             }
-    //             if (response.data.wali) {
-    //                 setDetailWali(response.data.wali)
-    //             }
-    //         } else {
-    //             router.push('/onboarding')
-    //         }
-    //     }
-    //     fetchAPI()
-    // }, [router, idsiswa])
     useEffect(() => {
         const fetchAPI = async () => {
+            const responseAccess = await accessGuru()
+            if (!responseAccess) {
+                router.push('/')
+            }
             let payload = {
                 idguru: parseInt(idguru)
             }
@@ -48,9 +32,6 @@ const ProfileGuru = () => {
         }
         fetchAPI()
     }, [router, idguru])
-    useEffect(() => {
-        console.log(detailGuru)
-    }, [detailGuru])
     if (isLoad) {
         return (<Loading />)
     }

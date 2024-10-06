@@ -8,8 +8,9 @@ import Footer from "@/components/Footer"
 import AudioPlayer from "@/components/AudioPlayer"
 import YoutubeVideo from "@/components/YoutubeVideo"
 import DisplayImageComponent from "@/components/DisplayImageComponent"
+import DownloadMateri from '@/components/DownloadMateri'
 import { Button, Image, RadioGroup, Radio } from "@nextui-org/react"
-import { ChevronRight, ChevronLeft } from 'lucide-react'
+import { ChevronRight, ChevronLeft, Download } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { detailMateri, listStasiun, getAbsensiByIdSiswa, addAbsen } from "@/backend/fetchAPI"
 import { usePathname } from "next/navigation"
@@ -80,7 +81,7 @@ const Stasiun = () => {
         const payload = {
             idmapel,
             stasiun,
-            idmateri:parseInt(dataMateri.id)
+            idmateri: parseInt(dataMateri.id)
         }
         const response = await addAbsen(payload)
         if (response) {
@@ -143,7 +144,7 @@ const Stasiun = () => {
                             <div className="flex flex-col gap-5">
                                 {dataMateri &&
                                     <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg text-justify">
-                                        <div className="ql-editor" dangerouslySetInnerHTML={{__html:dataMateri.detailmateri}}/>
+                                        <div id='quill-content' className="ql-editor" dangerouslySetInnerHTML={{ __html: dataMateri.detailmateri }} />
                                         <div className="flex flex-col justify-center items-center">
                                             {dataMateri.urlaudio && <AudioPlayer url={`${dataMateri.urlaudio}`} />}
                                             {dataMateri.urlimage && <DisplayImageComponent url={`${dataMateri.urlimage}`} />}
@@ -152,7 +153,7 @@ const Stasiun = () => {
                                     </div>
                                 }
                                 <div className="flex flex-col gap-5 items-end">
-                                    {/* <h5 className="font-semibold">Unduh Materi</h5> */}
+                                    <DownloadMateri/>
                                     <Button
                                         onPress={() => {
                                             if (hasAbsen) {
