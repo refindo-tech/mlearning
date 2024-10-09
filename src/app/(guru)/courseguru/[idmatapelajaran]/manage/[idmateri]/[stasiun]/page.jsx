@@ -63,6 +63,7 @@ const CourseHomePage = () => {
         })
     }
     const handleStasiun = (value) => {
+        setIsLoad(true)
         const payload = {
             idmapel: idmapel,
             stasiun: value
@@ -131,7 +132,7 @@ const CourseHomePage = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row overflow-x-hidden">
-                <aside className="w-[15%]">
+                <aside className="hidden lg:block lg:w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}
                         manage={'true'}

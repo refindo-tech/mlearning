@@ -124,7 +124,7 @@ const Navbar = () => {
                             <div className="w-full flex flex-col p-4 gap-2">
                                 <Button
                                     as={Link}
-                                    href="/login"
+                                    href="/profile"
                                     className="bg-white rounded border-2 border-gray-200 font-semibold text-sm"
                                 >
                                     Tentang Akun

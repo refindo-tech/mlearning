@@ -68,15 +68,17 @@ const CourseHomePage = () => {
                         </div>
                     </div>
                     <div className="h-[100px] flex items-center justify-center border-b-2 border-gray-300">
-                        <h1 className="font-semibold text-2xl">Atur dan sesuaikan mata pelajaran</h1>
+                        <h1 className="font-semibold text-2xl text-center">Atur dan sesuaikan mata pelajaran</h1>
                     </div>
-                    <div className="relative w-full hidden lg:block min-h-screen">
+                    <div className="relative w-full min-h-screen">
                         <Background />
-                        <div className="flex justify-center py-10 gap-10">
+                        <div className="flex justify-center py-10">
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
                             <CardFeature path={'/assets/image/bagpack.png'} text={'Stasiun Belajar'} href={'/manage'}/>
                             <CardFeature path={'/assets/image/red clock.png'} text={'Absensi Siswa'} href={'/absen'}/>
                             <CardFeature path={'/assets/image/bookfeatureteacher.png'} text={'Koreksi Tugas'} href={'/koreksi'}/>
                             <CardFeature path={'/assets/image/mikroskop.png'} text={'Hasil Akhir'} href={'/hasil'}/>
+                            </div>
                         </div>
                     </div>
                     <Footer />

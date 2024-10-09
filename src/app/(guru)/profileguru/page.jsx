@@ -65,13 +65,13 @@ const ProfilGuru = () => {
                 (
                     <div className="relative w-full min-h-screen flex justify-center">
                         <Background />
-                        <div className="py-10 flex flex-col gap-[30px] w-[80%] mx-auto">
+                        <div className="py-10 flex flex-col gap-[30px] w-[90%] mx-auto z-10">
                             <h1 className="font-bold text-3xl">Kelola Guru</h1>
                             <div className="border-2 border-gray-300 rounded-xl">
                                 <div className="w-full h-[87px] bg-gray-200 rounded-t-xl flex items-center justify-center">
-                                    <div className="w-[90%] flex justify-between items-center">
+                                    <div className="w-[90%] flex justify-between items-center gap-3">
                                         <div className="flex gap-3 items-center text-sm">
-                                            <p>Tampilkan</p>
+                                            <p className="hidden lg:block">Tampilkan</p>
                                             <Input
                                                 variant="faded"
                                                 type="number"
@@ -84,13 +84,14 @@ const ProfilGuru = () => {
                                         </div>
                                         <div className="flex gap-3">
                                             <Button
+                                                isIconOnly={true}
                                                 radius="sm"
-                                                className="bg-primer-300 w-[260px]"
+                                                className="bg-primer-300 lg:w-[260px]"
                                                 onPress={handleIsActiveModal}
                                             >
                                                 <div className="flex gap-3 items-center justify-center text-white text-base">
                                                     <AddIcon />
-                                                    <p>Tambah Guru</p>
+                                                    <p className="hidden lg:block">Tambah Guru</p>
                                                 </div>
                                             </Button>
                                             <SearchTable value={inputSearch} handleValue={handleSearch} />
@@ -161,19 +162,21 @@ const ActionGroup = ({ idguru }) => {
     return (
         <div className="flex gap-3">
             <Button
+                isIconOnly={true}
                 radius="sm"
-                className="bg-primer-500"
+                className="bg-primer-500 lg:w-fit lg:px-3"
                 onPress={handleDetailProfile}
             >
                 <div className="flex justify-center gap-3 text-white text-base">
                     <EditIcon />
-                    <p>Detail</p>
+                    <p className="hidden lg:block">Detail</p>
                 </div>
             </Button>
             <Button
+                isIconOnly={true}
                 isDisabled={isLoad ? true : false}
                 radius="sm"
-                className="bg-accent-red"
+                className="bg-accent-red lg:w-fit lg:px-3"
                 onPress={() => {
                     setIsLoad(true)
                     handleDeleteProfile()
@@ -184,7 +187,7 @@ const ActionGroup = ({ idguru }) => {
                 ) : (
                     <div className="flex justify-center gap-3 text-white text-base">
                         <TrashIcon />
-                        <p>Hapus</p>
+                        <p className="hidden lg:block">Hapus</p>
                     </div>
                 )}
                 </>

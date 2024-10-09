@@ -195,17 +195,19 @@ const ActionGroup = ({ handleSubmitAddGuru, handleModal }) => {
         <div className='w-[90%] mx-auto flex justify-end z-10 mb-10'>
             <div className='flex gap-4'>
                 <Button
+                    isIconOnly={true}
                     radius='sm'
                     variant='light'
-                    className='w-[260px] text-primer-500'
+                    className='w-fit lg:w-[260px] text-primer-500 px-3'
                     onPress={handleModal}
                 >
                     <span>Kembali</span>
                 </Button>
                 <Button
+                    isIconOnly={true}
                     radius='sm'
                     isDisabled={isLoad ? true : false}
-                    className='w-[260px] bg-primer-500 text-white'
+                    className='w-fit lg:w-[260px] bg-primer-500 text-white px-3'
                     onPress={() => {
                         setIsLoad(true)
                         handleSubmitAddGuru()

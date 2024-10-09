@@ -130,14 +130,14 @@ const CourseHomePage = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row overflow-x-hidden">
-                <aside className="w-[15%]">
+                <aside className="hidden lg:block lg:w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}
                         manage={'true'}
                         handleStasiun={handleStasiun}
                     />
                 </aside>
-                <div className=" w-[85%] border-l-2 border-gray-200">
+                <div className="w-full lg:w-[85%] border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="flex flex-row items-end justify-between">

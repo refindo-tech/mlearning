@@ -1,6 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { Input, Image, Button, Link } from "@nextui-org/react"
+import { Input, Image, Button, Link, Divider } from "@nextui-org/react"
 import { useState } from "react"
 import Icons from "@/components/Icons"
 import { loginSiswa } from '@/backend/fetchAPI.js'
@@ -41,13 +41,21 @@ const LoginPage = () => {
     }
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-b from-primer-400 to-primer-500 py-10">
-            <div className="flex flex-col gap-[50px] items-center">
-                <Image
-                    alt="logo"
-                    src={'/assets/image/logosma3.png'}
-                    className="hidden lg:block h-[120px] w-[120px]"
-                />
-                <div className="flex flex-row items-end">
+            <div className="w-[90vw] flex flex-col gap-y-[25px] lg:gap-y-[50px] items-center">
+                <div className="flex gap-x-5 items-center z-20">
+                    <Image
+                        alt="logo"
+                        src={'/assets/image/logosma3.png'}
+                        className="block h-[80px] w-[80px] lg:h-[120px] lg:w-[120px]"
+                    />
+                    <div className="w-[2px] h-[80px] border-l-2 border-white rounded"/>
+                    <Image
+                        alt="logo"
+                        src={'/assets/image/logo_untirta.png'}
+                        className="block h-[80px] w-[80px] lg:h-[120px] lg:w-[120px]"
+                    />
+                </div>
+                <div className="w-full lg:w-fit flex flex-row items-end justify-center">
                     <Image
                         alt="logo"
                         src={'/assets/image/loginkiri.png'}
@@ -59,7 +67,7 @@ const LoginPage = () => {
                             src={'/assets/image/logologinpage.png'}
                             className="block h-[70] w-[100]  lg:h-[80] lg:w-[198]"
                         />
-                        <h3 className="my-5 font-bold text-xl text-center">Masuk</h3>
+                        <h3 className="my-5 font-bold text-xl text-center">Masuk Sebagai Siswa</h3>
                         {error &&
                             <p className="text-xs text-danger-500 font-semibold text-center mb-2">{error}</p>
                         }

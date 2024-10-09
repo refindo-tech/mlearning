@@ -18,18 +18,10 @@ const ReportAbsen = () => {
     const idmapel = path.split('/')[2]
     const [isLoad, setIsLoad] = useState(true)
     const [dataListProfile, setDataListProfile] = useState([])
-    const [dataAbsensi, setDataAbsensi] = useState(null)
     const [detailMapel, setDetailMapel] = useState(null)
     const [stasiun, setStasiun] = useState(null)
     const [inputSearch, setInputSearch] = useState(null)
     const {EditIcon} = Icons
-    const handleUrl = (value) => {
-        if (value) {
-            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${value.stasiun}`
-        } else {
-            return `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/result`
-        }
-    }
     const handleStasiun = (value) => {
         setStasiun(value)
     }
@@ -86,12 +78,6 @@ const ReportAbsen = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
-                {/* <aside className="w-[15%]">
-                    <AsideTeacher
-                        listStasiun={dataListStasiun}
-                        handleStasiun={handleStasiun}
-                    />
-                </aside> */}
                 <div className=" w-full border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
@@ -116,13 +102,13 @@ const ReportAbsen = () => {
                     </div>
                     <div className="relative w-full min-h-screen flex justify-center">
                         <Background />
-                        <div className="py-10 flex flex-col gap-[30px] w-[80%] mx-auto">
+                        <div className="py-10 flex flex-col gap-[30px] w-[90%] mx-auto z-10">
                             <h3 className="font-semibold text-lg">Hasil Pembelajaran Siswa</h3>
                             <div className="border-2 border-gray-300 rounded-xl">
                                 <div className="w-full h-[87px] bg-gray-200 rounded-t-xl flex items-center justify-center">
-                                    <div className="w-[90%] flex justify-between items-center">
+                                    <div className="w-[90%] flex justify-between items-center gap-3">
                                         <div className="flex gap-3 items-center text-sm">
-                                            <p>Tampilkan</p>
+                                            <p className="hidden lg:block">Tampilkan</p>
                                             <Input
                                                 variant="flat"
                                                 type="number"
@@ -141,7 +127,7 @@ const ReportAbsen = () => {
                                         <tr className="bg-gray-200 h-10 align-center text-left font-normal text-sm">
                                             <th className="w-[50px] text-center">No</th>
                                             <th>Nama</th>
-                                            <th>NISN</th>
+                                            <th className="hidden lg:block">NISN</th>
                                             <th>Kelas</th>
                                             <th className="text-center">Aksi</th>
                                         </tr>
@@ -152,24 +138,25 @@ const ReportAbsen = () => {
                                                 <td className="text-center w-[50px]">{index + 1}</td>
                                                 <td>{item.name}</td>
                                                 {item.nisn ?
-                                                    (<td>{item.nisn}</td>) :
-                                                    (<td>-</td>)
+                                                    (<td className="hidden lg:block">{item.nisn}</td>) :
+                                                    (<td className="hidden lg:block">-</td>)
                                                 }
                                                 {item.kelas ?
                                                     (<td>{item.kelas}</td>) :
                                                     (<td>-</td>)
                                                 }
-                                                <td>
+                                                <td className="h-full flex justify-center items-center">
                                                     <Button
+                                                        isIconOnly={true}
                                                         radius="sm"
-                                                        className="w-[90%] mx-auto bg-primer-500"
+                                                        className="w-fit lg:w-[90%] lg:mx-auto bg-primer-500"
                                                         onPress={()=>{
                                                             router.push(`${path}/${item.idsiswa}`)
                                                         }}
                                                     >
-                                                        <div className="flex justify-center gap-3 text-white text-base">
+                                                        <div className="flex justify-center items-center gap-3 text-white text-base">
                                                             <EditIcon />
-                                                            <p>Detail</p>
+                                                            <p className="hidden lg:block">Detail</p>
                                                         </div>
                                                     </Button>
                                                 </td>
