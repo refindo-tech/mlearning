@@ -16,6 +16,7 @@ import { detailMateri, listStasiun, accessGuru } from "@/backend/fetchAPI.js"
 import AddMateri from '@/components/AddMateri'
 import AddDiskusi from '@/components/AddDiskusi'
 import AddExam from '@/components/AddExam'
+import ShowStasiunTeacher from '@/components/ShowStasiunTeacher'
 import Icons from "@/components/Icons"
 import "quill/dist/quill.snow.css";
 const CourseHomePage = () => {
@@ -74,7 +75,7 @@ const CourseHomePage = () => {
                 if (response.data) {
                     const newUrl = path.replace(`/${idmateri}/${stasiun}`, `/${response.data.id}/${value}`)
                     router.push(newUrl)
-                }else{
+                } else {
                     const newUrl = path.replace(`/${idmateri}/${stasiun}`, `/add/${value}`)
                     router.push(newUrl)
                 }
@@ -113,7 +114,7 @@ const CourseHomePage = () => {
             }
             const responseDetailMateri = await detailMateri(payload)
             if (responseDetailMateri) {
-                if(responseDetailMateri.data.id !== parseInt(idmateri)){
+                if (responseDetailMateri.data.id !== parseInt(idmateri)) {
                     router.push('/onboarding')
                 }
                 setIsLoad(false)
@@ -124,6 +125,9 @@ const CourseHomePage = () => {
     }, [idmapel, stasiun, idmateri, router])
     const resetMapel = () => {
         setDetailMapel(null)
+    }
+    const onShowStations = () => {
+        console.log('ini stasiun')
     }
     if (isLoad) {
         return (<Loading />)
@@ -139,6 +143,7 @@ const CourseHomePage = () => {
                         handleStasiun={handleStasiun}
                     />
                 </aside>
+                <ShowStasiunTeacher onShowStations={onShowStations} listStasiun={dataListStasiun} handleStasiun={handleStasiun} manage={'true'}/>
                 {context.materi &&
                     <AddMateri
                         detailMapel={detailMapel}
