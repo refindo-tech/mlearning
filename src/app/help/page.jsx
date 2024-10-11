@@ -15,7 +15,7 @@ const HelpPage = () => {
                 <div className=" w-full z-10">
                     <div className="container mx-auto py-10 text-center text-base font-semibold">
                         <p>
-                            Layanan Bantuan : (219) 555-0114
+                            Layanan Bantuan:  mlearning.help@gmail.com
                         </p>
                     </div>
                 </div>
