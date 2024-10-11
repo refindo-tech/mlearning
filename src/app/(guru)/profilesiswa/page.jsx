@@ -12,7 +12,7 @@ import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
 const ProfilSiswa = () => {
     const [isLoad, setIsLoad] = useState(true)
-    const [limitData, setLimitData] = useState(5)
+    const [limitData, setLimitData] = useState(null)
     const [dataListProfile, setDataListProfile] = useState(null)
     const [inputSearch, setInputSearch] = useState(null)
     const handleSearch = (value) => {

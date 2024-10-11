@@ -48,7 +48,7 @@ class _profile {
             })
             if (findProfile) {
                 const edit = await db.profileSiswa.update({
-                    where: { id:findProfile.id },
+                    where: { id: findProfile.id },
                     data: payload
                 })
                 if (!edit) {
@@ -88,7 +88,7 @@ class _profile {
             })
             if (findProfile) {
                 const edit = await db.profileWali.update({
-                    where: { id:findProfile.id },
+                    where: { id: findProfile.id },
                     data: payload
                 })
                 if (!edit) {
@@ -103,10 +103,10 @@ class _profile {
                     message: 'success',
                     code: 200
                 }
-            } else{
+            } else {
                 const create = await db.profileWali.create({
                     data: {
-                        idsiswa:parseInt(idsiswa),
+                        idsiswa: parseInt(idsiswa),
                         ...payload
                     }
                 })
@@ -142,7 +142,7 @@ class _profile {
             const deleteProfile = await db.siswa.delete({
                 where: { id: parseInt(idsiswa) },
             })
-            if(deleteProfile){
+            if (deleteProfile) {
                 return {
                     status: true,
                     message: 'Delete user berhasil',
@@ -164,46 +164,35 @@ class _profile {
     }
     listProfile = async (req) => {
         try {
-            const { limit, name } = req
-            var list = []
-            if(name && name !== ''){
-                list = await db.siswa.findMany({
-                    where:{
-                        ProfileSiswa:{
-                            some:{
-                                name:{
-                                    contains:name
-                                }
+            const { limit, name } = req;
+            var list = [];
+            const query = {
+                select: {
+                    ProfileSiswa: {
+                        select: {
+                            name: true,
+                            nisn: true,
+                            kelas: true,
+                            idsiswa: true
+                        }
+                    }
+                }
+            };
+            if (name && name !== '') {
+                query.where = {
+                    ProfileSiswa: {
+                        some: {
+                            name: {
+                                contains: name
                             }
                         }
-                    },
-                    select: {
-                        ProfileSiswa: {
-                            select: {
-                                name: true,
-                                nisn: true,
-                                kelas: true,
-                                idsiswa: true
-                            }
-                        }
-                    },
-                    take: parseInt(limit)
-                })
-            }else{
-                list = await db.siswa.findMany({
-                    select: {
-                        ProfileSiswa: {
-                            select: {
-                                name: true,
-                                nisn: true,
-                                kelas: true,
-                                idsiswa: true
-                            }
-                        }
-                    },
-                    take: parseInt(limit)
-                })
+                    }
+                };
             }
+            if (limit) {
+                query.take = parseInt(limit);
+            }
+            list = await db.siswa.findMany(query);
             const listProfileSiswa = list.map((item) => item.ProfileSiswa[0])
             return {
                 status: true,
@@ -228,46 +217,34 @@ class _profile {
         try {
             const { limit, name } = req
             var list = []
-            if(name && name !== ''){
-                list = await db.guru.findMany({
-                    where:{
-                        ProfileGuru:{
-                            some:{
-                                name:{
-                                    contains:name
-                                }
-                            }
+            const query = {
+                select: {
+                    ProfileGuru: {
+                        select: {
+                            idguru: true,
+                            nuptk: true,
+                            name: true,
+                            start: true,
+                            urlimage: true
                         }
-                    },
-                    select: {
-                        ProfileGuru: {
-                            select: {
-                                idguru:true,
-                                nuptk:true,
-                                name:true,
-                                start:true,
-                                urlimage:true
-                            }
-                        }
-                    },
-                    take: parseInt(limit)
-                })
-            }else{
-                list = await db.guru.findMany({
-                    select: {
-                        ProfileGuru: {
-                            select: {
-                                idguru:true,
-                                nuptk:true,
-                                name:true,
-                                start:true,
-                                urlimage:true
-                            }
-                        }
-                    },
-                    take: parseInt(limit)
-                })
+                    }
+                }
             }
+            if(name && name !== ''){
+                query.where = {
+                    ProfileGuru: {
+                        some: {
+                            name: {
+                                contains: name
+                            }
+                        }
+                    }
+                }
+            }
+            if(limit){
+                query.take= parseInt(limit)
+            }
+            list = await db.guru.findMany(query)
             const listProfileGuru = list.map((item) => item.ProfileGuru[0])
             return {
                 status: true,
@@ -295,17 +272,17 @@ class _profile {
                 where: {
                     idguru: parseInt(idguru)
                 },
-                select:{
-                    idguru:true,
-                    name:true,
-                    nuptk:true,
-                    start:true,
-                    urlimage:true,
-                    ttl:true
+                select: {
+                    idguru: true,
+                    name: true,
+                    nuptk: true,
+                    start: true,
+                    urlimage: true,
+                    ttl: true
                 }
             })
-            if(!detail){
-                return{
+            if (!detail) {
+                return {
                     status: false,
                     message: 'Not any data',
                     code: 404
@@ -314,7 +291,7 @@ class _profile {
             return {
                 status: true,
                 message: 'Detail Profile Guru Success',
-                data:detail,
+                data: detail,
                 code: 200
             }
         } catch (error) {
@@ -341,7 +318,7 @@ class _profile {
             })
             if (findProfile) {
                 const edit = await db.profileGuru.update({
-                    where: { id:findProfile.id },
+                    where: { id: findProfile.id },
                     data: payload
                 })
                 if (!edit) {
@@ -376,7 +353,7 @@ class _profile {
             const deleteProfile = await db.guru.delete({
                 where: { id: parseInt(idguru) },
             })
-            if(deleteProfile){
+            if (deleteProfile) {
                 return {
                     status: true,
                     message: 'Delete Guru berhasil',

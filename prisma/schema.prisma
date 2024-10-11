@@ -48,7 +48,7 @@ model ProfileSiswa {
   kelas      String?  @db.VarChar(10)
   ttl        String?  @db.VarChar(200)
   urlimage   String?  @db.Text
-  gender     Gender?
+  gender     String?  @db.Text
   agama      String?  @db.VarChar(20)
   phone      String?
   anakke     Int?
@@ -214,11 +214,6 @@ model News {
   text       String   @db.Text
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
-}
-
-enum Gender {
-  Pria
-  Perempuan
 }
 
 enum StatusAbsen {

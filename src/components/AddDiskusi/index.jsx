@@ -117,7 +117,7 @@ const AddDiskusi = (
                                 </div>
                             ) :
                             (
-                                <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
+                                <div className="flex flex-col gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                     <div
                                         className="flex items-center gap-1 h-10 w-fit border-3 border-dashed border-white rounded-lg px-2"
                                     >

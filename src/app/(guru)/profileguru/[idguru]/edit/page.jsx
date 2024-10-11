@@ -191,7 +191,7 @@ const ActionGroup = ({ handleSubmitEdit }) => {
                 <Button
                     radius='sm'
                     variant='light'
-                    className='w-[260px] text-primer-500'
+                    className='w-[100px] lg:w-[260px] text-primer-500'
                     onPress={handleBack}
                 >
                     <span>Kembali</span>
@@ -199,7 +199,7 @@ const ActionGroup = ({ handleSubmitEdit }) => {
                 <Button
                     radius='sm'
                     isDisabled={isLoad ? true : false}
-                    className='w-[260px] bg-primer-500 text-white'
+                    className='w-[100px] lg:w-[260px] bg-primer-500 text-white'
                     onPress={() => {
                         setIsLoad(true)
                         handleSubmitEdit()

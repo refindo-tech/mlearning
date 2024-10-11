@@ -20,7 +20,7 @@ const CourseHomePage = () => {
         const fetchAPI = async () => {
             const responseAccess = await accessGuru()
             if (!responseAccess) {
-                router.push('/')
+                router.push('/loginguru')
             }
             const req = { idmatapelajaran: idmapel }
             const response = await listStasiun(req)

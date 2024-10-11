@@ -38,8 +38,8 @@ const ProfileSiswa = () => {
         }
         fetchAPI()
     }, [router, idsiswa])
-    if(isLoad){
-        return(<Loading/>)
+    if (isLoad) {
+        return (<Loading />)
     }
     return (
         <div className='flex flex-col min-h-screen'>
@@ -51,7 +51,7 @@ const ProfileSiswa = () => {
                     {detailSiswa &&
                         <div className=' grid grid-cols-1 lg:grid-cols-2 gap-8'>
                             <div className='h-[300px] flex flex-row items-center pl-5 lg:pl-10 gap-10 rounded-lg border-2 border-gray-200'>
-                            {detailSiswa.urlimage ?
+                                {detailSiswa.urlimage ?
                                     (
                                         <Image
                                             alt="avatar"
@@ -161,10 +161,10 @@ const ProfileSiswa = () => {
                             </div>
                         }
                     </div>
-                    <div className='flex flex-col gap-4 pb-10'>
-                        <h1 className='text-xl font-bold'>Informasi Lainnya</h1>
-                        {detailWali ?
-                            (<div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
+                    {detailWali &&
+                        <div className='flex flex-col gap-4 pb-10'>
+                            <h1 className='text-xl font-bold'>Informasi Lainnya</h1>
+                            <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
                                     {detailWali.name ? (
@@ -191,34 +191,14 @@ const ProfileSiswa = () => {
                                 </div>
                                 <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                     <h3 className='text-lg font-bold'>Alamat Orang Tua/Wali</h3>
-                                    {detailWali.phone ? (
-                                        <p className='text-lg font-bold text-accent-orange'>{detailWali.phone}</p>
+                                    {detailWali.alamat ? (
+                                        <p className='text-lg font-bold text-accent-orange'>{detailWali.alamat}</p>
                                     ) : (
                                         <p className='text-lg font-bold text-accent-orange'>-</p>
                                     )}
                                 </div>
-                            </div>) : (
-                                <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
-                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                        <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
-                                        <p className='text-lg font-bold text-accent-orange'>-</p>
-                                    </div>
-                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                        <h3 className='text-lg font-bold'>Pekerjaan Orang Tua/Wali</h3>
-                                        <p className='text-lg font-bold text-accent-orange'>-</p>
-                                    </div>
-                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                        <h3 className='text-lg font-bold'>No. Telepon Orang Tua/Wali</h3>
-                                        <p className='text-lg font-bold text-accent-orange'>-</p>
-                                    </div>
-                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                        <h3 className='text-lg font-bold'>Alamat Orang Tua/Wali</h3>
-                                        <p className='text-lg font-bold text-accent-orange'>-</p>
-                                    </div>
-                                </div>
-                            )
-                        }
-                    </div>
+                            </div>
+                        </div>}
                 </div>
                 <ActionGroup />
             </div>
@@ -246,14 +226,14 @@ const ActionGroup = () => {
                 <Button
                     radius='sm'
                     variant='light'
-                    className='w-[260px] text-primer-500'
+                    className='w-[100px] lg:w-[260px] text-primer-500'
                     onPress={handleBack}
                 >
                     <span>Kembali</span>
                 </Button>
                 <Button
                     radius='sm'
-                    className='w-[260px] bg-primer-500 text-white'
+                    className='w-[100px] lg:w-[260px] bg-primer-500 text-white'
                     onPress={handleEdit}
                 >
                     <span>Edit</span>

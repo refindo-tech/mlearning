@@ -316,13 +316,12 @@ class _exam {
                     idsiswa: true
                 }
             });
-
             // Menggunakan Set untuk menghapus duplikasi idsiswa
             let listIdSiswa = listExamAuthSiswa.map((auth) => auth.idsiswa);
             console.log('listExamAuthSiswa:', listExamAuthSiswa);
             console.log('listIdSiswa:', listIdSiswa);
             // Menggunakan findMany untuk mendapatkan banyak profil siswa sekaligus
-            const listProfile = await db.profileSiswa.findMany({
+            const queryProfile = {
                 where: {
                     idsiswa: {
                         in: listIdSiswa // Menggunakan operator 'in' untuk mendapatkan profil siswa dengan idsiswa yang ada di listIdSiswa
@@ -333,10 +332,12 @@ class _exam {
                     name: true,
                     nisn: true,
                     kelas: true
-                },
-                take: parseInt(limit)
-            });
-
+                }
+            }
+            if(limit && parseInt(limit)){
+                queryProfile.take = parseInt(limit)
+            }
+            const listProfile = await db.profileSiswa.findMany(queryProfile);
             return {
                 status: true,
                 message: 'success',

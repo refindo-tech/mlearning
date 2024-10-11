@@ -51,10 +51,11 @@ const CourseHomePage = () => {
         })
     }
     const handleChevronLeft = () => {
+        if (context.materi) {
+            setIsLoad(true)
+            router.push(`/courseguru/${idmapel}/manage`)
+        }
         setContext((prevData) => {
-            if (prevData.materi) {
-                return { ...prevData, materi: true, discussion: false, exam: false }
-            }
             if (prevData.discussion) {
                 return { ...prevData, materi: true, discussion: false, exam: false }
             }
@@ -143,7 +144,7 @@ const CourseHomePage = () => {
                         handleStasiun={handleStasiun}
                     />
                 </aside>
-                <ShowStasiunTeacher onShowStations={onShowStations} listStasiun={dataListStasiun} handleStasiun={handleStasiun} manage={'true'}/>
+                <ShowStasiunTeacher onShowStations={onShowStations} listStasiun={dataListStasiun} handleStasiun={handleStasiun} manage={'true'} />
                 {context.materi &&
                     <AddMateri
                         detailMapel={detailMapel}

@@ -6,12 +6,13 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import Icons from "@/components/Icons"
 import { Button, Image, Link } from "@nextui-org/react"
-// import { ChevronRight, ChevronLeft } from 'lucide-react'
+import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { detailMateri, listStasiun, listExam, accessGuru } from "@/backend/fetchAPI.js"
 import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
+import ShowStasiunTeacher from '@/components/ShowStasiunTeacher'
 const KoreksiTugas = () => {
     const path = usePathname()
     const router = useRouter()
@@ -19,7 +20,7 @@ const KoreksiTugas = () => {
     const [isLoad, setIsLoad] = useState(true)
     const [dataListStasiun, setDataListStasiun] = useState([])
     const [dataListExam, setDataListExam] = useState([])
-    const [limit, setLimit] = useState(5)
+    const [limit, setLimit] = useState(null)
     const handleLimit = (value) => {
         setLimit(value)
     }
@@ -59,7 +60,7 @@ const KoreksiTugas = () => {
             const payloadListExam = {
                 idmapel: idmapel,
                 stasiun: stasiun,
-                limit: parseInt(limit)
+                limit: limit
             }
             if (stasiun) {
                 const response = await listExam(payloadListExam)
@@ -71,6 +72,9 @@ const KoreksiTugas = () => {
         }
         fetchAPI()
     }, [stasiun, idmapel, limit])
+    const handleBack = ()=>{
+        router.push(`/courseguru/${idmapel}`)
+    }
     if (isLoad) {
         return (<Loading />)
     }
@@ -78,6 +82,7 @@ const KoreksiTugas = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
+                <ShowStasiunTeacher listStasiun={dataListStasiun} handleStasiun={handleStasiun} />
                 <aside className="hidden lg:block lg:w-[15%]">
                     {dataListStasiun.length !== 0 &&
                         <AsideTeacher
@@ -88,6 +93,20 @@ const KoreksiTugas = () => {
                 <div className="w-full lg:w-[85%] border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
+                            <div className="w-[90%] mx-auto lg:w-full flex flex-row justify-between">
+                                <button
+                                    onClick={handleBack}
+                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white hover:bg-white/50"
+                                >
+                                    <ChevronLeft size={32} />
+                                </button>
+                                <button
+                                    // onClick={handleChevronRight}
+                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white/50 text-black/50"
+                                >
+                                    <ChevronRight size={32} />
+                                </button>
+                            </div>
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                     {detailMapel.MataPelajaran.name && <h1 className="font-bold text-xl lg:text-3xl">{detailMapel.MataPelajaran.name}</h1>}

@@ -11,6 +11,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { detailMateri, listStasiun, accessGuru, getAbsensiForTeacher } from "@/backend/fetchAPI.js"
 import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
+import ShowStasiunTeacher from '@/components/ShowStasiunTeacher'
 const ReportAbsen = () => {
     const path = usePathname()
     const router = useRouter()
@@ -50,25 +51,25 @@ const ReportAbsen = () => {
         }
         fetchAPI()
     }, [idmapel, router])
-    const [limit, setLimit] = useState(5)
-    const handleLimit = (value)=>{
+    const [limit, setLimit] = useState(null)
+    const handleLimit = (value) => {
         setLimit(value)
     }
-    const handleInputSearch = (value)=>{
+    const handleInputSearch = (value) => {
         setInputSearch(value)
     }
     useEffect(() => {
         let payload = {
             idmapel: parseInt(idmapel),
             stasiun: stasiun,
-            limit:limit
+            limit: limit
         }
-        if(inputSearch){
-            payload={
+        if (inputSearch) {
+            payload = {
                 idmapel: parseInt(idmapel),
                 stasiun: stasiun,
-                limit:limit,
-                name:inputSearch
+                limit: limit,
+                name: inputSearch
             }
         }
         const fetchAPI = async () => {
@@ -79,9 +80,10 @@ const ReportAbsen = () => {
         }
         fetchAPI()
     }, [idmapel, stasiun, limit, inputSearch])
-    useEffect(()=>{
-        console.log(inputSearch)
-    },[inputSearch])
+    const handleBack=()=>{
+        const newUrl = path.replace('/absen','')
+        router.push(newUrl)
+    }
     if (isLoad) {
         return (<Loading />)
     }
@@ -89,6 +91,7 @@ const ReportAbsen = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
+                <ShowStasiunTeacher listStasiun={dataListStasiun} handleStasiun={handleStasiun} />
                 <aside className="hidden lg:block lg:w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}
@@ -96,7 +99,21 @@ const ReportAbsen = () => {
                     />
                 </aside>
                 <div className="w-full lg:w-[85%] border-l-2 border-gray-200">
-                    <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
+                    <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300 flex flex-col gap-7">
+                        <div className="w-[90%] mx-auto flex flex-row justify-between">
+                            <button
+                                onClick={handleBack}
+                                className="h-10 w-10 flex  items-center justify-center rounded-full bg-white hover:bg-white/50"
+                            >
+                                <ChevronLeft size={32} />
+                            </button>
+                            <button
+                                // onClick={handleChevronRight}
+                                className="h-10 w-10 flex  items-center justify-center rounded-full bg-white/50 text-black/50"
+                            >
+                                <ChevronRight size={32} />
+                            </button>
+                        </div>
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
@@ -115,7 +132,7 @@ const ReportAbsen = () => {
                     </div>
                     <div className="relative w-full min-h-screen flex justify-center">
                         <Background />
-                        {stasiun&&<div className="py-10 flex flex-col gap-[30px] w-[90%] mx-auto z-10">
+                        {stasiun && <div className="py-10 flex flex-col gap-[30px] w-[90%] mx-auto z-10">
                             <h3 className="font-semibold text-lg">{`Absensi siswa ${stasiun}`}</h3>
                             <div className="border-2 border-gray-300 rounded-xl">
                                 <div className="w-full h-[87px] bg-gray-200 rounded-t-xl flex items-center justify-center">
@@ -127,12 +144,12 @@ const ReportAbsen = () => {
                                                 type="number"
                                                 min={1}
                                                 defaultValue={limit}
-                                                onValueChange={(value)=>handleLimit(parseInt(value))}
+                                                onValueChange={(value) => handleLimit(parseInt(value))}
                                                 className="w-[60px] h-10 rounded"
                                             />
                                             <p>baris</p>
                                         </div>
-                                        <SearchTable value={inputSearch} handleValue={handleInputSearch}/>
+                                        <SearchTable value={inputSearch} handleValue={handleInputSearch} />
                                     </div>
                                 </div>
                                 <table className="table-fixed w-full">
@@ -146,7 +163,7 @@ const ReportAbsen = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="text-base">
-                                        { dataAbsensi?.map((item, index) => (
+                                        {dataAbsensi?.map((item, index) => (
                                             <tr className="h-[60px] align-center" key={index}>
                                                 <td className="text-center w-[50px]">{index + 1}</td>
                                                 <td>{item.name}</td>
@@ -158,9 +175,9 @@ const ReportAbsen = () => {
                                                     (<td>{item.kelas}</td>) :
                                                     (<td className="text-center">-</td>)
                                                 }
-                                                {item.status === 'SUDAH'?
+                                                {item.status === 'SUDAH' ?
                                                     (<td className="text-center">Sudah Absen</td>) :
-                                                    (<td className="text-center">Belum Absen</td>) 
+                                                    (<td className="text-center">Belum Absen</td>)
                                                 }
                                             </tr>
                                         ))}

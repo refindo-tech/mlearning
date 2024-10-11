@@ -8,7 +8,7 @@ import { Button, Image, Link } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { detailMateri, listProfile, accessGuru} from "@/backend/fetchAPI.js"
+import { detailMateri, listProfile, accessGuru } from "@/backend/fetchAPI.js"
 import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
 import Icons from "@/components/Icons"
@@ -21,11 +21,11 @@ const ReportAbsen = () => {
     const [detailMapel, setDetailMapel] = useState(null)
     const [stasiun, setStasiun] = useState(null)
     const [inputSearch, setInputSearch] = useState(null)
-    const {EditIcon} = Icons
+    const { EditIcon } = Icons
     const handleStasiun = (value) => {
         setStasiun(value)
     }
-    const [limit, setLimit] = useState(5)
+    const [limit, setLimit] = useState(null)
     const handleLimit = (value) => {
         setLimit(value)
     }
@@ -71,6 +71,9 @@ const ReportAbsen = () => {
         }
         fetchAPI()
     }, [idmapel, router])
+    const handleBack = ()=>{
+        router.push(`/courseguru/${idmapel}`)
+    }
     if (isLoad) {
         return (<Loading />)
     }
@@ -79,7 +82,21 @@ const ReportAbsen = () => {
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
                 <div className=" w-full border-l-2 border-gray-200">
-                    <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
+                    <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300 flex flex-col gap-7">
+                        <div className="w-[90%] mx-auto lg:w-full flex flex-row justify-between">
+                            <button
+                                onClick={handleBack}
+                                className="h-10 w-10 flex  items-center justify-center rounded-full bg-white hover:bg-white/50"
+                            >
+                                <ChevronLeft size={32} />
+                            </button>
+                            <button
+                                // onClick={handleChevronRight}
+                                className="h-10 w-10 flex  items-center justify-center rounded-full bg-white/50 text-black/50"
+                            >
+                                <ChevronRight size={32} />
+                            </button>
+                        </div>
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
@@ -150,7 +167,7 @@ const ReportAbsen = () => {
                                                         isIconOnly={true}
                                                         radius="sm"
                                                         className="w-fit lg:w-[90%] lg:mx-auto bg-primer-500"
-                                                        onPress={()=>{
+                                                        onPress={() => {
                                                             router.push(`${path}/${item.idsiswa}`)
                                                         }}
                                                     >
