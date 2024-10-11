@@ -31,8 +31,8 @@ const Profile = () => {
         }
         fetchAPI()
     }, [router])
-    if(!detailGuru && !detailSiswa){
-        return(<Loading/>)
+    if (!detailGuru && !detailSiswa) {
+        return (<Loading />)
     }
     return (
         <div className='flex flex-col min-h-screen'>
@@ -155,9 +155,9 @@ const Profile = () => {
                                 </div>
                             }
                         </div>
-                        <div className='flex flex-col gap-4 pb-10'>
-                            <h1 className='text-xl font-bold'>Informasi Lainnya</h1>
-                            {detailWali ?
+                        {detailWali &&
+                            <div className='flex flex-col gap-4 pb-10'>
+                                <h1 className='text-xl font-bold'>Informasi Lainnya</h1>
                                 (<div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
                                     <div className='flex flex-col gap-1 w-[90%] mx-auto'>
                                         <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
@@ -192,27 +192,26 @@ const Profile = () => {
                                         )}
                                     </div>
                                 </div>) : (
-                                    <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
-                                        <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                            <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
-                                            <p className='text-lg font-bold text-accent-orange'>-</p>
-                                        </div>
-                                        <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                            <h3 className='text-lg font-bold'>Pekerjaan Orang Tua/Wali</h3>
-                                            <p className='text-lg font-bold text-accent-orange'>-</p>
-                                        </div>
-                                        <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                            <h3 className='text-lg font-bold'>No. Telepon Orang Tua/Wali</h3>
-                                            <p className='text-lg font-bold text-accent-orange'>-</p>
-                                        </div>
-                                        <div className='flex flex-col gap-1 w-[90%] mx-auto'>
-                                            <h3 className='text-lg font-bold'>Alamat Orang Tua/Wali</h3>
-                                            <p className='text-lg font-bold text-accent-orange'>-</p>
-                                        </div>
+                                <div className='flex flex-col py-4 gap-4 rounded-lg border-2 border-gray-200'>
+                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
+                                        <h3 className='text-lg font-bold'>Orang Tua/Wali</h3>
+                                        <p className='text-lg font-bold text-accent-orange'>-</p>
                                     </div>
+                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
+                                        <h3 className='text-lg font-bold'>Pekerjaan Orang Tua/Wali</h3>
+                                        <p className='text-lg font-bold text-accent-orange'>-</p>
+                                    </div>
+                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
+                                        <h3 className='text-lg font-bold'>No. Telepon Orang Tua/Wali</h3>
+                                        <p className='text-lg font-bold text-accent-orange'>-</p>
+                                    </div>
+                                    <div className='flex flex-col gap-1 w-[90%] mx-auto'>
+                                        <h3 className='text-lg font-bold'>Alamat Orang Tua/Wali</h3>
+                                        <p className='text-lg font-bold text-accent-orange'>-</p>
+                                    </div>
+                                </div>
                                 )
-                            }
-                        </div>
+                            </div>}
                     </div>
                 </>}
                 {detailGuru &&

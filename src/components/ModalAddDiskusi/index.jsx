@@ -38,57 +38,40 @@ const ModalAddDiskusi = ({ active, inActiveModalExam, saveMateri, handleDiskusi 
     const handleInput = (e) => {
         setInput(e)
     }
-
-    // const [input, setInput] = useState(null)
-    // const handleInput = (value) =>{
-    //     setInput(value)
-    // }
-
-
-    // const [isActiveModal, setIsActiveModal] = useState(false)
-    // const handleActiveModal = ()=>{
-    //     setIsActiveModal(!isActiveModal)
-    // }
-
-    // useEffect(() => {
-    //     console.log(valueMateri)
-    // }, [valueMateri])
-    // const TextEditor = dynamic(
-    //     () => import("@/components/Quill"), // Path to the TextEditor component file
-    //     {
-    //         ssr: false, // Disables server-side rendering (SSR) for this component
-    //     }
-    // );
     return (
         <>
             {active &&
                 <div className="fixed top-0 left-0 right-0 bottom-0 w-full py-10 flex items-center h-[100vh] bg-gray-500/30 z-[999]">
                     <div className="w-[90%] h-fit max-h-[90vh] mx-auto bg-white py-10 rounded-xl flex flex-col gap-5">
-                        <div className="w-[90%] mx-auto flex flex-row items-center justify-end gap-[40%] text-primer-300 font-semibold">
-                            <h1>Buat Materi</h1>
-                            <Button
-                                radius="sm"
-                                isIconOnly={true}
-                                className="bg-primer-500"
-                                onPress={inActiveModalExam}
-                            >
-                                <div className="h-5 w-5 text-white font-semibold">x</div>
-                            </Button>
+                        <div className="flex flex-col">
+                            <div className="lg:hidden w-[90%] mx-auto flex justify-end">
+                                <Button
+                                    radius="sm"
+                                    isIconOnly={true}
+                                    className="bg-primer-500"
+                                    onPress={inActiveModalExam}
+                                >
+                                    <div className="h-5 w-5 text-white font-semibold">x</div>
+                                </Button>
+                            </div>
+                            <div className="w-[90%] mx-auto flex flex-row items-end justify-end text-primer-300 font-semibold">
+                                <h1 className="w-full flex justify-center">Buat Materi</h1>
+                                <div className="hidden lg:block ">
+                                    <Button
+                                        radius="sm"
+                                        isIconOnly={true}
+                                        className="bg-primer-500"
+                                        onPress={inActiveModalExam}
+                                    >
+                                        <div className="h-5 w-5 text-white font-semibold">x</div>
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                         <div className="w-[90%] mx-auto flex flex-col gap-5 overflow-y-auto overflow-x-hidden px-2 justify-between">
                             <div className="flex flex-col gap-5">
                                 <h3>Materi dalam bentuk teks atau video</h3>
                                 <TextEditor value={input} handleValue={handleInput} />
-                                {/* <h3>Tambah materi dalam bentuk gambar atau audio</h3>
-                                <Button
-                                    variant="bordered"
-                                    className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
-                                >
-                                    <h3>Tambah materi</h3>
-                                    <div className="h-5 w-5 flex items-center justify-center text-primer-500">
-                                        <AddIcon fill={'#110B63'} />
-                                    </div>
-                                </Button> */}
                             </div>
                             <div className="flex justify-end">
                                 <Button

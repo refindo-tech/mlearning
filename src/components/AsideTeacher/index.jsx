@@ -19,8 +19,12 @@ const AsideTeacher = ({ listStasiun, handleStasiun,  manage }) => {
     const createNewStasiun = ()=>{
         setTotalStasiun((prev)=>{
             const data = [...prev]
-            const lastData = data[data.length - 1]
-            return [...prev, lastData+1]
+            if(data.length==0){
+                return [...prev, 1]
+            }else{
+                const lastData = data[data.length - 1]
+                return [...prev, lastData+1]
+            }
         })
     }
     const handleIsActive = ()=>{
@@ -40,7 +44,7 @@ const AsideTeacher = ({ listStasiun, handleStasiun,  manage }) => {
         }
     }, [listStasiun])
     return (
-        <aside className="w-full py-10 flex flex-col items-center gap-7">
+        <aside className="min-h-screen w-[50vw] lg:w-full py-10 flex flex-col items-center gap-7 overflow-y-visible">
             <h3 className="font-semibold text-xl text-center">Materi Belajar</h3>
             <div className="w-[90%] flex flex-col gap-4">
                 {totalStasiun && totalStasiun.map((item, index) => (

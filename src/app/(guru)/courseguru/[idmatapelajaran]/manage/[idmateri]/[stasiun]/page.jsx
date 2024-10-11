@@ -16,6 +16,7 @@ import { detailMateri, listStasiun, accessGuru } from "@/backend/fetchAPI.js"
 import AddMateri from '@/components/AddMateri'
 import AddDiskusi from '@/components/AddDiskusi'
 import AddExam from '@/components/AddExam'
+import ShowStasiunTeacher from '@/components/ShowStasiunTeacher'
 import Icons from "@/components/Icons"
 import "quill/dist/quill.snow.css";
 const CourseHomePage = () => {
@@ -50,10 +51,11 @@ const CourseHomePage = () => {
         })
     }
     const handleChevronLeft = () => {
+        if (context.materi) {
+            setIsLoad(true)
+            router.push(`/courseguru/${idmapel}/manage`)
+        }
         setContext((prevData) => {
-            if (prevData.materi) {
-                return { ...prevData, materi: true, discussion: false, exam: false }
-            }
             if (prevData.discussion) {
                 return { ...prevData, materi: true, discussion: false, exam: false }
             }
@@ -63,6 +65,7 @@ const CourseHomePage = () => {
         })
     }
     const handleStasiun = (value) => {
+        setIsLoad(true)
         const payload = {
             idmapel: idmapel,
             stasiun: value
@@ -73,7 +76,7 @@ const CourseHomePage = () => {
                 if (response.data) {
                     const newUrl = path.replace(`/${idmateri}/${stasiun}`, `/${response.data.id}/${value}`)
                     router.push(newUrl)
-                }else{
+                } else {
                     const newUrl = path.replace(`/${idmateri}/${stasiun}`, `/add/${value}`)
                     router.push(newUrl)
                 }
@@ -112,7 +115,7 @@ const CourseHomePage = () => {
             }
             const responseDetailMateri = await detailMateri(payload)
             if (responseDetailMateri) {
-                if(responseDetailMateri.data.id !== parseInt(idmateri)){
+                if (responseDetailMateri.data.id !== parseInt(idmateri)) {
                     router.push('/onboarding')
                 }
                 setIsLoad(false)
@@ -124,6 +127,9 @@ const CourseHomePage = () => {
     const resetMapel = () => {
         setDetailMapel(null)
     }
+    const onShowStations = () => {
+        console.log('ini stasiun')
+    }
     if (isLoad) {
         return (<Loading />)
     }
@@ -131,13 +137,14 @@ const CourseHomePage = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row overflow-x-hidden">
-                <aside className="w-[15%]">
+                <aside className="hidden lg:block lg:w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}
                         manage={'true'}
                         handleStasiun={handleStasiun}
                     />
                 </aside>
+                <ShowStasiunTeacher onShowStations={onShowStations} listStasiun={dataListStasiun} handleStasiun={handleStasiun} manage={'true'} />
                 {context.materi &&
                     <AddMateri
                         detailMapel={detailMapel}

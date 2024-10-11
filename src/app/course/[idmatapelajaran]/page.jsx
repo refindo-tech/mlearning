@@ -22,6 +22,10 @@ const CourseHomePage = () => {
     // const handleNextLearn = () => {
     //     setSelectedStasiun()
     // }
+    const tokensiswa = sessionStorage.getItem('tokensiswa')
+    if(!tokensiswa){
+        window.location.href = '/login'
+    }
     const findFirstIncompleteStasiun = () => {
         return dataListStasiun.find(stasiun =>
             !dataAbsensi.find(absen => absen.stasiun === stasiun.stasiun && absen.status === "SUDAH")
@@ -81,7 +85,7 @@ const CourseHomePage = () => {
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
                                 <button
-                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white/50 cursor-default"
+                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white/50 cursor-default text-black/50"
                                 >
                                     <ChevronLeft size={32} />
                                 </button>

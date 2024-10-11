@@ -2,12 +2,20 @@ import { Image } from "@nextui-org/react"
 const Footer = () => {
     return (
         <footer className="bg-primer-300">
-            <div className="h-[202px] lg:h-[600px] w-[90%] mx-auto flex flex-row items-center justify-center my-auto gap-[60px]">
-                <Image
-                    alt="logofooter"
-                    src={'/assets/image/logosma3.png'}
-                    className="block h-[40px] w-[40px] lg:h-[120px] lg:w-[120px]"
-                />
+            <div className="h-[202px] lg:h-[600px] w-[90%] mx-auto flex flex-row items-center justify-center my-auto gap-[40px] lg:gap-[60px]">
+                <div className="flex gap-x-3 items-center">
+                    <Image
+                        alt="logo"
+                        src={'/assets/image/logosma3.png'}
+                        className="block h-[40px] w-[40px] lg:h-[120px] lg:w-[120px]"
+                    />
+                    <div className="w-[2px] h-[40px] lg:h-[120px] border-l-2 border-white rounded" />
+                    <Image
+                        alt="logo"
+                        src={'/assets/image/logo_untirta.png'}
+                        className="block h-[40px] w-[40px] lg:h-[120px] lg:w-[120px]"
+                    />
+                </div>
                 <Image
                     alt="logofooter"
                     src={'/assets/image/logofooter.png'}

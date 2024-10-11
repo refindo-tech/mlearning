@@ -13,7 +13,7 @@ const SearchTable = ({ value, handleValue }) => {
             placeholder="Cari materi"
             size="md"
             // onChange={(e)=>{handleValueSearch(e.target.value)}}
-            className="rounded-md shadow-md w-[300px]"
+            className="rounded-md shadow-md max-w-[300px]"
             onValueChange={(value) => { handleChangeInput(value) }}
             endContent={
                 <button

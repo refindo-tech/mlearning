@@ -12,7 +12,7 @@ import { Input } from "@nextui-org/react"
 import SearchTable from '@/components/SearchTable'
 const ProfilSiswa = () => {
     const [isLoad, setIsLoad] = useState(true)
-    const [limitData, setLimitData] = useState(5)
+    const [limitData, setLimitData] = useState(null)
     const [dataListProfile, setDataListProfile] = useState(null)
     const [inputSearch, setInputSearch] = useState(null)
     const handleSearch = (value) => {
@@ -60,13 +60,13 @@ const ProfilSiswa = () => {
                 <div className=" w-full border-l-2 border-gray-200">
                     <div className="relative w-full min-h-screen flex justify-center">
                         <Background />
-                        <div className="py-10 flex flex-col gap-[30px] w-[80%] mx-auto">
+                        <div className="py-10 flex flex-col gap-[30px] w-[90%] mx-auto z-10">
                             <h1 className="font-semibold text-3xl">Kelola Siswa</h1>
                             <div className="border-2 border-gray-300 rounded-xl">
                                 <div className="w-full h-[87px] bg-gray-200 rounded-t-xl flex items-center justify-center">
-                                    <div className="w-[90%] flex justify-between items-center">
+                                    <div className="w-[90%] flex gap-3 justify-between items-center">
                                         <div className="flex gap-3 items-center text-sm">
-                                            <p>Tampilkan</p>
+                                            <p className="hidden lg:block">Tampilkan</p>
                                             <Input
                                                 variant="faded"
                                                 type="number"
@@ -85,7 +85,7 @@ const ProfilSiswa = () => {
                                         <tr className="bg-gray-200 h-10 align-center text-left font-normal">
                                             <th className="w-[50px] text-center">No</th>
                                             <th>Nama</th>
-                                            <th>NISN</th>
+                                            <th className="hidden lg:block">NISN</th>
                                             <th>Kelas</th>
                                             <th className="text-center">Aksi</th>
                                         </tr>
@@ -96,14 +96,14 @@ const ProfilSiswa = () => {
                                                 <td className="text-center w-[50px]">{index + 1}</td>
                                                 <td>{item.name}</td>
                                                 {item.nisn ?
-                                                    (<td>{item.nisn}</td>) :
-                                                    (<td>-</td>)
+                                                    (<td className="hidden lg:block">{item.nisn}</td>) :
+                                                    (<td className="hidden lg:block">-</td>)
                                                 }
                                                 {item.kelas ?
                                                     (<td>{item.kelas}</td>) :
                                                     (<td>-</td>)
                                                 }
-                                                <td className="text-center">
+                                                <td className="text-center px-3">
                                                     <ActionGroup idsiswa={item.idsiswa} />
                                                 </td>
                                             </tr>
@@ -142,21 +142,23 @@ const ActionGroup = ({ idsiswa }) => {
         fetchAPI()
     }
     return (
-        <div className="flex gap-3">
+        <div className="flex gap-3 justify-center">
             <Button
+                isIconOnly={true}
                 radius="sm"
-                className="bg-primer-500"
+                className="bg-primer-500 w-fit lg:px-3"
                 onPress={handleDetailProfile}
             >
                 <div className="flex justify-center gap-3 text-white text-base">
                     <EditIcon />
-                    <p>Detail</p>
+                    <p className="hidden lg:block">Detail</p>
                 </div>
             </Button>
             <Button
+                isIconOnly={true}
                 isDisabled={isLoad ? true : false}
                 radius="sm"
-                className="bg-accent-red"
+                className="bg-accent-red w-fit lg:px-3"
                 onPress={() => {
                     setIsLoad(true)
                     handleDeleteProfile()
@@ -167,7 +169,7 @@ const ActionGroup = ({ idsiswa }) => {
                 ) : (
                     <div className="flex justify-center gap-3 text-white text-base">
                         <TrashIcon />
-                        <p>Hapus</p>
+                        <p className="hidden lg:block">Hapus</p>
                     </div>
                 )}
                 </>

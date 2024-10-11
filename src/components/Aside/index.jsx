@@ -138,7 +138,7 @@ const Aside = () => {
                                     className="block h-[70px] w-[70px]"
                                 />
                             </div>
-                            <p>Oops... nantikan fitur lainnya disini</p>
+                            <p className='text-center'>Oops... nantikan fitur lainnya disini</p>
                         </div>
                     </div>
                 </div>

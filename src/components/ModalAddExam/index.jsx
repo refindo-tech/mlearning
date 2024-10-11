@@ -35,21 +35,6 @@ const ModalAddExam = ({
     const handleCorrectAnswer = (value) => {
         setCorrectAnswer(value)
     }
-    // useEffect(()=>{
-    //     console.log(listOptionAnswer)
-    // },[listOptionAnswer])
-    
-    
-    // useEffect(()=>{
-    //     const arrayToString = ()=>{
-    //         let result = ""
-    //         for(let i=0; i<listOptionAnswer.length; i++){
-    //             result += `${listOptionAnswer[i]}/`
-    //         }
-    //         return result
-    //     }
-    //     console.log(arrayToString())
-    // },[listOptionAnswer])
 const arrayToString = ()=>{
             let result = ""
             for(let i=0; i<listOptionAnswer.length; i++){
@@ -64,12 +49,6 @@ const arrayToString = ()=>{
     const resetStateInput=()=>{
         setInputQuestion(null)
     }
-    // const TextEditor = dynamic(
-    //     () => import("@/components/Quill"), // Path to the TextEditor component file
-    //     {
-    //         ssr: false, // Disables server-side rendering (SSR) for this component
-    //     }
-    // );
     const handleSave = ()=>{
         let payload = {
             text:inputQuestion,
@@ -89,34 +68,41 @@ const arrayToString = ()=>{
             {active &&
                 <div className="fixed top-0 left-0 right-0 bottom-0 w-full py-10 flex items-center h-[100vh] bg-gray-500/30 z-[999]">
                     <div className="w-[90%] h-[90vh] mx-auto bg-white py-10 rounded-xl flex flex-col gap-5">
-                        <div className="w-[90%] mx-auto flex flex-row items-center justify-end gap-[40%] text-primer-300 font-semibold mb-5">
-                            <h1>Buat Exam</h1>
-                            <Button
-                                radius="sm"
-                                isIconOnly={true}
-                                className="bg-primer-500"
-                                onPress={()=>{
-                                    inActiveModalExam()
-                                    resetStateInput()
-                                }}
-                            >
-                                <div className="h-5 w-5 text-white font-semibold">x</div>
-                            </Button>
+                        <div className="flex flex-col">
+                            <div className="lg:hidden w-[90%] mx-auto flex justify-end">
+                                <Button
+                                    radius="sm"
+                                    isIconOnly={true}
+                                    className="bg-primer-500"
+                                    onPress={()=>{
+                                        inActiveModalExam()
+                                        resetStateInput()
+                                    }}
+                                >
+                                    <div className="h-5 w-5 text-white font-semibold">x</div>
+                                </Button>
+                            </div>
+                            <div className="w-[90%] mx-auto flex flex-row items-end justify-end text-primer-300 font-semibold">
+                                <h1 className="w-full flex justify-center">Buat Exam</h1>
+                                <div className="hidden lg:block ">
+                                    <Button
+                                        radius="sm"
+                                        isIconOnly={true}
+                                        className="bg-primer-500"
+                                        onPress={()=>{
+                                            inActiveModalExam()
+                                            resetStateInput()
+                                        }}
+                                    >
+                                        <div className="h-5 w-5 text-white font-semibold">x</div>
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                         <div className="w-[90%] mx-auto flex flex-col gap-5 overflow-y-scroll overflow-x-hidden px-2">
                             <div className="flex flex-col gap-5">
                                 <h3>Pertanyaan dalam bentuk teks</h3>
                                 <TextEditor value={inputQuestion} handleValue={handleValueInputQuestion}/>
-                                {/* <h3>Pertanyaan dalam bentuk gambar, audio, atau video</h3>
-                                <Button
-                                    variant="bordered"
-                                    className="h-20 border-3 border-dashed border-primer-500 flex-row justify-center items-center font-semibold"
-                                >
-                                    <h3>Tambah materi</h3>
-                                    <div className="h-5 w-5 flex items-center justify-center text-primer-500">
-                                        <AddIcon fill={'#110B63'} />
-                                    </div>
-                                </Button> */}
                             </div>
                             <div className="flex flex-col items-end gap-2">
                                 <h3>Pilih opsi jawaban</h3>
@@ -175,14 +161,7 @@ const arrayToString = ()=>{
                                     </Button>}
                                 </div>
                             }
-                            <div className="flex justify-between">
-                                <Button
-                                    variant="bordered"
-                                    radius="sm"
-                                    className="w-[260px] border-primer-300 text-primer-300"
-                                >
-                                    Buat kunci jawaban
-                                </Button>
+                            <div className="flex justify-end">
                                 <Button
                                     radius="sm"
                                     className="w-[260px] bg-primer-500 text-white"

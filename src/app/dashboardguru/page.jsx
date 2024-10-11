@@ -57,7 +57,7 @@ const DashboardGuru = () => {
         <div className="flex flex-col min-h-screen">
             <Navbar />
             <div className="flex-grow flex flex-row">
-                <div className="relative flex flex-col w-full lg:w-3/4 border-r-2 border-gray-200">
+                <div className="min-h-screen relative flex flex-col w-full lg:w-3/4 border-r-2 border-gray-200">
                     <Background />
                     <div className="w-full p-10 z-10">
                         <div className="w-fit bg-gray-200 flex flex-row p-1 gap-x-2 rounded-2xl font-semibold mb-10">

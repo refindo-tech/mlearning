@@ -3,12 +3,14 @@ import Background from "@/components/Background"
 import Loading from "@/app/loading.jsx"
 import AsideTeacher from '@/components/AsideTeacher'
 import Navbar from "@/components/Navbar"
+import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { Button, Image, Input } from "@nextui-org/react"
 import { useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { detailMateri, listStasiun, updateDeskripsi, accessGuru } from "@/backend/fetchAPI.js"
 import ModalAddDescription from "@/components/ModalAddDescription"
 import Icons from "@/components/Icons"
+import ShowStasiunTeacher from '@/components/ShowStasiunTeacher'
 import "quill/dist/quill.snow.css";
 const CourseHomePage = () => {
     const path = usePathname()
@@ -66,7 +68,7 @@ const CourseHomePage = () => {
             if (response) {
                 if (response.data) {
                     router.push(`${path}/${response.data.id}/${value}`)
-                }else{
+                } else {
                     router.push(`${path}/add/${value}`)
                 }
             }
@@ -123,6 +125,9 @@ const CourseHomePage = () => {
         setIsHasUpdateDesc(true)
         setDescMapel(null)
     }
+    const handleBack = ()=>{
+        router.push(`/courseguru/${idmapel}`)
+    }
     if (isLoad) {
         return (<Loading />)
     }
@@ -130,16 +135,31 @@ const CourseHomePage = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row overflow-x-hidden">
-                <aside className="w-[15%]">
+                <ShowStasiunTeacher listStasiun={dataListStasiun} handleStasiun={handleStasiun} manage={'true'} />
+                <aside className="hidden lg:block lg:w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}
                         manage={'true'}
                         handleStasiun={handleStasiun}
                     />
                 </aside>
-                <div className=" w-[85%] border-l-2 border-gray-200">
+                <div className="w-full lg:w-[85%] border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
+                            <div className="w-[90%] mx-auto lg:w-full flex flex-row justify-between">
+                                <button
+                                    onClick={handleBack}
+                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white hover:bg-white/50"
+                                >
+                                    <ChevronLeft size={32} />
+                                </button>
+                                <button
+                                    // onClick={handleChevronRight}
+                                    className="h-10 w-10 flex  items-center justify-center rounded-full bg-white/50 text-black/50"
+                                >
+                                    <ChevronRight size={32} />
+                                </button>
+                            </div>
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                     {detailMapel.MataPelajaran.name && <h1 className="font-bold text-xl lg:text-3xl">{detailMapel.MataPelajaran.name}</h1>}

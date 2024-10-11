@@ -141,7 +141,7 @@ const AddExam = (
         return(<div className="loader z-50"></div>)
     }
     return (
-        <div className=" w-[85%] border-l-2 border-gray-200">
+        <div className="w-full lg:w-[85%] border-l-2 border-gray-200">
             <div className="h-fit lg:h-[30vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                 <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                     <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
@@ -158,7 +158,7 @@ const AddExam = (
                             <ChevronRight size={32} />
                         </button>
                     </div>
-                    <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
+                    <div className="flex flex-col gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                         <div
                             className="flex items-center gap-1 h-10 w-fit border-3 border-dashed border-white rounded-lg px-2"
                         >
@@ -213,10 +213,10 @@ const AddExam = (
                                         <Button
                                             isIconOnly={true}
                                             radius="sm"
-                                            className="bg-primer-500 w-[300px]"
+                                            className="bg-primer-500 w-[300px] p-4 lg:p-0"
                                             onPress={() => activeModalAddExam(index)}
                                         >
-                                            <div className="flex justify-center gap-2 text-white">
+                                            <div className="flex items-center justify-center gap-2 text-white text-wrap">
                                                 <h3>Tambah Pertanyaan</h3>
                                                 <AddIcon />
                                             </div>

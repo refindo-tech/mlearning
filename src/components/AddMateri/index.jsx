@@ -105,8 +105,8 @@ const AddMateri = (
         fetchAPI()
     }
     return (
-        <div className=" w-[85%] border-l-2 border-gray-200">
-            <ModalAddMateri active={isActiveModal} inActiveModalExam={handleIsActiveModal} saveMateri={saveMateri} />
+        <div className="w-full lg:w-[85%] border-l-2 border-gray-200">
+            <ModalAddMateri active={isActiveModal} inActiveModalMateri={handleIsActiveModal} saveMateri={saveMateri} />
             <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                 <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                     {stasiun &&
@@ -134,7 +134,7 @@ const AddMateri = (
                                 </div>
                             ) :
                             (
-                                <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
+                                <div className="flex flex-col gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
                                     <div
                                         className="flex items-center gap-1 h-10 w-fit border-3 border-dashed border-white rounded-lg px-2"
                                     >
