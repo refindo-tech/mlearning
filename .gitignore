@@ -36,3 +36,7 @@ yarn-error.log*
 next-env.d.ts
 
 prisma/migrations/
+
+#Docker Compose
+docker-compose.yml
+docker-compose.yml.save
