@@ -179,7 +179,7 @@ const AddDiskusi = (
                                     </Button>
                                 </div>
                                 <h3 className="font-semibold text-lg">Portal Diskusi</h3>
-                                {detailMapel&&<Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idmateri={idmateri} />}
+                                {detailMapel && <Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idmateri={idmateri} />}
                             </div>
                         </div>
                     ) :
@@ -189,7 +189,7 @@ const AddDiskusi = (
                                 (
                                     <div className="flex flex-col gap-5">
                                         <h3 className="font-semibold text-lg w-[90%] mx-auto">Simak materi berikut ini!</h3>
-                                        <div className="w-[90%] mx-auto rounded-lg bg-yellow-500  z-10">
+                                        <div className="w-[90%] mx-auto rounded-lg bg-yellow-500 z-10">
                                             <div className="ql-editor" dangerouslySetInnerHTML={{ __html: isDiskusi }}></div>
                                         </div>
                                         <div className="flex justify-end w-[90%] mx-auto z-10">

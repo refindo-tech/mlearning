@@ -92,15 +92,15 @@ const ProfilSiswa = () => {
                                     </thead>
                                     <tbody className="text-base">
                                         {dataListProfile?.map((item, index) => (
-                                            <tr className="h-[60px] align-center" key={index}>
+                                            <tr className="h-[60px] align-middle" key={index}>
                                                 <td className="text-center w-[50px]">{index + 1}</td>
                                                 {item.name?
-						    (<td>{item.name}</td>):
-						    (<td> </td>)
-						}
+                                                    (<td>{item.name}</td>):
+                                                    (<td> </td>)
+                                                }
                                                 {item.nisn ?
-                                                    (<td className="hidden lg:block">{item.nisn}</td>) :
-                                                    (<td className="hidden lg:block">-</td>)
+                                                    (<td className="hidden lg:table-cell ">{item.nisn}</td>) :
+                                                    (<td className="hidden lg:table-cell ">-</td>)
                                                 }
                                                 {item.kelas ?
                                                     (<td>{item.kelas}</td>) :

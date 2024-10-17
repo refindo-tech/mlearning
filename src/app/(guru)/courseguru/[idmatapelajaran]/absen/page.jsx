@@ -92,12 +92,12 @@ const ReportAbsen = () => {
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
                 <ShowStasiunTeacher listStasiun={dataListStasiun} handleStasiun={handleStasiun} />
-                <aside className="hidden lg:block lg:w-[15%]">
+                {/* <aside className="hidden lg:block lg:w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}
                         handleStasiun={handleStasiun}
                     />
-                </aside>
+                </aside> */}
                 <div className="w-full lg:w-[85%] border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300 flex flex-col gap-7">
                         <div className="w-[90%] mx-auto flex flex-row justify-between">

@@ -83,13 +83,13 @@ const KoreksiTugas = () => {
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
                 <ShowStasiunTeacher listStasiun={dataListStasiun} handleStasiun={handleStasiun} />
-                <aside className="hidden lg:block lg:w-[15%]">
+                {/* <aside className="hidden lg:block lg:w-[15%]">
                     {dataListStasiun.length !== 0 &&
                         <AsideTeacher
                             listStasiun={dataListStasiun}
                             handleStasiun={handleStasiun}
                         />}
-                </aside>
+                </aside> */}
                 <div className="w-full lg:w-[85%] border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
