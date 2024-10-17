@@ -112,8 +112,8 @@ const ProfilGuru = () => {
                                         {dataListProfile?.map((item, index) => (
                                             <tr className="h-[60px] align-center" key={index}>
                                                 <td className="text-center w-[50px]">{index + 1}</td>
-                                                <td>{item.name}</td>
-                                                {item.nuptk ?
+                                                <td>{item? item.name : ''}</td> 
+                                                {item ?
                                                     (<td className="text-center">{item.nuptk}</td>) :
                                                     (<td className="text-center">-</td>)
                                                 }

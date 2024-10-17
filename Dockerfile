@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 4000
 
 # Run database migrations and start the application
-CMD ["sh", "-c", "npx prisma migrate dev --name init && npm run dev"]
+CMD ["sh", "-c", "npx prisma migrate dev && npm run dev"]

@@ -154,10 +154,12 @@ const AddDiskusi = (
                 <Background />
                 {dataDiskusi ?
                     (
-                        <div className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-5 z-10">
                             <div className="w-[90%] mx-auto flex flex-col gap-5 z-10">
                                 <h3 className="font-semibold text-lg">Simak materi berikut ini!</h3>
-                                <div className="ql-editor rounded-lg bg-yellow-500" dangerouslySetInnerHTML={{ __html: dataDiskusi.question }}></div>
+                                <div className=" rounded-lg bg-yellow-500">
+                                    <div className="ql-editor" dangerouslySetInnerHTML={{ __html: dataDiskusi.question }} />
+                                </div>
                                 <div className="flex justify-end gap-5">
                                     <Button
                                         variant="bordered"
@@ -186,7 +188,8 @@ const AddDiskusi = (
                             {isDiskusi ?
                                 (
                                     <div className="flex flex-col gap-5">
-                                        <div className="w-[90%] mx-auto rounded-lg bg-yellow-500">
+                                        <h3 className="font-semibold text-lg w-[90%] mx-auto">Simak materi berikut ini!</h3>
+                                        <div className="w-[90%] mx-auto rounded-lg bg-yellow-500  z-10">
                                             <div className="ql-editor" dangerouslySetInnerHTML={{ __html: isDiskusi }}></div>
                                         </div>
                                         <div className="flex justify-end w-[90%] mx-auto z-10">

@@ -94,7 +94,10 @@ const ProfilSiswa = () => {
                                         {dataListProfile?.map((item, index) => (
                                             <tr className="h-[60px] align-center" key={index}>
                                                 <td className="text-center w-[50px]">{index + 1}</td>
-                                                <td>{item.name}</td>
+                                                {item.name?
+						    (<td>{item.name}</td>):
+						    (<td> </td>)
+						}
                                                 {item.nisn ?
                                                     (<td className="hidden lg:block">{item.nisn}</td>) :
                                                     (<td className="hidden lg:block">-</td>)
