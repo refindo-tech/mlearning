@@ -50,18 +50,18 @@ const Discussion = () => {
                 router.push('/onboarding')
             }
             const responseDetailDiskusi = await detailDiskusi(payloadDetailDiskusi)
-            if(responseDetailDiskusi){
+            if (responseDetailDiskusi) {
                 if (!responseDetailDiskusi.data) {
                     router.push('exam')
                 }
                 setDataDiskusi(responseDetailDiskusi.data)
             }
             const payloadDetailMateri = {
-                idmapel:parseInt(idmapel),
-                stasiun:decodeURIComponent(stasiun)
+                idmapel: parseInt(idmapel),
+                stasiun: decodeURIComponent(stasiun)
             }
             const responseDetailMateri = await detailMateri(payloadDetailMateri)
-            if(responseDetailMateri){
+            if (responseDetailMateri) {
                 setDetailMapel(responseDetailMateri.data)
             }
         }
@@ -82,12 +82,10 @@ const Discussion = () => {
             <>
                 <Navbar />
                 <div className="w-full min-h-screen flex fllex-row">
-                    <aside className="hidden lg:block w-full lg:w-[15%]">
-                        <AsideCourse
-                            listStasiun={dataListStasiun}
-                            absen={dataAbsensi}
-                        />
-                    </aside>
+                    <AsideCourse
+                        listStasiun={dataListStasiun}
+                        absen={dataAbsensi}
+                    />
                     <div className="lg:w-[85%] w-full border-l-2 border-gray-200">
                         <div className="h-fit static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                             <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
@@ -146,7 +144,7 @@ const Discussion = () => {
                                 </div>
                                 <div className="w-full min-h-screen flex flex-col gap-4">
                                     <h3 className="font-semibold text-xl">Portal Diskusi</h3>
-                                    {detailMapel&&<Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idmateri={detailMapel.id} />}
+                                    {detailMapel && <Comments idmapel={idmapel} stasiun={decodeURIComponent(stasiun)} idmateri={detailMapel.id} />}
                                 </div>
                             </div>
                         </div>

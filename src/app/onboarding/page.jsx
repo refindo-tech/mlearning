@@ -36,7 +36,7 @@ const Homepage = () => {
             <div className="relative ">
                 <Background />
                 {dataListClass &&
-                    <div className="w-full min-h-screen flex flex-col justify-between p-10 z-10">
+                    <div className="w-full min-h-screen flex flex-col justify-between p-10 gap-10 z-10">
                         <div className="flex flex-col gap-5 lg:gap-10">
                             <h1
                                 className="text-center text-lg font-semibold"
@@ -74,7 +74,7 @@ const SubjectCard = ({ subject }) => {
     return (
         <div 
             onClick={handleRouter}
-            className="hover:cursor-pointer flex flex-col p-2 gap-3 rounded-xl border-2 border-gray-200 bg-white h-[200px]"
+            className="hover:cursor-pointer flex flex-col p-2 gap-3 rounded-xl border-2 border-gray-200 bg-white h-[200px] z-10"
         >
             <div className="w-full h-[90px] flex items-center justify-end bg-primer-300 rounded">
                 <Image

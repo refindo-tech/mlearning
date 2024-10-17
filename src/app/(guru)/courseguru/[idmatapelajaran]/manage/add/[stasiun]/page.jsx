@@ -18,6 +18,7 @@ import AddDiskusi from '@/components/AddDiskusi'
 import AddExam from '@/components/AddExam'
 import Icons from "@/components/Icons"
 import "quill/dist/quill.snow.css";
+import ShowStasiunTeacher from '@/components/ShowStasiunTeacher'
 const CourseHomePage = () => {
     const path = usePathname()
     const router = useRouter()
@@ -66,6 +67,7 @@ const CourseHomePage = () => {
         console.log(context)
     }, [context])
     const handleStasiun = (value) => {
+        setIsLoad(true)
         const payload = {
             idmapel: idmapel,
             stasiun: value
@@ -76,7 +78,7 @@ const CourseHomePage = () => {
                 if (response.data) {
                     const newUrl = path.replace(`/${idmateri}/${stasiun}`, `/${response.data.id}/${value}`)
                     router.push(newUrl)
-                }else{
+                } else {
                     const newUrl = path.replace(`/${idmateri}/${stasiun}`, `/add/${value}`)
                     router.push(newUrl)
                 }
@@ -131,13 +133,18 @@ const CourseHomePage = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row overflow-x-hidden">
-                <aside className="w-[15%]">
+                {/* <aside className="w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}
                         manage={'true'}
                         handleStasiun={handleStasiun}
                     />
-                </aside>
+                </aside> */}
+                <ShowStasiunTeacher
+                    listStasiun={dataListStasiun}
+                    manage={'true'}
+                    handleStasiun={handleStasiun}
+                />
                 {context.materi &&
                     <AddMateri
                         detailMapel={detailMapel}

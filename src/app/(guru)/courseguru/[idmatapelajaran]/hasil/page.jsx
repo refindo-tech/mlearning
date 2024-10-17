@@ -83,7 +83,7 @@ const ReportAbsen = () => {
             <div className="w-full min-h-screen flex flex-row">
                 <div className=" w-full border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300 flex flex-col gap-7">
-                        <div className="w-[90%] mx-auto lg:w-full flex flex-row justify-between">
+                        <div className="w-[90%] mx-auto flex flex-row justify-between">
                             <button
                                 onClick={handleBack}
                                 className="h-10 w-10 flex  items-center justify-center rounded-full bg-white hover:bg-white/50"
@@ -162,7 +162,7 @@ const ReportAbsen = () => {
                                                     (<td>{item.kelas}</td>) :
                                                     (<td>-</td>)
                                                 }
-                                                <td className="h-full flex justify-center items-center">
+                                                <td className="h-[60px] flex justify-center items-center">
                                                     <Button
                                                         isIconOnly={true}
                                                         radius="sm"

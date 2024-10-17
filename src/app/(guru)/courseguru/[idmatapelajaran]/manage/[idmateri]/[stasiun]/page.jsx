@@ -137,13 +137,13 @@ const CourseHomePage = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row overflow-x-hidden">
-                <aside className="hidden lg:block lg:w-[15%]">
+                {/* <aside className="hidden lg:block lg:w-[15%]">
                     <AsideTeacher
                         listStasiun={dataListStasiun}
                         manage={'true'}
                         handleStasiun={handleStasiun}
                     />
-                </aside>
+                </aside> */}
                 <ShowStasiunTeacher onShowStations={onShowStations} listStasiun={dataListStasiun} handleStasiun={handleStasiun} manage={'true'} />
                 {context.materi &&
                     <AddMateri

@@ -95,12 +95,12 @@ const Stasiun = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
-                <aside className="hidden lg:block w-full lg:w-[15%]">
-                    <AsideCourse
-                        listStasiun={dataListStasiun}
-                        absen={dataAbsensi}
-                    />
-                </aside>
+                {/* <aside className="hidden lg:block w-full lg:w-[15%]">
+                </aside> */}
+                <AsideCourse
+                    listStasiun={dataListStasiun}
+                    absen={dataAbsensi}
+                />
                 <div className="lg:w-[85%] w-full lg:border-l-2 lg:border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
@@ -153,7 +153,7 @@ const Stasiun = () => {
                                     </div>
                                 }
                                 <div className="flex flex-col gap-5 items-end">
-                                    <DownloadMateri/>
+                                    <DownloadMateri />
                                     <Button
                                         onPress={() => {
                                             if (hasAbsen) {

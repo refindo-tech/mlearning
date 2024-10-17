@@ -20,7 +20,7 @@ const Exam = () => {
     const path = usePathname()
     const [topic, setTopic] = useState(null)
     const [otherData, setOtherData] = useState(null)
-    const [isLoad,setIsLoad] = useState(false)
+    const [isLoad, setIsLoad] = useState(false)
     const [listQuestionExam, setListQuestionExam] = useState(null)
     const [isHasAnswer, setIsHasAnswer] = useState(null)
     const [answerQuestion, setAnswerQuestion] = useState([])
@@ -102,7 +102,7 @@ const Exam = () => {
             updatedAnswers[index] = value; // Ganti jawaban pada indeks soal dengan jawaban baru
             return updatedAnswers;
         })
-    
+
     }
     const submitAnswer = async () => {
         setIsLoad(true)
@@ -126,12 +126,10 @@ const Exam = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex fllex-row">
-                <aside className="hidden lg:block w-full lg:w-[15%]">
-                    <AsideCourse
-                        listStasiun={dataListStasiun}
-                        absen={dataAbsensi}
-                    />
-                </aside>
+                <AsideCourse
+                    listStasiun={dataListStasiun}
+                    absen={dataAbsensi}
+                />
                 <div className="lg:w-[85%] w-full lg:border-l-2 lg:border-gray-200">
                     <div className="h-fit static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
@@ -218,11 +216,11 @@ const Exam = () => {
                                     <Button
                                         size="sm"
                                         onPress={submitAnswer}
-                                        isDisabled={isLoad?true:false}
+                                        isDisabled={isLoad ? true : false}
                                         className="bg-primer-500 text-white h-10 w-[200px] flex text-md items-center text-center rounded"
                                     >
-                                        {isLoad?
-                                            (<div className="loader"></div>):
+                                        {isLoad ?
+                                            (<div className="loader"></div>) :
                                             (<p>Kumpulkan</p>)
                                         }
                                     </Button>
