@@ -50,41 +50,30 @@ const CourseHomePage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoad(true)
             try {
-                setIsLoad(true)
-
-                // Fetch list stasiun
-                const listResponse = await listStasiun({ idmatapelajaran: idmapel })
-                if (listResponse) {
-                    setDataListStasiun(listResponse.data)
-                }
-
-                // Fetch absensi
-                const absensiResponse = await getAbsensiByIdSiswa({ idmapel })
-                if (absensiResponse.status) {
-                    setDataAbsensi(absensiResponse.data)
-                } else {
-                    router.push('/onboarding')
-                }
-
-                // Fetch detail materi
-                const detailResponse = await detailMateri({ idmapel })
+                const [listResponse, absensiResponse, detailResponse] = await Promise.all([
+                    listStasiun({ idmatapelajaran: idmapel }),
+                    getAbsensiByIdSiswa({ idmapel }),
+                    detailMateri({ idmapel }),
+                ])
+                
+                if (listResponse) setDataListStasiun(listResponse.data)
+                if (absensiResponse.status) setDataAbsensi(absensiResponse.data)
+                else router.push('/onboarding')
+                
                 if (detailResponse) {
-                    if (!detailResponse.data) {
-                        router.push('/dashboard')
-                    }
+                    if (!detailResponse.data) router.push('/dashboard')
                     setDetailMapel(detailResponse.data)
                 }
-
             } catch (error) {
                 console.error("Error fetching data:", error)
             } finally {
                 setIsLoad(false)
             }
         }
-
         fetchData()
-    }, [idmapel, router])
+    }, [idmapel, router])    
 
     if (isLoad) {
         return (<Loading />)
