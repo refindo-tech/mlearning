@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import m$fpassword from "@/backend/modules/forgotPassword.module.js";
 export async function POST(req){

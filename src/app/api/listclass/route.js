@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 //import m$uthentication from "@/backend/modules/authentication.module.js";
 import m$kelas from '@/backend/modules/class.module.js'

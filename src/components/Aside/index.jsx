@@ -37,9 +37,11 @@ const Aside = () => {
             idNews: value
         }
         const fetchAPI = async () => {
-            const response = await deleteNews(payload)
-            if (response) {
-                window.location.reload()
+            if (typeof window !== "undefined") {
+                const response = await deleteNews(payload)
+                if (response) {
+                    window.location.reload()
+                }
             }
         }
         fetchAPI()
