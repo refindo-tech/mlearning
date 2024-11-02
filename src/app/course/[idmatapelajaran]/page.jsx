@@ -64,13 +64,15 @@ const CourseHomePage = () => {
                 
                 if (detailResponse) {
                     if (!detailResponse.data) router.push('/dashboard')
+                    setIsLoad(false)
                     setDetailMapel(detailResponse.data)
                 }
             } catch (error) {
                 console.error("Error fetching data:", error)
-            } finally {
-                setIsLoad(false)
             }
+            // finally {
+            //     setIsLoad(false)
+            // }
         }
         fetchData()
     }, [idmapel, router])    
