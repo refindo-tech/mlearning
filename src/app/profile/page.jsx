@@ -1,6 +1,11 @@
 'use client'
+import dynamic from 'next/dynamic'
 import { Image } from '@nextui-org/react'
-import Navbar from '@/components/Navbar'
+// import Navbar from '@/components/Navbar'
+const Navbar = dynamic(
+    ()=>import('@/components/Navbar'),
+    {ssr:false}
+)
 import Footer from '@/components/Footer'
 import Background from '@/components/Background'
 import { useRouter } from 'next/navigation'

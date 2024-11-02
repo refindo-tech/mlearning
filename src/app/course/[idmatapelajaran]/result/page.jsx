@@ -1,11 +1,17 @@
 'use client'
+import dynamic from "next/dynamic"
 import Background from "@/components/Background"
 import Loading from "@/app/loading.jsx"
-import Navbar from "@/components/Navbar"
+// import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import AsideCourse from "@/components/AsideCourse"
+// import AsideCourse from "@/components/AsideCourse"
+const AsideCourse = dynamic(()=>import('@/components/AsideCourse'), {ssr:false})
+const Navbar = dynamic(
+    ()=>import('@/components/Navbar'),
+    {ssr:false}
+)
 import { Button, Image, Link } from "@nextui-org/react"
 import { listStasiun, getAbsensiByIdSiswa, getResultSiswa, getDetailProfile, detailMateri } from '@/backend/fetchAPI.js'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
