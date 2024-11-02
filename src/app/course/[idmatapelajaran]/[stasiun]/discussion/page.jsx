@@ -1,8 +1,14 @@
 'use client'
+import dynamic from "next/dynamic"
 import Background from "@/components/Background"
 import Loading from "@/app/loading.jsx"
-import Navbar from "@/components/Navbar"
-import AsideCourse from "@/components/AsideCourse"
+// import Navbar from "@/components/Navbar"
+// import AsideCourse from "@/components/AsideCourse"
+const AsideCourse = dynamic(()=>import('@/components/AsideCourse'), {ssr:false})
+const Navbar = dynamic(
+    ()=>import('@/components/Navbar'),
+    {ssr:false}
+)
 import Footer from "@/components/Footer"
 import Comments from '@/components/Comments'
 import AudioPlayer from "@/components/AudioPlayer"

@@ -1,10 +1,16 @@
 'use client'
+import dynamic from "next/dynamic"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import Loading from "@/app/loading.jsx"
 import Background from "@/components/Background"
-import AsideCourse from '@/components/AsideCourse'
-import Navbar from "@/components/Navbar"
+// import AsideCourse from '@/components/AsideCourse'
+// import Navbar from "@/components/Navbar"
+const AsideCourse = dynamic(()=>import('@/components/AsideCourse'), {ssr:false})
+const Navbar = dynamic(
+    ()=>import('@/components/Navbar'),
+    {ssr:false}
+)
 import Footer from "@/components/Footer"
 import YoutubeVideo from '@/components/YoutubeVideo'
 import AudioPlayer from '@/components/AudioPlayer'
