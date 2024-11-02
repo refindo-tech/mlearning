@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import m$authentication from "@/backend/modules/authentication.module.js";
 export async function POST(req){

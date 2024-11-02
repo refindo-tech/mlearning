@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import m$reset from "@/backend/modules/reset.module.js";
 export async function GET(req){

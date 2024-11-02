@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import m$diskusi from "../../../backend/modules/discussion.module";
 export async function GET(req){

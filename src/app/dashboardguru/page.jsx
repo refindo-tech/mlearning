@@ -1,11 +1,20 @@
 'use client'
+import dynamic from "next/dynamic"
 import { Button, Image } from "@nextui-org/react"
 import Loading from "../loading"
 import Link from "next/link"
-import Navbar from "@/components/Navbar"
+// import Navbar from "@/components/Navbar"
+const Navbar = dynamic(
+    ()=>import('@/components/Navbar'),
+    {ssr:false}
+)
 import Footer from "@/components/Footer"
 import Background from "@/components/Background"
-import Aside from "@/components/Aside"
+// import Aside from "@/components/Aside"
+const Aside = dynamic(
+    ()=>import('@/components/Aside'),
+    {ssr:false}
+)
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { listClass, accessGuru } from "@/backend/fetchAPI.js"

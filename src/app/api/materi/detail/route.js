@@ -1,5 +1,6 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
-import m$materi from "../../../../backend/modules/materi.module";
+import m$materi from "@/backend/modules/materi.module";
 export async function GET(req){
     try {
         const authorization = req.headers.get('authorization');

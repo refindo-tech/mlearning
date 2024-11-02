@@ -1,11 +1,20 @@
 'use client'
+import dynamic from "next/dynamic"
 import { Button, Image } from "@nextui-org/react"
 import Loading from "../loading"
 import Link from "next/link"
-import Navbar from "@/components/Navbar"
+// import Navbar from "@/components/Navbar"
+const Navbar = dynamic(
+    ()=>import('@/components/Navbar'),
+    {ssr:false}
+)
 import Footer from "@/components/Footer"
 import Background from "@/components/Background"
-import Aside from "@/components/Aside"
+const Aside = dynamic(
+    ()=>import('@/components/Aside'),
+    {ssr:false}
+)
+// import Aside from "@/components/Aside"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import {listClass} from "@/backend/fetchAPI.js"
@@ -27,9 +36,11 @@ const Dashboard = () => {
     }
     useEffect(()=>{
         const validateAccess = ()=>{
-            const getToken=sessionStorage.getItem('tokensiswa')
-            if(!getToken){
-                router.push('login/')
+            if (typeof window !== "undefined") {
+                const getToken=sessionStorage.getItem('tokensiswa')
+                if(!getToken){
+                    router.push('login/')
+                }
             }
         }
         validateAccess()

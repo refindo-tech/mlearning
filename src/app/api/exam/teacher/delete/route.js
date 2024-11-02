@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import middleware from '@/backend/helpers/middleware.js'
 import m$exam from "@/backend/modules/exam.module.js";
