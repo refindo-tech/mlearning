@@ -23,7 +23,6 @@ const Aside = () => {
             }
             const responseList = await listNews()
             if (responseList) {
-                console.log(responseList)
                 setDataListNews(responseList.data)
             }
         }

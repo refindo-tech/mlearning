@@ -47,20 +47,23 @@ const CourseHomePage = () => {
             ? `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/${value.stasiun}`
             : `${process.env.NEXT_PUBLIC_BASE_API}/course/${idmapel}/result`
     }
-
+    const getData = (stasiun, absen) =>{
+        setDataListStasiun(stasiun)
+        setDataAbsensi(absen)
+    }
     useEffect(() => {
         const fetchData = async () => {
             setIsLoad(true)
             try {
-                const [listResponse, absensiResponse, detailResponse] = await Promise.all([
-                    listStasiun({ idmatapelajaran: idmapel }),
-                    getAbsensiByIdSiswa({ idmapel }),
+                const [detailResponse] = await Promise.all([
+                    // listStasiun({ idmatapelajaran: idmapel }),
+                    // getAbsensiByIdSiswa({ idmapel }),
                     detailMateri({ idmapel }),
                 ])
                 
-                if (listResponse) setDataListStasiun(listResponse.data)
-                if (absensiResponse.status) setDataAbsensi(absensiResponse.data)
-                else router.push('/onboarding')
+                // if (listResponse) setDataListStasiun(listResponse.data)
+                // if (absensiResponse.status) setDataAbsensi(absensiResponse.data)
+                // else router.push('/onboarding')
                 
                 if (detailResponse) {
                     if (!detailResponse.data) router.push('/dashboard')
@@ -85,12 +88,13 @@ const CourseHomePage = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
-                {dataListStasiun.length > 0 && (
+                {/* {dataListStasiun.length > 0 && ( */}
                     <AsideCourse
-                        listStasiun={dataListStasiun}
-                        absen={dataAbsensi}
+                        // propsStasiun={dataListStasiun}
+                        // propsAbsen={dataAbsensi}
+                        getData={getData}
                     />
-                )}
+                {/* )} */}
                 <div className="lg:w-[85%] w-full border-l-2 border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
@@ -122,11 +126,11 @@ const CourseHomePage = () => {
                         <div className="hidden lg:block absolute bottom-0 right-0 h-[200px] w-[250px] bg-[url('/assets/image/openedbook.png')] bg-no-repeat bg-cover bg-center">
                         </div>
                     </div>
-                    <div className="relative w-full hidden lg:block min-h-screen">
+                    <div className="relative w-full min-h-screen">
                         <Background />
-                        <div className="relative top-0 w-[90%] hidden lg:flex flex-col gap-5 mx-auto py-10 z-10">
+                        <div className="relative top-0 w-[90%] flex flex-col gap-5 mx-auto py-10 z-10">
                             {detailMapel?.MataPelajaran?.description &&
-                                (<div className="ql-editor" dangerouslySetInnerHTML={{__html: detailMapel.MataPelajaran.description}}/>)}
+                                (<div className="" dangerouslySetInnerHTML={{__html: detailMapel.MataPelajaran.description}}/>)}
                             <div className="flex justify-end">
                                 <Button
                                     as={Link}
@@ -139,9 +143,9 @@ const CourseHomePage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full min-h-screen block lg:hidden">
+                    {/* <div className="w-full min-h-screen block lg:hidden">
                         <div className="ql-editor" dangerouslySetInnerHTML={{__html: detailMapel?.MataPelajaran?.description}} />
-                    </div>
+                    </div> */}
                     <Footer />
                 </div>
             </div>

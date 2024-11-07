@@ -3,13 +3,9 @@ import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import Loading from "@/app/loading"
 import Background from "@/components/Background"
-
 const AsideCourse = dynamic(() => import('@/components/AsideCourse'), { ssr: false })
 const Navbar = dynamic(() => import('@/components/Navbar'), { ssr: false })
 import Footer from "@/components/Footer"
-import AudioPlayer from "@/components/AudioPlayer"
-import YoutubeVideo from "@/components/YoutubeVideo"
-import DisplayImageComponent from "@/components/DisplayImageComponent"
 import DownloadMateri from '@/components/DownloadMateri'
 import { Button, Image, RadioGroup, Radio } from "@nextui-org/react"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
@@ -25,10 +21,8 @@ const Stasiun = () => {
     const [dataListStasiun, setDataListStasiun] = useState(null)
     const [dataAbsensi, setDataAbsensi] = useState(null)
     const [dataMateri, setDataMateri] = useState(null)
-
     const stasiun = decodeURIComponent(path.split('/')[3])
     const idmapel = path.split('/')[2]
-
     useEffect(() => {
         const fetchAPI = async () => {
             try {
@@ -37,7 +31,6 @@ const Stasiun = () => {
                     getAbsensiByIdSiswa({ idmapel }),
                     detailMateri({ idmapel, stasiun })
                 ])
-
                 if (response) setDataListStasiun(response.data)
                 if (responseAbsensi.status) setDataAbsensi(responseAbsensi.data)
                 else router.push('/onboarding')
@@ -55,23 +48,19 @@ const Stasiun = () => {
         }
         fetchAPI()
     }, [idmapel, path, router, stasiun])
-
     useEffect(() => {
         if (dataAbsensi) {
             const isCompleted = dataAbsensi.some(item => item.stasiun === stasiun && item.status === 'SUDAH')
             setHasAbsen(isCompleted)
         }
     }, [dataAbsensi, stasiun])
-
     const handleNextStep = () => {
         router.push(`${path}/discussion`)
     }
-
     const handleBack = () => {
-        const newPath = path.replace(`${stasiun}`, '')
+        const newPath = path.replace(`${encodeURIComponent(stasiun)}`, '')
         router.push(newPath)
     }
-
     const submitAbsen = async () => {
         const payload = {
             idmapel,
@@ -85,21 +74,19 @@ const Stasiun = () => {
             console.error("Error submitting attendance:", error)
         }
     }
-
     if (!dataMateri || !dataListStasiun || !dataAbsensi) {
         return <Loading />
     }
-
     return (
         <>
             <Navbar />
             <div className="w-full min-h-screen flex flex-row">
-                <AsideCourse listStasiun={dataListStasiun} absen={dataAbsensi} />
+                <AsideCourse />
                 <div className="lg:w-[85%] w-full lg:border-l-2 lg:border-gray-200">
                     <div className="h-fit lg:h-[50vh] static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
                             <div className="w-[90%] lg:w-full mx-auto lg:mx-0 flex flex-row justify-between">
-                                <button onClick={handleBack} className="h-10 w-10 flex items-center justify-center rounded-full bg-white">
+                                <button onClick={()=>handleBack()} className="h-10 w-10 flex items-center justify-center rounded-full bg-white">
                                     <ChevronLeft size={32} />
                                 </button>
                                 <button onClick={handleNextStep} className="h-10 w-10 flex items-center justify-center rounded-full bg-white">
@@ -123,11 +110,6 @@ const Stasiun = () => {
                             <div className="flex flex-col gap-5">
                                 <div className="bg-sekunder-300 p-2 lg:p-3 rounded-lg text-justify">
                                     <div id='quill-content' className="ql-editor" dangerouslySetInnerHTML={{ __html: dataMateri.detailmateri }} />
-                                    <div className="flex flex-col justify-center items-center">
-                                        {dataMateri.urlaudio && <AudioPlayer url={dataMateri.urlaudio} />}
-                                        {dataMateri.urlimage && <DisplayImageComponent url={dataMateri.urlimage} />}
-                                        {dataMateri.urlvideo && <YoutubeVideo urlvideo={dataMateri.urlvideo} />}
-                                    </div>
                                 </div>
                                 <div className="flex flex-col gap-5 items-end">
                                     <DownloadMateri />

@@ -7,10 +7,10 @@ import Footer from "@/components/Footer"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 // import AsideCourse from "@/components/AsideCourse"
-const AsideCourse = dynamic(()=>import('@/components/AsideCourse'), {ssr:false})
+const AsideCourse = dynamic(() => import('@/components/AsideCourse'), { ssr: false })
 const Navbar = dynamic(
-    ()=>import('@/components/Navbar'),
-    {ssr:false}
+    () => import('@/components/Navbar'),
+    { ssr: false }
 )
 import { Button, Image, Link } from "@nextui-org/react"
 import { listStasiun, getAbsensiByIdSiswa, getResultSiswa, getDetailProfile, detailMateri } from '@/backend/fetchAPI.js'
@@ -27,44 +27,29 @@ const ResultCoursePage = () => {
     useEffect(() => {
         const idmapel = path.split('/')[2]
         const fetchAPI = async () => {
-            const req = { idmatapelajaran: idmapel }
-            const response = await listStasiun(req)
-            if (response) {
-                setDataListStasiun(response.data)
-            }
             const payload = {
                 idmapel: idmapel
             }
             const responseResult = await getResultSiswa(payload)
             if (responseResult) {
                 setDataResult(responseResult.data)
-            }
-            const responseAbsensi = await getAbsensiByIdSiswa(payload)
-            if (responseAbsensi.status) {
-                setDataAbsensi(responseAbsensi.data)
                 setIsLoad(false)
-            }else{
-                router.push('/onboarding')
             }
             const responseDetailProfile = await getDetailProfile()
             if (responseDetailProfile.status) {
                 if (responseDetailProfile.data.siswa) {
                     setDetailSiswa(responseDetailProfile.data.siswa)
                 }
-            }else{
+            } else {
                 router.push('/onboarding')
             }
             const responseDetailMapel = await detailMateri(payload)
-            if(responseDetailMapel){
-                console.log(responseDetailMapel)
+            if (responseDetailMapel) {
                 setDetailMapel(responseDetailMapel.data.MataPelajaran)
             }
         }
         fetchAPI()
     }, [path, router])
-    useEffect(()=>{
-        console.log(detailMapel)
-    },[detailMapel])
     if (isLoaded) {
         return (<Loading />)
     }
@@ -72,12 +57,7 @@ const ResultCoursePage = () => {
         <>
             <Navbar />
             <div className="w-full min-h-screen flex fllex-row">
-                <aside className="hidden lg:block w-full lg:w-[15%]">
-                    <AsideCourse
-                        listStasiun={dataListStasiun}
-                        absen={dataAbsensi}
-                    />
-                </aside>
+                <AsideCourse/>
                 <div className="lg:w-[85%] w-full">
                     <div className="h-fit static lg:relative py-5 lg:py-10 bg-primer-400 border-b-5 border-sekunder-300">
                         <div className="lg:w-[90%] w-full h-full lg:h-fit justify-between lg:justify-start mx-auto flex flex-col gap-7">
@@ -95,8 +75,8 @@ const ResultCoursePage = () => {
                             </div>
                             <div className="flex flex-row items-end justify-between">
                                 <div className="flex flex-col gap-1 lg:gap-3 text-white pl-[5vw] pb-2 lg:pb-0 lg:pl-0">
-                                    {detailMapel&&detailMapel.name&&<h1 className="font-bold text-xl lg:text-3xl">{detailMapel.name}</h1>}
-                                    {detailMapel&&detailMapel.kelas&&<h2 className=" text-xl">{detailMapel.kelas}</h2>}
+                                    {detailMapel && detailMapel.name && <h1 className="font-bold text-xl lg:text-3xl">{detailMapel.name}</h1>}
+                                    {detailMapel && detailMapel.kelas && <h2 className=" text-xl">{detailMapel.kelas}</h2>}
                                 </div>
                                 <Image
                                     alt="icon-card"

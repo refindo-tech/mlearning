@@ -1,15 +1,40 @@
 'use client'
 import { usePathname, useRouter } from "next/navigation"
-import Loading from '@/app/loading.jsx'
 import { useState, useEffect } from "react"
 import { ChevronsLeft } from "lucide-react"
-// import { listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
+import { listStasiun, getAbsensiByIdSiswa } from "@/backend/fetchAPI.js"
 import { Button, Link } from "@nextui-org/react"
-const AsideCourse = ({ listStasiun, absen }) => {
+const AsideCourse = ({propsStasiun, propsAbsen, getData}) => {
     const [isShow, setIsShow] = useState(false)
+    const [dataAbsensi, setDataAbsensi] = useState(propsAbsen)
+    const [dataListStasiun, setDataListStasiun] = useState(propsStasiun)
+    const path = usePathname()
+    const idmapel = path.split('/')[2]
     const handleButtonClick = () => {
         setIsShow(!isShow)
     }
+    useEffect(() => {
+            const fetchAPI = async () => {
+                try {
+                    const [response, responseAbsen] = await Promise.all([
+                        listStasiun({ idmatapelajaran: idmapel }),
+                        getAbsensiByIdSiswa({ idmapel })
+                    ])
+                    if (response) {
+                        setDataListStasiun(response.data)
+                    }
+                    if (responseAbsen) {
+                        setDataAbsensi(responseAbsen.data)
+                    }
+                    if(typeof getData == 'function'){
+                        getData(response.data, responseAbsen.data)
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            fetchAPI()
+    }, [idmapel, propsStasiun, propsAbsen, getData])
     return (
         <>
             <button
@@ -25,18 +50,18 @@ const AsideCourse = ({ listStasiun, absen }) => {
                     <div className='w-[50vw] bg-gray-500/50 h-screen' onClick={handleButtonClick}>
                     </div>
                     <div className='bg-white px-3 w-[50vw] h-screen overflow-y-scroll'>
-                        <ParentStasiun
-                            listStasiun={listStasiun}
-                            absen={absen}
-                        />
+                        {dataListStasiun && dataAbsensi && <ParentStasiun
+                            listStasiun={dataListStasiun}
+                            absen={dataAbsensi}
+                        />}
                     </div>
                 </div>
             }
             <div className='hidden lg:block bg-white px-3 w-[15%]'>
-                <ParentStasiun
-                    listStasiun={listStasiun}
-                    absen={absen}
-                />
+                {dataListStasiun && dataAbsensi && <ParentStasiun
+                    listStasiun={dataListStasiun}
+                    absen={dataAbsensi}
+                />}
             </div>
         </>
     )
@@ -62,7 +87,7 @@ const ParentStasiun = ({ listStasiun, absen }) => {
         return absensi !== undefined
     }
     useEffect(() => {
-        if (listStasiun && absen) {
+        if (listStasiun) {
             setDataListStasiun(listStasiun);
             setDataAbsensi(absen);
         }
