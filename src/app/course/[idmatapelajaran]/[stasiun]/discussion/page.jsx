@@ -31,13 +31,17 @@ const Discussion = () => {
                     detailMateri({ idmapel: parseInt(idmapel), stasiun })
                 ])
                 // Fetch discussion details
-                if (responseDetailDiskusi) {
-                    setDataDiskusi(responseDetailDiskusi.data)
+                if (!responseDetailDiskusi?.data) {
+                    const newPath = path.replace('discussion','exam')
+                    router.push(newPath)
                 } else {
-                    router.push('/exam')
+                    setDataDiskusi(responseDetailDiskusi.data)
+                    console.log(responseDetailDiskusi)
                 }
                 // Fetch material details
-                setDetailMapel(responseDetailMateri?.data || null)
+                if(responseDetailMateri){
+                    setDetailMapel(responseDetailMateri?.data || null)
+                }
             } catch (error) {
                 console.error("Error fetching data:", error)
             } finally {
@@ -45,7 +49,7 @@ const Discussion = () => {
             }
         }
         fetchAPI()
-    }, [idmapel, stasiun, router])
+    }, [idmapel, stasiun, router, path])
     if (loading) return <Loading />
     const handleNextStep = () => router.push('exam')
     const handlePreviousStep = () => {
